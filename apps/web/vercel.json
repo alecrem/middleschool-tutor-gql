@@ -3,5 +3,16 @@
   "outputDirectory": "build/client",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "framework": null
+  "framework": null,
+  "functions": {
+    "build/server/index.js": {
+      "runtime": "@vercel/node@3"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/build/server/index.js"
+    }
+  ]
 }
