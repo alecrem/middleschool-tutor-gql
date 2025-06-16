@@ -5,5 +5,6 @@
       "destination": "/api/index"
     }
   ],
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "buildCommand": "npm run build"
 }
