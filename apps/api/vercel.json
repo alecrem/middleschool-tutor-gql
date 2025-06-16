@@ -5,6 +5,6 @@
       "destination": "/api/index"
     }
   ],
-  "installCommand": "cd ../.. && pnpm install",
-  "buildCommand": "cd ../.. && pnpm run build --filter=api"
+  "installCommand": "pnpm install --shamefully-hoist",
+  "buildCommand": "pnpm run build"
 }
