@@ -1,13 +1,8 @@
 {
-  "functions": {
-    "src/index.ts": {
-      "runtime": "@vercel/node@3"
-    }
-  },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/src/index.ts"
+      "destination": "/api/index"
     }
   ],
   "installCommand": "cd ../.. && pnpm install",
