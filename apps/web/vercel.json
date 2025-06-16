@@ -1,0 +1,7 @@
+{
+  "buildCommand": "pnpm build",
+  "outputDirectory": "build/client",
+  "devCommand": "pnpm dev",
+  "installCommand": "pnpm install",
+  "framework": null
+}

@@ -1,0 +1,11 @@
+# Build output
+dist/
+*.js
+*.js.map
+
+# Ignore generated JSON data in build
+src/assets/cards.json
+
+# Local environment
+.env
+.env.local

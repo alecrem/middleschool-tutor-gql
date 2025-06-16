@@ -1,0 +1,11 @@
+# Build output
+build/
+public/build/
+
+# Remix
+/.cache
+/node_modules/.cache
+
+# Local environment
+.env
+.env.local
