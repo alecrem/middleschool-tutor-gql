@@ -9,3 +9,4 @@ public/build/
 # Local environment
 .env
 .env.local
+.vercel
