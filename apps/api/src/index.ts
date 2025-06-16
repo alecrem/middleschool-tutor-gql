@@ -9,7 +9,7 @@ const app = new Hono()
 
 // CORS for frontend access
 app.use('*', cors({
-  origin: ['http://localhost:3000', 'https://your-app.vercel.app'],
+  origin: ['http://localhost:3000', 'https://*.vercel.app'],
   allowMethods: ['GET', 'POST', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization']
 }))

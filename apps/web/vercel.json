@@ -1,7 +1,7 @@
 {
-  "buildCommand": "pnpm build",
+  "buildCommand": "cd ../.. && pnpm run build --filter=web",
   "outputDirectory": "build/client",
-  "devCommand": "pnpm dev",
-  "installCommand": "pnpm install",
+  "devCommand": "cd ../.. && pnpm run dev --filter=web",
+  "installCommand": "cd ../.. && pnpm install",
   "framework": null
 }

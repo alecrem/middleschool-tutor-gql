@@ -9,3 +9,4 @@ src/assets/cards.json
 # Local environment
 .env
 .env.local
+.vercel
