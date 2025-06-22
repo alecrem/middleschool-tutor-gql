@@ -94,7 +94,7 @@ app.get("/", (c) => {
 });
 
 // For Vercel serverless functions
-export default app.fetch;
+export default app;
 
 // For local development - check if this file is being run directly
 if (
