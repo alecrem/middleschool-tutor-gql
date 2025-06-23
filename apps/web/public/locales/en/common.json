@@ -1,0 +1,12 @@
+{
+  "title": "MTG Middle School",
+  "description": "Search and explore Magic: The Gathering cards legal in the Middle School format",
+  "searchCards": "Search Cards",
+  "searchPlaceholder": "Search for cards...",
+  "search": "Search",
+  "searching": "Searching...",
+  "searchError": "Failed to search cards. Please try again.",
+  "foundCards": "Found {{total}} cards for \"{{query}}\"",
+  "foundCardsPartial": "Found {{total}} cards for \"{{query}}\" — showing the first {{shown}}",
+  "enterCardName": "Enter a card name to get started"
+}
