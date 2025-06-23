@@ -1,12 +1,15 @@
 import type { CardSearchResult } from "./types";
 
-const API_URL = process.env.API_URL || 'http://localhost:3001/graphql';
+const API_URL = process.env.API_URL || "http://localhost:3001/graphql";
 
-export async function searchCards(query: string, limit: number = 50): Promise<CardSearchResult> {
+export async function searchCards(
+  query: string,
+  limit: number = 50
+): Promise<CardSearchResult> {
   const response = await fetch(API_URL, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       query: `
@@ -34,18 +37,18 @@ export async function searchCards(query: string, limit: number = 50): Promise<Ca
           }
         }
       `,
-      variables: { query, limit }
+      variables: { query, limit },
     }),
   });
 
   if (!response.ok) {
-    throw new Error('Failed to search cards');
+    throw new Error("Failed to search cards");
   }
 
   const data = await response.json();
-  
+
   if (data.errors) {
-    throw new Error(data.errors[0]?.message || 'GraphQL error');
+    throw new Error(data.errors[0]?.message || "GraphQL error");
   }
 
   return data.data.searchCards;

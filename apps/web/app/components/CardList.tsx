@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { MagicCard } from "../lib/types";
 
 interface CardListProps {
@@ -5,6 +6,7 @@ interface CardListProps {
 }
 
 export function CardList({ cards }: CardListProps) {
+  const { i18n } = useTranslation();
   if (cards.length === 0) {
     return (
       <div style={{ textAlign: "center", padding: "2rem", color: "#6b7280" }}>
@@ -23,13 +25,34 @@ export function CardList({ cards }: CardListProps) {
             borderRadius: "8px",
             padding: "1.5rem",
             backgroundColor: "#ffffff",
-            boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
+            boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
           }}
         >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem" }}>
-            <h3 style={{ fontSize: "1.25rem", fontWeight: "600", margin: 0, color: card.banned ? "#dc2626" : "#111827" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              marginBottom: "0.5rem",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: "1.25rem",
+                fontWeight: "600",
+                margin: 0,
+                color: card.banned ? "#dc2626" : "#111827",
+              }}
+            >
+              {i18n.language === "ja" &&
+                card.name_ja !== null &&
+                `${card.name_ja} • `}
               {card.name}
-              {card.banned && <span style={{ color: "#dc2626", marginLeft: "0.5rem" }}>(Banned)</span>}
+              {card.banned && (
+                <span style={{ color: "#dc2626", marginLeft: "0.5rem" }}>
+                  (Banned)
+                </span>
+              )}
             </h3>
             <div style={{ display: "flex", gap: "0.25rem", flexShrink: 0 }}>
               {card.w && <span style={{ color: "#fbbf24" }}>W</span>}
@@ -40,8 +63,16 @@ export function CardList({ cards }: CardListProps) {
               {card.c && <span style={{ color: "#9ca3af" }}>C</span>}
             </div>
           </div>
-          
-          <div style={{ display: "flex", gap: "1rem", marginBottom: "0.75rem", fontSize: "0.875rem", color: "#6b7280" }}>
+
+          <div
+            style={{
+              display: "flex",
+              gap: "1rem",
+              marginBottom: "0.75rem",
+              fontSize: "0.875rem",
+              color: "#6b7280",
+            }}
+          >
             <span>{card.type}</span>
             <span>•</span>
             <span>{card.rarity}</span>
@@ -50,19 +81,23 @@ export function CardList({ cards }: CardListProps) {
             {card.power && card.toughness && (
               <>
                 <span>•</span>
-                <span>{card.power}/{card.toughness}</span>
+                <span>
+                  {card.power}/{card.toughness}
+                </span>
               </>
             )}
           </div>
-          
+
           {card.text && (
-            <p style={{
-              fontSize: "0.875rem",
-              lineHeight: "1.5",
-              color: "#4b5563",
-              margin: 0,
-              whiteSpace: "pre-wrap"
-            }}>
+            <p
+              style={{
+                fontSize: "0.875rem",
+                lineHeight: "1.5",
+                color: "#4b5563",
+                margin: 0,
+                whiteSpace: "pre-wrap",
+              }}
+            >
               {card.text}
             </p>
           )}

@@ -1,6 +1,7 @@
 # React i18n Library Research for Remix App
 
 ## Current Stack Analysis
+
 - **Framework**: Remix v2.0.0 with Vite
 - **React**: v18.2.0
 - **Deployment**: Vercel
@@ -9,7 +10,9 @@
 - **Monorepo**: Turborepo setup
 
 ## Current UI Structure
+
 The app has a simple structure with:
+
 - Main search page with form and results
 - CardList component displaying MTG cards
 - Hardcoded English strings in UI components
@@ -18,8 +21,9 @@ The app has a simple structure with:
 ## Research Tasks
 
 ### Todo List
+
 - [x] Research react-i18next for Remix compatibility
-- [x] Research react-intl (FormatJS) for Remix compatibility  
+- [x] Research react-intl (FormatJS) for Remix compatibility
 - [x] Research @lingui/react for modern i18n approach
 - [x] Analyze bundle size impact of each library
 - [x] Check SSR/hydration compatibility with Remix
@@ -28,6 +32,7 @@ The app has a simple structure with:
 - [x] Provide final recommendation with pros/cons
 
 ## Research Focus Areas
+
 1. **Remix Compatibility**: SSR support, hydration handling
 2. **Bundle Size**: Impact on application performance
 3. **Developer Experience**: API simplicity, TypeScript support
@@ -36,7 +41,9 @@ The app has a simple structure with:
 6. **Community & Maintenance**: Active development and support
 
 ## Target Implementation
+
 Simple language switcher with string extraction from existing UI components like:
+
 - "MTG Middle School" title
 - "Search Cards" heading
 - "Search for cards..." placeholder
@@ -48,11 +55,13 @@ Simple language switcher with string extraction from existing UI components like
 ## Research Results & Library Comparison
 
 ### 1. react-i18next with remix-i18next
+
 **Bundle Size**: ~22-27kb (react-i18next 7kb + i18next 15kb)
 **Remix Compatibility**: ⭐⭐⭐⭐⭐ Excellent - Native Remix support via remix-i18next
 **Popularity**: 5.5M weekly downloads
 
 **Pros:**
+
 - **Best Remix Integration**: remix-i18next package built specifically for Remix by core contributor
 - **Server-First Approach**: Handles SSR seamlessly with loader integration
 - **Mature Ecosystem**: Most popular React i18n library with extensive plugins
@@ -61,6 +70,7 @@ Simple language switcher with string extraction from existing UI components like
 - **Active Development**: Regular updates and strong community support
 
 **Cons:**
+
 - **Larger Bundle Size**: Heaviest option at ~25kb
 - **More Configuration**: Requires more setup than simpler alternatives
 - **Learning Curve**: More concepts to understand (namespaces, backends, etc.)
@@ -68,11 +78,13 @@ Simple language switcher with string extraction from existing UI components like
 **Best For**: Full-featured i18n with complex translation needs
 
 ### 2. react-intl (FormatJS)
+
 **Bundle Size**: ~17kb
 **Remix Compatibility**: ⭐⭐⭐ Good - Third-party integration available
 **Popularity**: 2.1M weekly downloads
 
 **Pros:**
+
 - **ICU Message Format**: Industry standard for complex pluralization/formatting
 - **Medium Bundle Size**: Smaller than react-i18next
 - **TypeScript Support**: Excellent TypeScript integration
@@ -80,6 +92,7 @@ Simple language switcher with string extraction from existing UI components like
 - **No Dependencies**: Self-contained library
 
 **Cons:**
+
 - **Limited Remix Support**: Requires third-party @postinumero/remix-react-intl
 - **Less Popular in Remix Community**: Fewer examples and tutorials
 - **Server Components Issues**: React Server Components compatibility challenges
@@ -88,11 +101,13 @@ Simple language switcher with string extraction from existing UI components like
 **Best For**: Applications requiring advanced formatting (dates, numbers, plurals)
 
 ### 3. @lingui/react
+
 **Bundle Size**: ~10.4kb (smallest)
 **Remix Compatibility**: ⭐⭐ Poor - Babel macro dependency conflicts
 **Popularity**: Growing but smaller community
 
 **Pros:**
+
 - **Smallest Bundle**: Only 10.4kb total with tree-shaking
 - **Modern Approach**: Inline translation strings with extraction
 - **Excellent DX**: TypeScript-first with great tooling
@@ -100,6 +115,7 @@ Simple language switcher with string extraction from existing UI components like
 - **Component Interpolation**: Rich text and component embedding
 
 **Cons:**
+
 - **Remix Incompatibility**: Babel macros don't work well with Remix's esbuild
 - **Build Tool Dependency**: Requires complex workarounds (remix-esbuild-override)
 - **Smaller Community**: Less documentation and examples for Remix
@@ -114,6 +130,7 @@ Simple language switcher with string extraction from existing UI components like
 For your Remix MTG Middle School app, **react-i18next with remix-i18next** is the clear winner because:
 
 ### Key Advantages for Your Use Case:
+
 1. **Remix-Native**: Built specifically for Remix by core team members
 2. **Simple Implementation**: Perfect for basic string translation needs
 3. **Great Documentation**: Extensive Remix-specific examples and tutorials
@@ -121,18 +138,22 @@ For your Remix MTG Middle School app, **react-i18next with remix-i18next** is th
 5. **SSR Ready**: No hydration flicker or server/client mismatch issues
 
 ### Implementation Simplicity:
+
 ```bash
 pnpm add remix-i18next i18next react-i18next i18next-browser-languagedetector
 ```
 
 Your translation workflow would be:
+
 1. Extract hardcoded strings to translation files
 2. Add `useTranslation()` hook to components
 3. Create simple language switcher component
 4. Configure language detection (cookie-based for persistence)
 
 ### Bundle Size Trade-off:
+
 While react-i18next is the largest (~25kb), for a simple MTG card search app, this size difference is negligible compared to the benefits of:
+
 - Seamless Remix integration
 - No build tool complications
 - Extensive community support
@@ -146,7 +167,8 @@ The ~8kb difference vs react-intl or ~15kb vs Lingui is minimal in the context o
 
 **Research Completed**: Comprehensive analysis of the top 3 React i18n libraries for Remix compatibility, bundle size, and ease of implementation.
 
-**Key Findings**: 
+**Key Findings**:
+
 - remix-i18next provides the best developer experience for Remix apps
 - Bundle size differences are minimal for typical applications
 - Remix-specific tooling and documentation are crucial for smooth implementation

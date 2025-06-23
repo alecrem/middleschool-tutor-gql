@@ -12,7 +12,8 @@ export const meta: MetaFunction = () => {
     { title: "MTG Middle School" },
     {
       name: "description",
-      content: "Search Magic: The Gathering cards legal in Middle School format",
+      content:
+        "Search Magic: The Gathering cards legal in Middle School format",
     },
   ];
 };
@@ -49,10 +50,15 @@ export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "2rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-          <h1 style={{ fontSize: "2.5rem", margin: 0 }}>
-            {t("title")}
-          </h1>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "1rem",
+          }}
+        >
+          <h1 style={{ fontSize: "2.5rem", margin: 0 }}>{t("title")}</h1>
           <LanguageSwitcher />
         </div>
         <p
@@ -124,18 +130,16 @@ export default function Index() {
         {searchResult ? (
           <div>
             <div style={{ marginBottom: "1rem", color: "#6b7280" }}>
-              {searchResult.total > searchResult.cards.length ? (
-                t("foundCardsPartial", { 
-                  total: searchResult.total, 
-                  query: query, 
-                  shown: searchResult.cards.length 
-                })
-              ) : (
-                t("foundCards", { 
-                  total: searchResult.total, 
-                  query: query 
-                })
-              )}
+              {searchResult.total > searchResult.cards.length
+                ? t("foundCardsPartial", {
+                    total: searchResult.total,
+                    query: query,
+                    shown: searchResult.cards.length,
+                  })
+                : t("foundCards", {
+                    total: searchResult.total,
+                    query: query,
+                  })}
             </div>
             <CardList cards={searchResult.cards} />
           </div>

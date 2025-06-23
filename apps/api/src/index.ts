@@ -100,22 +100,25 @@ export default async function handler(req: any, res: any) {
   const request = new Request(url, {
     method: req.method,
     headers: req.headers,
-    body: req.method !== 'GET' && req.method !== 'HEAD' ? JSON.stringify(req.body) : undefined,
+    body:
+      req.method !== "GET" && req.method !== "HEAD"
+        ? JSON.stringify(req.body)
+        : undefined,
   });
-  
+
   const response = await app.fetch(request);
-  
+
   res.status(response.status);
-  
+
   // Set headers
   response.headers.forEach((value, key) => {
     res.setHeader(key, value);
   });
-  
+
   // Send body
   const body = await response.text();
   res.send(body);
-};
+}
 
 // For local development - check if this file is being run directly
 if (
