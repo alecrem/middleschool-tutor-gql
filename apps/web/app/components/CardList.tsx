@@ -21,11 +21,15 @@ export function CardList({ cards }: CardListProps) {
         <div
           key={card.oracle_id}
           style={{
-            border: "1px solid #e5e7eb",
+            border: card.perfectMatch 
+              ? "3px solid #374151" 
+              : "1px solid #e5e7eb",
             borderRadius: "8px",
             padding: "1.5rem",
             backgroundColor: "#ffffff",
-            boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
+            boxShadow: card.perfectMatch
+              ? "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+              : "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
           }}
         >
           <div
