@@ -47,9 +47,36 @@ export function searchCards(
       card.text.toLowerCase().includes(searchTerm)
   );
 
+  // Sort matches to prioritize perfect matches
+  const sortedMatches = matches.sort((a, b) => {
+    const aNameLower = a.name.toLowerCase();
+    const bNameLower = b.name.toLowerCase();
+    const aNameJa = a.name_ja?.toLowerCase();
+    const bNameJa = b.name_ja?.toLowerCase();
+
+    // Check for perfect matches in English name
+    const aExactMatch = aNameLower === searchTerm;
+    const bExactMatch = bNameLower === searchTerm;
+
+    // Check for perfect matches in Japanese name
+    const aExactMatchJa = aNameJa === searchTerm;
+    const bExactMatchJa = bNameJa === searchTerm;
+
+    // Perfect matches (either English or Japanese) come first
+    if ((aExactMatch || aExactMatchJa) && !(bExactMatch || bExactMatchJa)) {
+      return -1;
+    }
+    if ((bExactMatch || bExactMatchJa) && !(aExactMatch || aExactMatchJa)) {
+      return 1;
+    }
+
+    // If both or neither are perfect matches, maintain original order
+    return 0;
+  });
+
   return {
-    cards: matches.slice(0, limit),
-    total: matches.length,
+    cards: sortedMatches.slice(0, limit),
+    total: sortedMatches.length,
   };
 }
 
