@@ -47,26 +47,24 @@ export function searchCards(
       card.text.toLowerCase().includes(searchTerm)
   );
 
-  // Sort matches to prioritize perfect matches
-  const sortedMatches = matches.sort((a, b) => {
-    const aNameLower = a.name.toLowerCase();
-    const bNameLower = b.name.toLowerCase();
-    const aNameJa = a.name_ja?.toLowerCase();
-    const bNameJa = b.name_ja?.toLowerCase();
+  // Add perfectMatch flag and sort matches to prioritize perfect matches
+  const cardsWithPerfectMatch = matches.map((card) => {
+    const cardNameLower = card.name.toLowerCase();
+    const cardNameJa = card.name_ja?.toLowerCase();
+    
+    const isExactMatch = cardNameLower === searchTerm;
+    const isExactMatchJa = cardNameJa === searchTerm;
+    const perfectMatch = isExactMatch || isExactMatchJa;
+    
+    return { ...card, perfectMatch };
+  });
 
-    // Check for perfect matches in English name
-    const aExactMatch = aNameLower === searchTerm;
-    const bExactMatch = bNameLower === searchTerm;
-
-    // Check for perfect matches in Japanese name
-    const aExactMatchJa = aNameJa === searchTerm;
-    const bExactMatchJa = bNameJa === searchTerm;
-
-    // Perfect matches (either English or Japanese) come first
-    if ((aExactMatch || aExactMatchJa) && !(bExactMatch || bExactMatchJa)) {
+  const sortedMatches = cardsWithPerfectMatch.sort((a, b) => {
+    // Perfect matches come first
+    if (a.perfectMatch && !b.perfectMatch) {
       return -1;
     }
-    if ((bExactMatch || bExactMatchJa) && !(aExactMatch || aExactMatchJa)) {
+    if (b.perfectMatch && !a.perfectMatch) {
       return 1;
     }
 

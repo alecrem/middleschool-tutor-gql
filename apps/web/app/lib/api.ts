@@ -32,6 +32,7 @@ export async function searchCards(
               r
               g
               c
+              perfectMatch
             }
             total
           }

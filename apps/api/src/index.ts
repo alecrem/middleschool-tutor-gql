@@ -38,6 +38,7 @@ const typeDefs = `
     r: Boolean!
     g: Boolean!
     c: Boolean!
+    perfectMatch: Boolean
   }
 
   type CardSearchResult {

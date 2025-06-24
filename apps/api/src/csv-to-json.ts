@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -114,6 +114,9 @@ try {
   const csvContent = readFileSync(csvPath, "utf-8");
   const cards = parseCSV(csvContent);
 
+  // Ensure assets directory exists
+  mkdirSync(dirname(jsonPath), { recursive: true });
+  
   writeFileSync(jsonPath, JSON.stringify(cards, null, 2));
   console.log(`✅ Converted ${cards.length} cards to JSON`);
   console.log(`📁 Saved to: ${jsonPath}`);
