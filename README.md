@@ -22,16 +22,19 @@ middleschool-mono/
 ### Getting Started
 
 1. Install dependencies:
+
    ```bash
    pnpm install
    ```
 
 2. Start development servers:
+
    ```bash
    pnpm dev
    ```
 
    This starts:
+
    - API server on http://localhost:3001
    - Web frontend on http://localhost:3000
 
@@ -40,11 +43,13 @@ middleschool-mono/
 The API is built with Hono and serves a GraphQL endpoint at `/graphql`.
 
 **Available queries:**
+
 - `searchCards(query: String!, limit: Int)` - Search cards by name, type, or text
 - `getCard(oracleId: String!)` - Get a single card by Oracle ID
 - `getCardsByColor(colors: [String!]!)` - Filter cards by mana colors
 
 **Convert CSV data:**
+
 ```bash
 cd apps/api
 pnpm run convert-data
@@ -72,15 +77,18 @@ cp .env.example .env.local
 ```
 
 **Required variables:**
+
 - `API_URL` - GraphQL API endpoint URL
 
 **For local development:**
+
 ```
 API_URL=http://localhost:3001/graphql
 ```
 
 **For Vercel deployment:**
 Set in Vercel dashboard or CLI:
+
 ```bash
 vercel env add API_URL
 # Enter: https://your-api-domain.vercel.app/graphql

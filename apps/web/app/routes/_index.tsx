@@ -1,8 +1,10 @@
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, Form, useNavigation } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 import { searchCards } from "../lib/api";
 import { CardList } from "../components/CardList";
+import { LanguageSwitcher } from "../components/LanguageSwitcher";
 import type { CardSearchResult } from "../lib/types";
 
 export const meta: MetaFunction = () => {
@@ -39,6 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Index() {
   const { searchResult, query, error } = useLoaderData<typeof loader>();
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const isSearching =
     navigation.state === "loading" &&
@@ -47,14 +50,21 @@ export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "2rem" }}>
-        <h1 style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>
-          MTG Middle School
-        </h1>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "1rem",
+          }}
+        >
+          <h1 style={{ fontSize: "2.5rem", margin: 0 }}>{t("title")}</h1>
+          <LanguageSwitcher />
+        </div>
         <p
           style={{ fontSize: "1.1rem", color: "#6b7280", marginBottom: "2rem" }}
         >
-          Search and explore Magic: The Gathering cards legal in the Middle
-          School format
+          {t("description")}
         </p>
 
         <div
@@ -66,7 +76,7 @@ export default function Index() {
           }}
         >
           <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>
-            Search Cards
+            {t("searchCards")}
           </h2>
           <Form method="get">
             <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -74,7 +84,7 @@ export default function Index() {
                 type="text"
                 name="query"
                 defaultValue={query}
-                placeholder="Search for cards..."
+                placeholder={t("searchPlaceholder")}
                 style={{
                   flex: 1,
                   padding: "0.75rem",
@@ -96,7 +106,7 @@ export default function Index() {
                   cursor: isSearching ? "not-allowed" : "pointer",
                 }}
               >
-                {isSearching ? "Searching..." : "Search"}
+                {isSearching ? t("searching") : t("search")}
               </button>
             </div>
           </Form>
@@ -120,22 +130,22 @@ export default function Index() {
         {searchResult ? (
           <div>
             <div style={{ marginBottom: "1rem", color: "#6b7280" }}>
-              {searchResult.total > searchResult.cards.length ? (
-                <>
-                  Found {searchResult.total} cards for "{query}" — showing the
-                  first {searchResult.cards.length}
-                </>
-              ) : (
-                <>
-                  Found {searchResult.total} cards for "{query}"
-                </>
-              )}
+              {searchResult.total > searchResult.cards.length
+                ? t("foundCardsPartial", {
+                    total: searchResult.total,
+                    query: query,
+                    shown: searchResult.cards.length,
+                  })
+                : t("foundCards", {
+                    total: searchResult.total,
+                    query: query,
+                  })}
             </div>
             <CardList cards={searchResult.cards} />
           </div>
         ) : (
           <div style={{ textAlign: "center", color: "#6b7280" }}>
-            <p>Enter a card name to get started</p>
+            <p>{t("enterCardName")}</p>
           </div>
         )}
       </div>
