@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import type { MagicCard } from "../lib/types";
+import { generateScryfallUrl } from "../lib/utils";
 
 interface CardListProps {
   cards: MagicCard[];
@@ -51,7 +52,18 @@ export function CardList({ cards }: CardListProps) {
               {i18n.language === "ja" &&
                 card.name_ja !== null &&
                 `${card.name_ja} • `}
-              {card.name}
+              <a
+                href={generateScryfallUrl(card.name)}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: "inherit",
+                  textDecoration: "underline",
+                  textDecorationColor: "#9ca3af",
+                }}
+              >
+                {card.name}
+              </a>
               {card.banned && (
                 <span style={{ color: "#dc2626", marginLeft: "0.5rem" }}>
                   (Banned)
