@@ -1,18 +1,18 @@
 import { useTranslation } from "react-i18next";
 import { useRef, useEffect, useState } from "react";
 import type { MagicCard } from "../lib/types";
-import { generateScryfallUrl, generateScryfallImageUrl } from "../lib/utils";
+import { generateScryfallUrl } from "../lib/utils";
 
 interface CardListProps {
   cards: MagicCard[];
 }
 
 interface CardImageProps {
-  oracleId: string;
+  imageUrl: string;
   cardName: string;
 }
 
-function CardImage({ oracleId, cardName }: CardImageProps) {
+function CardImage({ imageUrl, cardName }: CardImageProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ function CardImage({ oracleId, cardName }: CardImageProps) {
     <div ref={imgRef} style={{ width: "146px", height: "204px", flexShrink: 0 }}>
       {isVisible && !hasError && (
         <img
-          src={generateScryfallImageUrl(oracleId)}
+          src={imageUrl}
           alt={cardName}
           onError={() => setHasError(true)}
           style={{
@@ -197,7 +197,7 @@ export function CardList({ cards }: CardListProps) {
             </p>
           )}
           </div>
-          <CardImage oracleId={card.oracle_id} cardName={card.name} />
+          <CardImage imageUrl={card.image_small} cardName={card.name} />
         </div>
       ))}
     </div>

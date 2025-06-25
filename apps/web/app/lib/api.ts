@@ -33,6 +33,7 @@ export async function searchCards(
               g
               c
               perfectMatch
+              image_small
             }
             total
           }
