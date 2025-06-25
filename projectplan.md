@@ -1,53 +1,74 @@
-# Project Plan: Issue #5 - Highlight Perfect Matches in Card Search
+# Project Plan: Issue #7 - Add Scryfall Links to Card Search Results
 
 ## Problem Statement
-When users search for cards, perfect matches (exact name matches) should be visually distinguished from partial matches by using a more solid border on the card.
+Add clickable links to Scryfall for every card in the search results. The English card name should be a clickable link that opens the card on Scryfall, using the specific URL format with search preferences.
+
+## Requirements Analysis
+- **URL Format**: `https://scryfall.com/search?q=prefer%3Aoldest%20!%22English%20Card%20Name%22`
+- **Language Behavior**: Always use English name for links, even in Japanese UI mode
+- **Link Target**: Only the English card name becomes clickable
+- **URL Encoding**: Card names must be properly URL-encoded
 
 ## Current State Analysis
-- Cards are displayed in a grid layout using `CardList.tsx` component
-- Individual cards have light gray borders (`border: '1px solid #e5e7eb'`)
-- All styling is done inline using React `style` prop
-- Perfect match logic already exists in API (`apps/api/src/data.ts:50-81`)
-- Cards show name, type, rarity, and other metadata in a clean layout
+- Cards displayed in `CardList.tsx` with English/Japanese name handling
+- Current name display logic shows Japanese name first when in Japanese mode
+- Names are currently plain text in `<h3>` tags
+- Internationalization already implemented with `useTranslation` hook
 
 ## Implementation Plan
 
 ### Todo Items
-- [x] Create branch for issue #5 - card highlight feature
-- [x] Research existing card UI components and styling
-- [ ] Understand how perfect matches are identified
-- [ ] Implement UI highlighting for perfect matches
-- [ ] Test visual changes
+- [x] Create branch for issue #7 - Scryfall links
+- [ ] Analyze current CardList component structure
+- [ ] Create utility function for Scryfall URL generation
+- [ ] Update CardList to make English names clickable links
+- [ ] Test links with various card names and URL encoding
 
 ### Technical Approach
 
-1. **Perfect Match Detection**: 
-   - API already sorts perfect matches first in `searchCards` function
-   - Need to pass perfect match status to frontend
-   - Add `isExactMatch` field to card data or detect client-side
+1. **URL Generation Utility**:
+   - Create function to generate Scryfall URLs with proper encoding
+   - Handle special characters in card names
+   - Use `encodeURIComponent()` for URL safety
 
-2. **UI Enhancement**:
-   - Modify `CardList.tsx` to apply different border styling
-   - Use more prominent border (thicker, different color) for perfect matches
-   - Maintain existing design aesthetic
+2. **Component Updates**:
+   - Modify `CardList.tsx` to wrap English names in `<a>` tags
+   - Maintain current Japanese name display logic
+   - Add proper styling for links (underline, hover states)
 
-3. **Implementation Strategy**:
-   - **Option A**: Modify API to include `isExactMatch` boolean
-   - **Option B**: Detect perfect matches client-side in CardList component
-   - **Preferred**: Option B for simplicity - detect in frontend
+3. **Link Behavior**:
+   - `target="_blank"` to open in new tab
+   - `rel="noopener noreferrer"` for security
+   - Preserve existing conditional rendering for Japanese names
 
-### Visual Design
-- **Normal cards**: Current styling (1px solid #e5e7eb border)
-- **Perfect matches**: Thicker, more prominent border (2-3px solid #3b82f6 or similar)
-- Keep all other styling consistent
+### Implementation Details
+
+**URL Structure Breakdown**:
+- Base: `https://scryfall.com/search?q=`
+- Preference: `prefer%3Aoldest%20` (prefer:oldest )
+- Search: `!%22{CARD_NAME}%22` (!"Card Name")
+
+**Current Name Display Logic**:
+```jsx
+{i18n.language === "ja" && card.name_ja !== null && `${card.name_ja} • `}
+{card.name}
+```
+
+**Planned Change**:
+```jsx
+{i18n.language === "ja" && card.name_ja !== null && `${card.name_ja} • `}
+<a href={generateScryfallUrl(card.name)} target="_blank" rel="noopener noreferrer">
+  {card.name}
+</a>
+```
 
 ### Files to Modify
-- `apps/web/app/components/CardList.tsx` - Add highlighting logic
-- Potentially `apps/web/app/lib/types.ts` - Add perfect match typing if needed
+- `apps/web/app/components/CardList.tsx` - Add clickable links
+- `apps/web/app/lib/utils.ts` - Add URL generation utility (create if needed)
 
 ## Next Steps
-1. Examine current CardList implementation
-2. Implement client-side perfect match detection
-3. Apply enhanced border styling
-4. Test with various search terms
-5. Create pull request with "Close #5"
+1. Create Scryfall URL generation utility
+2. Update CardList component with clickable English names
+3. Test with various card names and special characters
+4. Verify proper URL encoding and link behavior
+5. Create pull request with "Close #7"
