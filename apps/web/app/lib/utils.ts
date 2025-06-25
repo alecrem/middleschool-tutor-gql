@@ -6,3 +6,4 @@ export function generateScryfallUrl(cardName: string): string {
   // URL encoded: prefer%3Aoldest%20!%22CardName%22
   return `https://scryfall.com/search?q=prefer%3Aoldest%20!%22${encodedName}%22`;
 }
+

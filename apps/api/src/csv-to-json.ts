@@ -21,6 +21,7 @@ interface MagicCard {
   r: boolean;
   g: boolean;
   c: boolean;
+  image_small: string;
 }
 
 function parseCSV(csvContent: string): MagicCard[] {
@@ -65,6 +66,9 @@ function parseCSV(csvContent: string): MagicCard[] {
         case "toughness":
           card[cleanHeader] = value === "" ? null : value;
           break;
+        case "image_small":
+          card[cleanHeader] = value.replace(/^["']|["']$/g, "");
+          break;
         case "index":
           // Skip index column
           break;
@@ -106,7 +110,7 @@ function parseCSVLine(line: string): string[] {
 // Convert CSV to JSON
 const csvPath = join(
   __dirname,
-  "../data/middleschool_extra_fields_with_banned.csv"
+  "../data/middleschool_extra_fields_with_banned_images.csv"
 );
 const jsonPath = join(__dirname, "assets/cards.json");
 

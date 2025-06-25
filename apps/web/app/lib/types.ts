@@ -16,6 +16,7 @@ export interface MagicCard {
   g: boolean;
   c: boolean;
   perfectMatch?: boolean;
+  image_small: string;
 }
 
 export interface CardSearchResult {
