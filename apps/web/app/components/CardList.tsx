@@ -1,9 +1,85 @@
 import { useTranslation } from "react-i18next";
+import { useRef, useEffect, useState } from "react";
 import type { MagicCard } from "../lib/types";
-import { generateScryfallUrl } from "../lib/utils";
+import { generateScryfallUrl, generateScryfallImageUrl } from "../lib/utils";
 
 interface CardListProps {
   cards: MagicCard[];
+}
+
+interface CardImageProps {
+  oracleId: string;
+  cardName: string;
+}
+
+function CardImage({ oracleId, cardName }: CardImageProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const imgRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "50px" }
+    );
+
+    if (imgRef.current) {
+      observer.observe(imgRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={imgRef} style={{ width: "146px", height: "204px", flexShrink: 0 }}>
+      {isVisible && !hasError && (
+        <img
+          src={generateScryfallImageUrl(oracleId)}
+          alt={cardName}
+          onError={() => setHasError(true)}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: "8px",
+            backgroundColor: "#f3f4f6"
+          }}
+        />
+      )}
+      {isVisible && hasError && (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "#f3f4f6",
+            borderRadius: "8px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#6b7280",
+            fontSize: "0.875rem"
+          }}
+        >
+          No image
+        </div>
+      )}
+      {!isVisible && (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "#f3f4f6",
+            borderRadius: "8px"
+          }}
+        />
+      )}
+    </div>
+  );
 }
 
 export function CardList({ cards }: CardListProps) {
@@ -31,8 +107,11 @@ export function CardList({ cards }: CardListProps) {
             boxShadow: card.perfectMatch
               ? "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
               : "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
+            display: "flex",
+            gap: "1.5rem"
           }}
         >
+          <div style={{ flex: 1 }}>
           <div
             style={{
               display: "flex",
@@ -117,6 +196,8 @@ export function CardList({ cards }: CardListProps) {
               {card.text}
             </p>
           )}
+          </div>
+          <CardImage oracleId={card.oracle_id} cardName={card.name} />
         </div>
       ))}
     </div>
