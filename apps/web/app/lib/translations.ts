@@ -2,9 +2,9 @@
 export const translations = {
   en: {
     common: {
-      title: "MTG Middle School",
-      description: "Search and explore Magic: The Gathering cards legal in the Middle School format",
-      searchCards: "Search Cards",
+      title: "Middle School Tutor",
+      description: 'Enter any English or Japanese text to find all <a href="https://www.eternalcentral.com/middleschoolrules/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">Middle School legal</a> card titles which include it.',
+      searchCards: "Card Search",
       searchPlaceholder: "Search for cards...",
       search: "Search",
       searching: "Searching...",
@@ -12,12 +12,17 @@ export const translations = {
       foundCards: 'Found {{total}} cards for "{{query}}"',
       foundCardsPartial: 'Found {{total}} cards for "{{query}}" — showing the first {{shown}}',
       enterCardName: "Enter a card name to get started",
+      noCardsFound: "No cards found. Try a different search term.",
+      noImage: "No image",
+      banned: "Banned",
+      legalDisclaimer: "Portions of Middle School Tutor are unofficial Fan Content permitted under the Wizards of the Coast Fan Content Policy. The literal and graphical information presented on this site about Magic: The Gathering, including card images, mana symbols, and Oracle text, is copyright Wizards of the Coast, LLC, a subsidiary of Hasbro, Inc. Middle School Tutor is not produced by or endorsed by Wizards of the Coast. The GitHub and Twitter logos are copyright their respective owners. Middle School Tutor is not produced by or endorsed by these services.",
+      footerLicense: "All other content MIT licensed since 2022 by",
     },
   },
   ja: {
     common: {
-      title: "MTG Middle School",
-      description: "Middle School フォーマットで使用可能なマジック：ザ・ギャザリングのカードを検索・探索",
+      title: "Middle School Tutor",
+      description: 'カードの英語名か日本語名を入力し始めると <a href="https://www.eternalcentral.com/middleschoolrules/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">ミドルスクールで使用可能</a> なカード名が引っかかります。',
       searchCards: "カード検索",
       searchPlaceholder: "カードを検索...",
       search: "検索",
@@ -26,6 +31,11 @@ export const translations = {
       foundCards: "「{{query}}」で{{total}}枚のカードが見つかりました",
       foundCardsPartial: "「{{query}}」で{{total}}枚のカードが見つかりました — 最初の{{shown}}枚を表示",
       enterCardName: "カード名を入力して開始してください",
+      noCardsFound: "カードが見つかりませんでした。別の検索語をお試しください。",
+      noImage: "画像なし",
+      banned: "禁止",
+      legalDisclaimer: "Portions of Middle School Tutor are unofficial Fan Content permitted under the Wizards of the Coast Fan Content Policy. The literal and graphical information presented on this site about Magic: The Gathering, including card images, mana symbols, and Oracle text, is copyright Wizards of the Coast, LLC, a subsidiary of Hasbro, Inc. Middle School Tutor is not produced by or endorsed by Wizards of the Coast. The GitHub and Twitter logos are copyright their respective owners. Middle School Tutor is not produced by or endorsed by these services.",
+      footerLicense: "All other content MIT licensed since 2022 by",
     },
   },
 } as const;
