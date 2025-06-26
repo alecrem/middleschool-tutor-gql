@@ -13,6 +13,7 @@ interface CardImageProps {
 }
 
 function CardImage({ imageUrl, cardName }: CardImageProps) {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLDivElement>(null);
@@ -65,7 +66,7 @@ function CardImage({ imageUrl, cardName }: CardImageProps) {
             fontSize: "0.875rem"
           }}
         >
-          No image
+          {t("noImage")}
         </div>
       )}
       {!isVisible && (
@@ -83,11 +84,11 @@ function CardImage({ imageUrl, cardName }: CardImageProps) {
 }
 
 export function CardList({ cards }: CardListProps) {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   if (cards.length === 0) {
     return (
       <div style={{ textAlign: "center", padding: "2rem", color: "#6b7280" }}>
-        No cards found. Try a different search term.
+        {t("noCardsFound")}
       </div>
     );
   }
@@ -145,7 +146,7 @@ export function CardList({ cards }: CardListProps) {
               </a>
               {card.banned && (
                 <span style={{ color: "#dc2626", marginLeft: "0.5rem" }}>
-                  (Banned)
+                  ({t("banned")})
                 </span>
               )}
             </h3>

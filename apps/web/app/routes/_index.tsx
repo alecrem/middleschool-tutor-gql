@@ -5,15 +5,16 @@ import { useTranslation } from "react-i18next";
 import { searchCards } from "../lib/api";
 import { CardList } from "../components/CardList";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
+import { Footer } from "../components/Footer";
 import type { CardSearchResult } from "../lib/types";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "MTG Middle School" },
+    { title: "Middle School Tutor" },
     {
       name: "description",
       content:
-        "Search Magic: The Gathering cards legal in Middle School format",
+        "Enter any English or Japanese text to find all Middle School legal card titles which include it.",
     },
   ];
 };
@@ -34,7 +35,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return json({
       searchResult: { cards: [], total: 0 } as CardSearchResult,
       query,
-      error: "Failed to search cards. Please try again.",
+      error: "searchError", // Pass translation key instead of hardcoded text
     });
   }
 }
@@ -63,9 +64,8 @@ export default function Index() {
         </div>
         <p
           style={{ fontSize: "1.1rem", color: "#6b7280", marginBottom: "2rem" }}
-        >
-          {t("description")}
-        </p>
+          dangerouslySetInnerHTML={{ __html: t("description") }}
+        />
 
         <div
           style={{
@@ -123,7 +123,7 @@ export default function Index() {
               border: "1px solid #fecaca",
             }}
           >
-            {error}
+            {t(error)}
           </div>
         )}
 
@@ -149,6 +149,7 @@ export default function Index() {
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 }
