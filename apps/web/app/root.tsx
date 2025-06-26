@@ -30,6 +30,31 @@ export default function App() {
         <Links />
       </head>
       <body>
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            * {
+              box-sizing: border-box;
+            }
+            body {
+              margin: 0;
+              overflow-x: hidden;
+            }
+            @media (max-width: 640px) {
+              body {
+                font-size: 14px;
+              }
+              .card-layout {
+                flex-direction: column !important;
+              }
+              .card-image {
+                width: 200px !important;
+                height: 280px !important;
+                max-width: 60vw !important;
+                align-self: center !important;
+              }
+            }
+          `
+        }} />
         <Outlet />
         <ScrollRestoration />
         <Scripts />
