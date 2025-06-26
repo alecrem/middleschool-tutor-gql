@@ -50,16 +50,18 @@ export default function Index() {
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "2rem" }}>
+      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "1rem" }}>
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: "1rem",
+            flexWrap: "wrap",
+            gap: "1rem"
           }}
         >
-          <h1 style={{ fontSize: "2.5rem", margin: 0 }}>{t("title")}</h1>
+          <h1 style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)", margin: 0 }}>{t("title")}</h1>
           <LanguageSwitcher />
         </div>
         <p
@@ -79,7 +81,7 @@ export default function Index() {
             {t("searchCards")}
           </h2>
           <Form method="get">
-            <div style={{ display: "flex", gap: "0.5rem" }}>
+            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
               <input
                 type="text"
                 name="query"
@@ -87,6 +89,7 @@ export default function Index() {
                 placeholder={t("searchPlaceholder")}
                 style={{
                   flex: 1,
+                  minWidth: "200px",
                   padding: "0.75rem",
                   border: "1px solid #d1d5db",
                   borderRadius: "6px",
