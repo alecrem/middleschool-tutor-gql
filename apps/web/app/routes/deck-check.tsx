@@ -7,7 +7,9 @@ import { validateCards } from "../lib/api";
 import { parseDeckList } from "../lib/deck-parser";
 import { generateScryfallUrl } from "../lib/utils";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
+import { ThemeSwitcher } from "../components/ThemeSwitcher";
 import { Footer } from "../components/Footer";
+import { useThemedStyles } from "../hooks/useTheme";
 import type { DeckValidationResult } from "../lib/types";
 
 export const meta: MetaFunction = () => {
@@ -60,6 +62,7 @@ export default function DeckCheck() {
   const { results, deckList, error } = useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation();
   const navigation = useNavigation();
+  const { colors } = useThemedStyles();
   const isValidating =
     navigation.state === "loading" &&
     navigation.location?.search.includes("decklist=");
@@ -96,7 +99,14 @@ export default function DeckCheck() {
   };
 
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
+    <div style={{ 
+      fontFamily: "system-ui, sans-serif", 
+      lineHeight: "1.8",
+      backgroundColor: colors.background.primary,
+      color: colors.text.primary,
+      minHeight: "100vh",
+      transition: "background-color 0.2s ease, color 0.2s ease"
+    }}>
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "1rem" }}>
         <div
           style={{
@@ -111,7 +121,10 @@ export default function DeckCheck() {
           <h1 style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)", margin: 0 }}>
             {t("title")}
           </h1>
-          <LanguageSwitcher />
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+            <LanguageSwitcher />
+            <ThemeSwitcher />
+          </div>
         </div>
 
         <div style={{ marginBottom: "2rem" }}>
@@ -119,7 +132,7 @@ export default function DeckCheck() {
             to="/"
             aria-label={t("cardSearchLink")}
             style={{
-              color: "#3b82f6",
+              color: colors.text.link,
               textDecoration: "underline",
               fontSize: "0.875rem",
             }}
@@ -130,7 +143,7 @@ export default function DeckCheck() {
 
         <div
           style={{
-            backgroundColor: "#f9fafb",
+            backgroundColor: colors.background.secondary,
             padding: "1.5rem",
             borderRadius: "8px",
             marginBottom: "2rem",
@@ -151,11 +164,13 @@ export default function DeckCheck() {
                 style={{
                   width: "100%",
                   padding: "0.75rem",
-                  border: "1px solid #d1d5db",
+                  border: `1px solid ${colors.border.primary}`,
                   borderRadius: "6px",
                   fontSize: "0.875rem",
                   fontFamily: "monospace",
                   resize: "vertical",
+                  backgroundColor: colors.background.primary,
+                  color: colors.text.primary,
                 }}
               />
             </div>
@@ -164,8 +179,8 @@ export default function DeckCheck() {
               disabled={isValidating}
               style={{
                 padding: "0.75rem 1.5rem",
-                backgroundColor: isValidating ? "#9ca3af" : "#3b82f6",
-                color: "white",
+                backgroundColor: isValidating ? colors.button.disabled : colors.button.primary,
+                color: colors.button.text,
                 border: "none",
                 borderRadius: "6px",
                 fontSize: "1rem",
@@ -180,12 +195,12 @@ export default function DeckCheck() {
         {error && (
           <div
             style={{
-              backgroundColor: "#fef2f2",
-              color: "#dc2626",
+              backgroundColor: colors.background.error,
+              color: colors.text.error,
               padding: "1rem",
               borderRadius: "6px",
               marginBottom: "2rem",
-              border: "1px solid #fecaca",
+              border: `1px solid ${colors.border.error}`,
             }}
           >
             {t("deckValidationError")}
@@ -215,9 +230,9 @@ export default function DeckCheck() {
                 disabled={copyStatus !== 'idle'}
                 style={{
                   padding: "0.5rem 1rem",
-                  backgroundColor: copyStatus === 'success' ? "#10b981" : copyStatus === 'error' ? "#ef4444" : "#f3f4f6",
-                  color: copyStatus === 'success' || copyStatus === 'error' ? "white" : "#374151",
-                  border: "1px solid #d1d5db",
+                  backgroundColor: copyStatus === 'success' ? colors.button.success : copyStatus === 'error' ? colors.button.error : colors.background.secondary,
+                  color: copyStatus === 'success' || copyStatus === 'error' ? colors.button.text : colors.text.primary,
+                  border: `1px solid ${colors.border.primary}`,
                   borderRadius: "6px",
                   fontSize: "0.875rem",
                   cursor: copyStatus === 'idle' ? "pointer" : "default",
@@ -230,10 +245,10 @@ export default function DeckCheck() {
 
             <div
               style={{
-                border: "1px solid #e5e7eb",
+                border: `1px solid ${colors.border.primary}`,
                 borderRadius: "8px",
                 padding: "1rem",
-                backgroundColor: "#ffffff",
+                backgroundColor: colors.background.card,
               }}
             >
               <div
@@ -249,7 +264,7 @@ export default function DeckCheck() {
                 {results.map((result, index) => (
                   <>
                     <div key={`${index}-en`} style={{ 
-                      color: result.banned ? "#dc2626" : !result.found ? "#f59e0b" : "inherit" 
+                      color: result.banned ? colors.accent.red : !result.found ? colors.accent.orange : "inherit" 
                     }}>
                       {result.quantity}{" "}
                       {result.found && result.matchedName ? (
@@ -260,7 +275,7 @@ export default function DeckCheck() {
                           style={{
                             color: "inherit",
                             textDecoration: "underline",
-                            textDecorationColor: "#9ca3af",
+                            textDecorationColor: colors.text.secondary,
                           }}
                         >
                           {result.matchedName}
@@ -271,7 +286,7 @@ export default function DeckCheck() {
                     </div>
                     {i18n.language === "ja" && (
                       <div key={`${index}-ja`} style={{ 
-                        color: result.banned ? "#dc2626" : !result.found ? "#f59e0b" : "inherit" 
+                        color: result.banned ? colors.accent.red : !result.found ? colors.accent.orange : "inherit" 
                       }}>
                         {result.quantity}{" "}
                         {result.found && result.matchedNameJa
@@ -283,12 +298,12 @@ export default function DeckCheck() {
                     )}
                     <div key={`${index}-status`}>
                       {result.banned && (
-                        <span style={{ color: "#dc2626", fontWeight: "600" }}>
+                        <span style={{ color: colors.accent.red, fontWeight: "600" }}>
                           {t("bannedLabel")}
                         </span>
                       )}
                       {!result.found && (
-                        <span style={{ color: "#f59e0b", fontWeight: "600" }}>
+                        <span style={{ color: colors.accent.orange, fontWeight: "600" }}>
                           {t("notFound")}
                         </span>
                       )}

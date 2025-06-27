@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useRef, useEffect, useState } from "react";
 import type { MagicCard } from "../lib/types";
 import { generateScryfallUrl } from "../lib/utils";
+import { useThemedStyles } from "../hooks/useTheme";
 
 interface CardListProps {
   cards: MagicCard[];
@@ -14,6 +15,7 @@ interface CardImageProps {
 
 function CardImage({ imageUrl, cardName }: CardImageProps) {
   const { t } = useTranslation();
+  const { colors } = useThemedStyles();
   const [isVisible, setIsVisible] = useState(false);
   const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLDivElement>(null);
@@ -54,7 +56,7 @@ function CardImage({ imageUrl, cardName }: CardImageProps) {
             height: "100%",
             objectFit: "cover",
             borderRadius: "8px",
-            backgroundColor: "#f3f4f6"
+            backgroundColor: colors.background.secondary
           }}
         />
       )}
@@ -63,12 +65,12 @@ function CardImage({ imageUrl, cardName }: CardImageProps) {
           style={{
             width: "100%",
             height: "100%",
-            backgroundColor: "#f3f4f6",
+            backgroundColor: colors.background.secondary,
             borderRadius: "8px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#6b7280",
+            color: colors.text.secondary,
             fontSize: "0.875rem"
           }}
         >
@@ -80,7 +82,7 @@ function CardImage({ imageUrl, cardName }: CardImageProps) {
           style={{
             width: "100%",
             height: "100%",
-            backgroundColor: "#f3f4f6",
+            backgroundColor: colors.background.secondary,
             borderRadius: "8px"
           }}
         />
@@ -91,9 +93,10 @@ function CardImage({ imageUrl, cardName }: CardImageProps) {
 
 export function CardList({ cards }: CardListProps) {
   const { i18n, t } = useTranslation();
+  const { colors } = useThemedStyles();
   if (cards.length === 0) {
     return (
-      <div style={{ textAlign: "center", padding: "2rem", color: "#6b7280" }}>
+      <div style={{ textAlign: "center", padding: "2rem", color: colors.text.secondary }}>
         {t("noCardsFound")}
       </div>
     );
@@ -106,11 +109,11 @@ export function CardList({ cards }: CardListProps) {
           key={card.oracle_id}
           style={{
             border: card.perfectMatch 
-              ? "3px solid #374151" 
-              : "1px solid #e5e7eb",
+              ? `3px solid ${colors.text.primary}` 
+              : `1px solid ${colors.border.primary}`,
             borderRadius: "8px",
             padding: "1rem",
-            backgroundColor: "#ffffff",
+            backgroundColor: colors.background.card,
             boxShadow: card.perfectMatch
               ? "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
               : "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
@@ -142,7 +145,7 @@ export function CardList({ cards }: CardListProps) {
                     fontSize: "1.125rem",
                     fontWeight: "600",
                     margin: 0,
-                    color: card.banned ? "#dc2626" : "#111827",
+                    color: card.banned ? colors.accent.red : colors.text.primary,
                     minWidth: 0,
                     wordBreak: "break-word"
                   }}
@@ -157,13 +160,13 @@ export function CardList({ cards }: CardListProps) {
                     style={{
                       color: "inherit",
                       textDecoration: "underline",
-                      textDecorationColor: "#9ca3af",
+                      textDecorationColor: colors.text.secondary,
                     }}
                   >
                     {card.name}
                   </a>
                   {card.banned && (
-                    <span style={{ color: "#dc2626", marginLeft: "0.5rem" }}>
+                    <span style={{ color: colors.accent.red, marginLeft: "0.5rem" }}>
                       ({t("banned")})
                     </span>
                   )}
@@ -184,7 +187,7 @@ export function CardList({ cards }: CardListProps) {
                   gap: "0.5rem",
                   marginBottom: "0.75rem",
                   fontSize: "0.875rem",
-                  color: "#6b7280",
+                  color: colors.text.secondary,
                   flexWrap: "wrap"
                 }}
               >
@@ -208,7 +211,7 @@ export function CardList({ cards }: CardListProps) {
                   style={{
                     fontSize: "0.875rem",
                     lineHeight: "1.5",
-                    color: "#4b5563",
+                    color: colors.text.secondary,
                     margin: 0,
                     whiteSpace: "pre-wrap",
                     wordBreak: "break-word"

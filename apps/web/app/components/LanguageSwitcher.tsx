@@ -1,7 +1,9 @@
 import { useTranslation } from "react-i18next";
+import { useThemedStyles } from "../hooks/useTheme";
 
 export function LanguageSwitcher() {
   const { i18n } = useTranslation();
+  const { colors } = useThemedStyles();
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     i18n.changeLanguage(e.target.value);
@@ -13,10 +15,13 @@ export function LanguageSwitcher() {
       onChange={handleLanguageChange}
       style={{
         padding: "0.5rem",
-        border: "1px solid #d1d5db",
+        border: `1px solid ${colors.border.primary}`,
         borderRadius: "6px",
         fontSize: "0.875rem",
-        backgroundColor: "white",
+        backgroundColor: colors.background.secondary,
+        color: colors.text.primary,
+        cursor: "pointer",
+        outline: "none",
       }}
     >
       <option value="en">English</option>
