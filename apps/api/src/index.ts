@@ -52,6 +52,7 @@ const typeDefs = `
     found: Boolean!
     banned: Boolean!
     matchedName: String
+    matchedNameJa: String
   }
 
   type Query {

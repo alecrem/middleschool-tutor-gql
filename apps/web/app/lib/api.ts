@@ -58,7 +58,7 @@ export async function searchCards(
 
 export async function validateCards(
   cardNames: string[]
-): Promise<Array<{ name: string; found: boolean; banned: boolean; matchedName: string | null }>> {
+): Promise<Array<{ name: string; found: boolean; banned: boolean; matchedName: string | null; matchedNameJa: string | null }>> {
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
@@ -72,6 +72,7 @@ export async function validateCards(
             found
             banned
             matchedName
+            matchedNameJa
           }
         }
       `,

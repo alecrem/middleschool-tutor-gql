@@ -110,7 +110,7 @@ export function getCardsByColor(colors: string[]): MagicCard[] {
 
 export function validateCards(
   cardNames: string[]
-): Array<{ name: string; found: boolean; banned: boolean; matchedName: string | null }> {
+): Array<{ name: string; found: boolean; banned: boolean; matchedName: string | null; matchedNameJa: string | null }> {
   const cards = loadCards();
   
   return cardNames.map((cardName) => {
@@ -129,6 +129,7 @@ export function validateCards(
       found: !!foundCard,
       banned: foundCard?.banned ?? false,
       matchedName: foundCard?.name ?? null,
+      matchedNameJa: foundCard?.name_ja ?? null,
     };
   });
 }

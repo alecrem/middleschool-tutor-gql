@@ -35,4 +35,5 @@ export interface DeckValidationResult {
   found: boolean;
   banned: boolean;
   matchedName: string | null;
+  matchedNameJa: string | null;
 }

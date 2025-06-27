@@ -58,29 +58,28 @@ export default function Index() {
             alignItems: "center",
             marginBottom: "1rem",
             flexWrap: "wrap",
-            gap: "1rem"
+            gap: "1rem",
           }}
         >
-          <h1 style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)", margin: 0 }}>{t("title")}</h1>
+          <h1 style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)", margin: 0 }}>
+            {t("title")}
+          </h1>
           <LanguageSwitcher />
         </div>
 
         <div style={{ marginBottom: "2rem" }}>
           <Link
             to="/deck-check"
+            aria-label={t("deckCheckLink")}
             style={{
               color: "#3b82f6",
               textDecoration: "underline",
-              fontSize: "0.875rem"
+              fontSize: "0.875rem",
             }}
           >
-            {t("deckCheck")} →
+            {t("deckCheckLink")}
           </Link>
         </div>
-        <p
-          style={{ fontSize: "1.1rem", color: "#6b7280", marginBottom: "2rem" }}
-          dangerouslySetInnerHTML={{ __html: t("description") }}
-        />
 
         <div
           style={{
@@ -90,9 +89,9 @@ export default function Index() {
             marginBottom: "2rem",
           }}
         >
-          <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>
-            {t("searchCards")}
-          </h2>
+          <h2>{t("searchCards")}</h2>
+          <p dangerouslySetInnerHTML={{ __html: t("description") }} />
+
           <Form method="get">
             <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
               <input

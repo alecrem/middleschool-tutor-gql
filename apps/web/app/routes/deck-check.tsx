@@ -28,17 +28,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   try {
     const entries = parseDeckList(deckList);
-    const cardNames = entries.map(entry => entry.name);
+    const cardNames = entries.map((entry) => entry.name);
     const validationResults = await validateCards(cardNames);
-    
-    const results: DeckValidationResult[] = entries.map(entry => {
-      const validation = validationResults.find(v => v.name === entry.name);
+
+    const results: DeckValidationResult[] = entries.map((entry) => {
+      const validation = validationResults.find((v) => v.name === entry.name);
       return {
         name: entry.name,
         quantity: entry.quantity,
         found: validation?.found ?? false,
         banned: validation?.banned ?? false,
         matchedName: validation?.matchedName ?? null,
+        matchedNameJa: validation?.matchedNameJa ?? null,
       };
     });
 
@@ -55,14 +56,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function DeckCheck() {
   const { results, deckList, error } = useLoaderData<typeof loader>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigation = useNavigation();
   const isValidating =
     navigation.state === "loading" &&
     navigation.location?.search.includes("decklist=");
 
-  const bannedCards = results?.filter(result => result.banned) ?? [];
-  const notFoundCards = results?.filter(result => !result.found) ?? [];
+  const bannedCards = results?.filter((result) => result.banned) ?? [];
+  const notFoundCards = results?.filter((result) => !result.found) ?? [];
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
@@ -74,11 +75,11 @@ export default function DeckCheck() {
             alignItems: "center",
             marginBottom: "1rem",
             flexWrap: "wrap",
-            gap: "1rem"
+            gap: "1rem",
           }}
         >
           <h1 style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)", margin: 0 }}>
-            {t("deckCheck")}
+            {t("title")}
           </h1>
           <LanguageSwitcher />
         </div>
@@ -86,19 +87,16 @@ export default function DeckCheck() {
         <div style={{ marginBottom: "2rem" }}>
           <Link
             to="/"
+            aria-label={t("cardSearchLink")}
             style={{
               color: "#3b82f6",
               textDecoration: "underline",
-              fontSize: "0.875rem"
+              fontSize: "0.875rem",
             }}
           >
-            ← {t("backToSearch")}
+            {t("cardSearchLink")}
           </Link>
         </div>
-
-        <p style={{ fontSize: "1.1rem", color: "#6b7280", marginBottom: "2rem" }}>
-          {t("deckCheckDescription")}
-        </p>
 
         <div
           style={{
@@ -110,17 +108,10 @@ export default function DeckCheck() {
         >
           <Form method="get">
             <div style={{ marginBottom: "1rem" }}>
-              <label
-                htmlFor="decklist"
-                style={{
-                  display: "block",
-                  fontSize: "1rem",
-                  fontWeight: "500",
-                  marginBottom: "0.5rem"
-                }}
-              >
-                {t("deckCheck")}
-              </label>
+              <h2>{t("deckCheck")}</h2>
+              <p
+                dangerouslySetInnerHTML={{ __html: t("deckCheckDescription") }}
+              />
               <textarea
                 id="decklist"
                 name="decklist"
@@ -174,38 +165,13 @@ export default function DeckCheck() {
         {results && (
           <div>
             <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>
-              {t("deckResults")}
+              {t("deckResults")}:{" "}
+              {bannedCards.length + notFoundCards.length === 0
+                ? t("deckValid")
+                : `${bannedCards.length + notFoundCards.length} ${t(
+                    "cardsNotAllowed"
+                  )}`}
             </h2>
-            
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1rem",
-                marginBottom: "2rem",
-                padding: "1rem",
-                backgroundColor: "#f9fafb",
-                borderRadius: "8px"
-              }}
-            >
-              <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: "1.5rem", fontWeight: "600", color: "#dc2626" }}>
-                  {bannedCards.length}
-                </div>
-                <div style={{ fontSize: "0.875rem", color: "#6b7280" }}>
-                  {t("bannedCards", { count: bannedCards.length })}
-                </div>
-              </div>
-              
-              <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: "1.5rem", fontWeight: "600", color: "#f59e0b" }}>
-                  {notFoundCards.length}
-                </div>
-                <div style={{ fontSize: "0.875rem", color: "#6b7280" }}>
-                  {t("notFoundCards", { count: notFoundCards.length })}
-                </div>
-              </div>
-            </div>
 
             <div
               style={{
@@ -215,37 +181,47 @@ export default function DeckCheck() {
                 backgroundColor: "#ffffff",
               }}
             >
-              <h3 style={{ fontSize: "1.125rem", marginBottom: "1rem", fontWeight: "600" }}>
-                Deck List
-              </h3>
-              <div style={{ fontFamily: "monospace", fontSize: "0.875rem" }}>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns:
+                    i18n.language === "ja" ? "1fr 1fr auto" : "1fr auto",
+                  gap: "0.5rem 1rem",
+                  fontFamily: "monospace",
+                  fontSize: "0.875rem",
+                }}
+              >
                 {results.map((result, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      padding: "0.25rem 0",
-                      borderBottom: index < results.length - 1 ? "1px solid #f3f4f6" : "none"
-                    }}
-                  >
-                    <span>
-                      {result.quantity} {result.found && result.matchedName ? result.matchedName : result.name}
-                    </span>
-                    <span>
+                  <>
+                    <div key={`${index}-en`}>
+                      {result.quantity}{" "}
+                      {result.found && result.matchedName
+                        ? result.matchedName
+                        : result.name}
+                    </div>
+                    {i18n.language === "ja" && (
+                      <div key={`${index}-ja`}>
+                        {result.quantity}{" "}
+                        {result.found && result.matchedNameJa
+                          ? result.matchedNameJa
+                          : result.found && result.matchedName
+                          ? result.matchedName
+                          : result.name}
+                      </div>
+                    )}
+                    <div key={`${index}-status`}>
                       {result.banned && (
                         <span style={{ color: "#dc2626", fontWeight: "600" }}>
-                          ({t("bannedLabel")})
+                          {t("bannedLabel")}
                         </span>
                       )}
                       {!result.found && (
                         <span style={{ color: "#f59e0b", fontWeight: "600" }}>
-                          ({t("notFound")})
+                          {t("notFound")}
                         </span>
                       )}
-                    </span>
-                  </div>
+                    </div>
+                  </>
                 ))}
               </div>
             </div>
