@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { createYoga, createSchema } from "graphql-yoga";
-import { searchCards, getCardById, getCardsByColor } from "./data.js";
+import { searchCards, getCardById, getCardsByColor, validateCards } from "./data.js";
 import type { MagicCard } from "./types.js";
 import { pathToFileURL } from "url";
 
@@ -47,10 +47,18 @@ const typeDefs = `
     total: Int!
   }
 
+  type CardValidationResult {
+    name: String!
+    found: Boolean!
+    banned: Boolean!
+    matchedName: String
+  }
+
   type Query {
     searchCards(query: String!, limit: Int): CardSearchResult!
     getCard(oracleId: String!): MagicCard
     getCardsByColor(colors: [String!]!): [MagicCard!]!
+    validateCards(cardNames: [String!]!): [CardValidationResult!]!
   }
 `;
 
@@ -67,6 +75,9 @@ const resolvers = {
     },
     getCardsByColor: (_: any, { colors }: { colors: string[] }) => {
       return getCardsByColor(colors);
+    },
+    validateCards: (_: any, { cardNames }: { cardNames: string[] }) => {
+      return validateCards(cardNames);
     },
   },
 };

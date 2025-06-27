@@ -23,3 +23,16 @@ export interface CardSearchResult {
   cards: MagicCard[];
   total: number;
 }
+
+export interface DeckEntry {
+  quantity: number;
+  name: string;
+}
+
+export interface DeckValidationResult {
+  name: string;
+  quantity: number;
+  found: boolean;
+  banned: boolean;
+  matchedName: string | null;
+}

@@ -1,6 +1,6 @@
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData, Form, useNavigation } from "@remix-run/react";
+import { useLoaderData, Form, useNavigation, Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { searchCards } from "../lib/api";
 import { CardList } from "../components/CardList";
@@ -63,6 +63,19 @@ export default function Index() {
         >
           <h1 style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)", margin: 0 }}>{t("title")}</h1>
           <LanguageSwitcher />
+        </div>
+
+        <div style={{ marginBottom: "2rem" }}>
+          <Link
+            to="/deck-check"
+            style={{
+              color: "#3b82f6",
+              textDecoration: "underline",
+              fontSize: "0.875rem"
+            }}
+          >
+            {t("deckCheck")} →
+          </Link>
         </div>
         <p
           style={{ fontSize: "1.1rem", color: "#6b7280", marginBottom: "2rem" }}
