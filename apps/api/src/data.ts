@@ -107,3 +107,29 @@ export function getCardsByColor(colors: string[]): MagicCard[] {
     });
   });
 }
+
+export function validateCards(
+  cardNames: string[]
+): Array<{ name: string; found: boolean; banned: boolean; matchedName: string | null; matchedNameJa: string | null }> {
+  const cards = loadCards();
+  
+  return cardNames.map((cardName) => {
+    const trimmedName = cardName.trim();
+    const normalizedName = trimmedName.toLowerCase();
+    
+    // Find card by exact name match (case-insensitive)
+    const foundCard = cards.find(
+      (card) =>
+        card.name.toLowerCase() === normalizedName ||
+        (card.name_ja && card.name_ja.toLowerCase() === normalizedName)
+    );
+    
+    return {
+      name: trimmedName,
+      found: !!foundCard,
+      banned: foundCard?.banned ?? false,
+      matchedName: foundCard?.name ?? null,
+      matchedNameJa: foundCard?.name_ja ?? null,
+    };
+  });
+}

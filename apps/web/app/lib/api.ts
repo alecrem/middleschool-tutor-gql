@@ -55,3 +55,40 @@ export async function searchCards(
 
   return data.data.searchCards;
 }
+
+export async function validateCards(
+  cardNames: string[]
+): Promise<Array<{ name: string; found: boolean; banned: boolean; matchedName: string | null; matchedNameJa: string | null }>> {
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `
+        query ValidateCards($cardNames: [String!]!) {
+          validateCards(cardNames: $cardNames) {
+            name
+            found
+            banned
+            matchedName
+            matchedNameJa
+          }
+        }
+      `,
+      variables: { cardNames },
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to validate cards");
+  }
+
+  const data = await response.json();
+
+  if (data.errors) {
+    throw new Error(data.errors[0]?.message || "GraphQL error");
+  }
+
+  return data.data.validateCards;
+}
