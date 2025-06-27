@@ -37,6 +37,9 @@ export const translations = {
       notFound: "Not Found",
       cardSearchLink: "Card Search",
       deckCheckLink: "Deck Check",
+      copyDeckList: "Copy Deck List",
+      copied: "Copied!",
+      copyFailed: "Copy failed",
     },
   },
   ja: {
@@ -78,6 +81,9 @@ export const translations = {
       notFound: "該当なし",
       cardSearchLink: "カード検索",
       deckCheckLink: "デッキ検証",
+      copyDeckList: "デッキリストをコピー",
+      copied: "コピーしました!",
+      copyFailed: "コピーに失敗しました",
     },
   },
 } as const;
