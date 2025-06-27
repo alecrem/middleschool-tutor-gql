@@ -1,9 +1,10 @@
-import type { CardSearchResult } from "./types";
+import type { CardSearchResult, SearchParams } from "./types";
 
 const API_URL = process.env.API_URL || "http://localhost:3001/graphql";
 
 export async function searchCards(
   query: string,
+  cardType?: string,
   limit: number = 50
 ): Promise<CardSearchResult> {
   const response = await fetch(API_URL, {
@@ -13,8 +14,8 @@ export async function searchCards(
     },
     body: JSON.stringify({
       query: `
-        query SearchCards($query: String!, $limit: Int) {
-          searchCards(query: $query, limit: $limit) {
+        query SearchCards($query: String!, $cardType: String, $limit: Int) {
+          searchCards(query: $query, cardType: $cardType, limit: $limit) {
             cards {
               oracle_id
               name
@@ -39,7 +40,7 @@ export async function searchCards(
           }
         }
       `,
-      variables: { query, limit },
+      variables: { query, cardType, limit },
     }),
   });
 

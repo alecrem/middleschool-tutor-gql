@@ -26,6 +26,7 @@ export function loadCards(): MagicCard[] {
 
 export function searchCards(
   query: string,
+  cardType?: string,
   limit: number = 50
 ): { cards: MagicCard[]; total: number } {
   const cards = loadCards();
@@ -39,13 +40,21 @@ export function searchCards(
 
   const searchTerm = query.toLowerCase().trim();
 
-  const matches = cards.filter(
+  let matches = cards.filter(
     (card) =>
       card.name.toLowerCase().includes(searchTerm) ||
       (card.name_ja && card.name_ja.toLowerCase().includes(searchTerm)) ||
       card.type.toLowerCase().includes(searchTerm) ||
       card.text.toLowerCase().includes(searchTerm)
   );
+
+  // Apply card type filter if specified
+  if (cardType && cardType.trim() !== "") {
+    const normalizedCardType = cardType.toLowerCase();
+    matches = matches.filter((card) =>
+      card.type.toLowerCase().includes(normalizedCardType)
+    );
+  }
 
   // Add perfectMatch flag and sort matches to prioritize perfect matches
   const cardsWithPerfectMatch = matches.map((card) => {
