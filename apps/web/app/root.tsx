@@ -6,6 +6,8 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { BodyStyle } from "./components/BodyStyle";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -38,6 +40,7 @@ export default function App() {
             body {
               margin: 0;
               overflow-x: hidden;
+              transition: background-color 0.2s ease, color 0.2s ease;
             }
             @media (max-width: 640px) {
               body {
@@ -53,9 +56,17 @@ export default function App() {
                 align-self: center !important;
               }
             }
+            @media (prefers-reduced-motion: reduce) {
+              * {
+                transition: none !important;
+              }
+            }
           `
         }} />
-        <Outlet />
+        <ThemeProvider>
+          <BodyStyle />
+          <Outlet />
+        </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

@@ -40,6 +40,11 @@ export const translations = {
       copyDeckList: "Copy Deck List",
       copied: "Copied!",
       copyFailed: "Copy failed",
+      theme: "Theme",
+      selectTheme: "Select theme",
+      themeSystem: "System",
+      themeLight: "Light",
+      themeDark: "Dark",
     },
   },
   ja: {
@@ -84,6 +89,11 @@ export const translations = {
       copyDeckList: "デッキリストをコピー",
       copied: "コピーしました!",
       copyFailed: "コピーに失敗しました",
+      theme: "テーマ",
+      selectTheme: "テーマを選択",
+      themeSystem: "システム",
+      themeLight: "ライト",
+      themeDark: "ダーク",
     },
   },
 } as const;

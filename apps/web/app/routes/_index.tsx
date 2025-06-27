@@ -5,7 +5,9 @@ import { useTranslation } from "react-i18next";
 import { searchCards } from "../lib/api";
 import { CardList } from "../components/CardList";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
+import { ThemeSwitcher } from "../components/ThemeSwitcher";
 import { Footer } from "../components/Footer";
+import { useThemedStyles } from "../hooks/useTheme";
 import type { CardSearchResult } from "../lib/types";
 
 export const meta: MetaFunction = () => {
@@ -44,12 +46,20 @@ export default function Index() {
   const { searchResult, query, error } = useLoaderData<typeof loader>();
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const { colors } = useThemedStyles();
   const isSearching =
     navigation.state === "loading" &&
     navigation.location?.search.includes("query=");
 
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
+    <div style={{ 
+      fontFamily: "system-ui, sans-serif", 
+      lineHeight: "1.8",
+      backgroundColor: colors.background.primary,
+      color: colors.text.primary,
+      minHeight: "100vh",
+      transition: "background-color 0.2s ease, color 0.2s ease"
+    }}>
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "1rem" }}>
         <div
           style={{
@@ -64,7 +74,10 @@ export default function Index() {
           <h1 style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)", margin: 0 }}>
             {t("title")}
           </h1>
-          <LanguageSwitcher />
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+            <LanguageSwitcher />
+            <ThemeSwitcher />
+          </div>
         </div>
 
         <div style={{ marginBottom: "2rem" }}>
@@ -72,7 +85,7 @@ export default function Index() {
             to="/deck-check"
             aria-label={t("deckCheckLink")}
             style={{
-              color: "#3b82f6",
+              color: colors.text.link,
               textDecoration: "underline",
               fontSize: "0.875rem",
             }}
@@ -83,7 +96,7 @@ export default function Index() {
 
         <div
           style={{
-            backgroundColor: "#f9fafb",
+            backgroundColor: colors.background.secondary,
             padding: "1.5rem",
             borderRadius: "8px",
             marginBottom: "2rem",
@@ -103,9 +116,11 @@ export default function Index() {
                   flex: 1,
                   minWidth: "200px",
                   padding: "0.75rem",
-                  border: "1px solid #d1d5db",
+                  border: `1px solid ${colors.border.primary}`,
                   borderRadius: "6px",
                   fontSize: "1rem",
+                  backgroundColor: colors.background.primary,
+                  color: colors.text.primary,
                 }}
               />
               <button
@@ -113,8 +128,8 @@ export default function Index() {
                 disabled={isSearching}
                 style={{
                   padding: "0.75rem 1.5rem",
-                  backgroundColor: isSearching ? "#9ca3af" : "#3b82f6",
-                  color: "white",
+                  backgroundColor: isSearching ? colors.button.disabled : colors.button.primary,
+                  color: colors.button.text,
                   border: "none",
                   borderRadius: "6px",
                   fontSize: "1rem",
@@ -130,12 +145,12 @@ export default function Index() {
         {error && (
           <div
             style={{
-              backgroundColor: "#fef2f2",
-              color: "#dc2626",
+              backgroundColor: colors.background.error,
+              color: colors.text.error,
               padding: "1rem",
               borderRadius: "6px",
               marginBottom: "2rem",
-              border: "1px solid #fecaca",
+              border: `1px solid ${colors.border.error}`,
             }}
           >
             {t(error)}
@@ -144,7 +159,7 @@ export default function Index() {
 
         {searchResult ? (
           <div>
-            <div style={{ marginBottom: "1rem", color: "#6b7280" }}>
+            <div style={{ marginBottom: "1rem", color: colors.text.secondary }}>
               {searchResult.total > searchResult.cards.length
                 ? t("foundCardsPartial", {
                     total: searchResult.total,
@@ -159,7 +174,7 @@ export default function Index() {
             <CardList cards={searchResult.cards} />
           </div>
         ) : (
-          <div style={{ textAlign: "center", color: "#6b7280" }}>
+          <div style={{ textAlign: "center", color: colors.text.secondary }}>
             <p>{t("enterCardName")}</p>
           </div>
         )}
