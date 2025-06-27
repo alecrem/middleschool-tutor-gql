@@ -11,37 +11,25 @@ export function ThemeSwitcher() {
   };
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-      <label
-        htmlFor="theme-selector"
-        style={{
-          fontSize: "0.875rem",
-          color: colors.text.secondary,
-          fontWeight: "500",
-        }}
-      >
-        {t("theme")}:
-      </label>
-      <select
-        id="theme-selector"
-        value={mode}
-        onChange={handleThemeChange}
-        style={{
-          padding: "0.25rem 0.5rem",
-          fontSize: "0.875rem",
-          backgroundColor: colors.background.secondary,
-          color: colors.text.primary,
-          border: `1px solid ${colors.border.primary}`,
-          borderRadius: "4px",
-          cursor: "pointer",
-          outline: "none",
-        }}
-        aria-label={t("selectTheme")}
-      >
-        <option value="system">{t("themeSystem")}</option>
-        <option value="light">{t("themeLight")}</option>
-        <option value="dark">{t("themeDark")}</option>
-      </select>
-    </div>
+    <select
+      id="theme-selector"
+      value={mode}
+      onChange={handleThemeChange}
+      style={{
+        padding: "0.5rem",
+        border: `1px solid ${colors.border.primary}`,
+        borderRadius: "6px",
+        fontSize: "0.875rem",
+        backgroundColor: colors.background.secondary,
+        color: colors.text.primary,
+        cursor: "pointer",
+        outline: "none",
+      }}
+      aria-label={t("selectTheme")}
+    >
+      <option value="system">{t("themeSystem")}</option>
+      <option value="light">{t("themeLight")}</option>
+      <option value="dark">{t("themeDark")}</option>
+    </select>
   );
 }
