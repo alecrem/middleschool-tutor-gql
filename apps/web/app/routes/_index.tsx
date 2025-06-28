@@ -239,7 +239,8 @@ export default function Index() {
               {searchResult.total > searchResult.cards.length
                 ? t("foundCardsGenericPartial", {
                     total: searchResult.total,
-                    shown: searchResult.cards.length,
+                    start: (page - 1) * 20 + 1,
+                    end: (page - 1) * 20 + searchResult.cards.length,
                   })
                 : t("foundCardsGeneric", {
                     total: searchResult.total,

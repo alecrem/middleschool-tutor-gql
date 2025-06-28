@@ -13,9 +13,9 @@ export const translations = {
       deckValidationError: "Failed to validate deck. Please try again.",
       foundCards: 'Found {{total}} cards for "{{query}}"',
       foundCardsPartial:
-        'Found {{total}} cards for "{{query}}" — showing the first {{shown}}',
+        'Found {{total}} cards for "{{query}}" — showing results {{start}} to {{end}}',
       foundCardsGeneric: 'Found {{total}} cards',
-      foundCardsGenericPartial: 'Found {{total}} cards — showing the first {{shown}}',
+      foundCardsGenericPartial: 'Found {{total}} cards — showing results {{start}} to {{end}}',
       enterCardName: "Enter a card name to get started",
       noCardsFound: "No cards found. Try a different search term.",
       noImage: "No image",
@@ -86,9 +86,9 @@ export const translations = {
         "デッキの検証に失敗しました。もう一度お試しください。",
       foundCards: "「{{query}}」で{{total}}枚のカードが見つかりました",
       foundCardsPartial:
-        "「{{query}}」で{{total}}枚のカードが見つかりました — 最初の{{shown}}枚を表示",
+        "「{{query}}」で{{total}}枚のカードが見つかりました — {{start}}番目から{{end}}番目を表示",
       foundCardsGeneric: "{{total}}枚のカードが見つかりました",
-      foundCardsGenericPartial: "{{total}}枚のカードが見つかりました — 最初の{{shown}}枚を表示",
+      foundCardsGenericPartial: "{{total}}枚のカードが見つかりました — {{start}}番目から{{end}}番目を表示",
       enterCardName: "カード名を入力して開始してください",
       noCardsFound:
         "カードが見つかりませんでした。別の検索語をお試しください。",
