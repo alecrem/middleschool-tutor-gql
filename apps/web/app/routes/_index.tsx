@@ -1,11 +1,12 @@
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData, Form, useNavigation, Link } from "@remix-run/react";
+import { useLoaderData, Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { searchCards } from "../lib/api";
 import { CardList } from "../components/CardList";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
 import { ThemeSwitcher } from "../components/ThemeSwitcher";
+import { SearchControls } from "../components/SearchControls";
 import { Footer } from "../components/Footer";
 import { useThemedStyles } from "../hooks/useTheme";
 import type { CardSearchResult } from "../lib/types";
@@ -24,32 +25,32 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const query = url.searchParams.get("query");
+  const cardType = url.searchParams.get("cardType") || "";
+  const colors = url.searchParams.getAll("colors");
 
   if (!query || query.trim() === "") {
-    return json({ searchResult: null, query: "", error: null });
+    return json({ searchResult: null, query: "", cardType, colors, error: null });
   }
 
   try {
-    const searchResult = await searchCards(query.trim());
-    return json({ searchResult, query, error: null });
+    const searchResult = await searchCards(query.trim(), cardType, colors);
+    return json({ searchResult, query, cardType, colors, error: null });
   } catch (error) {
     console.error("Search error:", error);
     return json({
       searchResult: { cards: [], total: 0 } as CardSearchResult,
       query,
+      cardType,
+      colors,
       error: "searchError", // Pass translation key instead of hardcoded text
     });
   }
 }
 
 export default function Index() {
-  const { searchResult, query, error } = useLoaderData<typeof loader>();
+  const { searchResult, query, cardType, colors: selectedColors, error } = useLoaderData<typeof loader>();
   const { t } = useTranslation();
-  const navigation = useNavigation();
   const { colors } = useThemedStyles();
-  const isSearching =
-    navigation.state === "loading" &&
-    navigation.location?.search.includes("query=");
 
   return (
     <div style={{ 
@@ -94,53 +95,7 @@ export default function Index() {
           </Link>
         </div>
 
-        <div
-          style={{
-            backgroundColor: colors.background.secondary,
-            padding: "1.5rem",
-            borderRadius: "8px",
-            marginBottom: "2rem",
-          }}
-        >
-          <h2>{t("searchCards")}</h2>
-          <p dangerouslySetInnerHTML={{ __html: t("description") }} />
-
-          <Form method="get">
-            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-              <input
-                type="text"
-                name="query"
-                defaultValue={query}
-                placeholder={t("searchPlaceholder")}
-                style={{
-                  flex: 1,
-                  minWidth: "200px",
-                  padding: "0.75rem",
-                  border: `1px solid ${colors.border.primary}`,
-                  borderRadius: "6px",
-                  fontSize: "1rem",
-                  backgroundColor: colors.background.primary,
-                  color: colors.text.primary,
-                }}
-              />
-              <button
-                type="submit"
-                disabled={isSearching}
-                style={{
-                  padding: "0.75rem 1.5rem",
-                  backgroundColor: isSearching ? colors.button.disabled : colors.button.primary,
-                  color: colors.button.text,
-                  border: "none",
-                  borderRadius: "6px",
-                  fontSize: "1rem",
-                  cursor: isSearching ? "not-allowed" : "pointer",
-                }}
-              >
-                {isSearching ? t("searching") : t("search")}
-              </button>
-            </div>
-          </Form>
-        </div>
+        <SearchControls query={query} cardType={cardType} colors={selectedColors} />
 
         {error && (
           <div

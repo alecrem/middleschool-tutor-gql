@@ -37,3 +37,10 @@ export interface DeckValidationResult {
   matchedName: string | null;
   matchedNameJa: string | null;
 }
+
+export interface SearchParams {
+  query: string;
+  cardType?: string;
+  colors?: string[];
+  limit?: number;
+}

@@ -56,7 +56,7 @@ const typeDefs = `
   }
 
   type Query {
-    searchCards(query: String!, limit: Int): CardSearchResult!
+    searchCards(query: String!, cardType: String, colors: [String!], limit: Int): CardSearchResult!
     getCard(oracleId: String!): MagicCard
     getCardsByColor(colors: [String!]!): [MagicCard!]!
     validateCards(cardNames: [String!]!): [CardValidationResult!]!
@@ -67,9 +67,9 @@ const resolvers = {
   Query: {
     searchCards: (
       _: any,
-      { query, limit = 50 }: { query: string; limit?: number }
+      { query, cardType, colors, limit = 50 }: { query: string; cardType?: string; colors?: string[]; limit?: number }
     ) => {
-      return searchCards(query, limit);
+      return searchCards(query, cardType, colors, limit);
     },
     getCard: (_: any, { oracleId }: { oracleId: string }) => {
       return getCardById(oracleId);
