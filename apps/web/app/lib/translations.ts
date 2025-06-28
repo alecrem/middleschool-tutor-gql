@@ -14,6 +14,8 @@ export const translations = {
       foundCards: 'Found {{total}} cards for "{{query}}"',
       foundCardsPartial:
         'Found {{total}} cards for "{{query}}" — showing the first {{shown}}',
+      foundCardsGeneric: 'Found {{total}} cards',
+      foundCardsGenericPartial: 'Found {{total}} cards — showing the first {{shown}}',
       enterCardName: "Enter a card name to get started",
       noCardsFound: "No cards found. Try a different search term.",
       noImage: "No image",
@@ -60,6 +62,9 @@ export const translations = {
       colorBlack: "Black",
       colorRed: "Red",
       colorGreen: "Green",
+      power: "Power",
+      toughness: "Toughness",
+      to: "to",
     },
   },
   ja: {
@@ -77,6 +82,8 @@ export const translations = {
       foundCards: "「{{query}}」で{{total}}枚のカードが見つかりました",
       foundCardsPartial:
         "「{{query}}」で{{total}}枚のカードが見つかりました — 最初の{{shown}}枚を表示",
+      foundCardsGeneric: "{{total}}枚のカードが見つかりました",
+      foundCardsGenericPartial: "{{total}}枚のカードが見つかりました — 最初の{{shown}}枚を表示",
       enterCardName: "カード名を入力して開始してください",
       noCardsFound:
         "カードが見つかりませんでした。別の検索語をお試しください。",
@@ -124,6 +131,9 @@ export const translations = {
       colorBlack: "黒",
       colorRed: "赤",
       colorGreen: "緑",
+      power: "パワー",
+      toughness: "タフネス",
+      to: "〜",
     },
   },
 } as const;

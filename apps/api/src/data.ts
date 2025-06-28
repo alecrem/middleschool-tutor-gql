@@ -28,26 +28,39 @@ export function searchCards(
   query: string,
   cardType?: string,
   colors?: string[],
-  limit: number = 50
+  limit: number = 50,
+  powerMin?: number,
+  powerMax?: number,
+  toughnessMin?: number,
+  toughnessMax?: number
 ): { cards: MagicCard[]; total: number } {
   const cards = loadCards();
 
-  if (!query.trim()) {
-    return {
-      cards: cards.slice(0, limit),
-      total: cards.length,
-    };
-  }
-
+  // If no query but filters are applied, start with all cards
+  let matches = cards;
   const searchTerm = query.toLowerCase().trim();
 
-  let matches = cards.filter(
-    (card) =>
-      card.name.toLowerCase().includes(searchTerm) ||
-      (card.name_ja && card.name_ja.toLowerCase().includes(searchTerm)) ||
-      card.type.toLowerCase().includes(searchTerm) ||
-      card.text.toLowerCase().includes(searchTerm)
-  );
+  if (!query.trim()) {
+    // If there's no query and no filters, return empty result to prompt for search
+    if (!cardType && (!colors || colors.length === 0) && 
+        powerMin === undefined && powerMax === undefined && 
+        toughnessMin === undefined && toughnessMax === undefined) {
+      return {
+        cards: [],
+        total: 0,
+      };
+    }
+    // If there are filters but no query, start with all cards
+  } else {
+    // Apply text search if query exists
+    matches = cards.filter(
+      (card) =>
+        card.name.toLowerCase().includes(searchTerm) ||
+        (card.name_ja && card.name_ja.toLowerCase().includes(searchTerm)) ||
+        card.type.toLowerCase().includes(searchTerm) ||
+        card.text.toLowerCase().includes(searchTerm)
+    );
+  }
 
   // Apply card type filter if specified
   if (cardType && cardType.trim() !== "") {
@@ -76,6 +89,22 @@ export function searchCards(
             return false;
         }
       });
+    });
+  }
+
+  // Apply power filter if specified (only filter if parameters are provided and not default range)
+  if (powerMin !== undefined && powerMax !== undefined) {
+    matches = matches.filter((card) => {
+      const power = parseFloat(card.power || "0");
+      return power >= powerMin && power <= powerMax;
+    });
+  }
+
+  // Apply toughness filter if specified (only filter if parameters are provided and not default range)
+  if (toughnessMin !== undefined && toughnessMax !== undefined) {
+    matches = matches.filter((card) => {
+      const toughness = parseFloat(card.toughness || "0");
+      return toughness >= toughnessMin && toughness <= toughnessMax;
     });
   }
 

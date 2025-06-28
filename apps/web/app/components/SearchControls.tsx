@@ -1,5 +1,6 @@
 import { Form, useNavigation } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 import { Accordion } from "./Accordion";
 import { useTheme } from "../hooks/useTheme";
 
@@ -7,16 +8,46 @@ interface SearchControlsProps {
   query: string;
   cardType: string;
   colors: string[];
+  powerMin?: number;
+  powerMax?: number;
+  toughnessMin?: number;
+  toughnessMax?: number;
 }
 
-export function SearchControls({ query, cardType, colors: selectedColors }: SearchControlsProps) {
+export function SearchControls({ 
+  query, 
+  cardType, 
+  colors: selectedColors, 
+  powerMin = 0, 
+  powerMax = 13, 
+  toughnessMin = 0, 
+  toughnessMax = 13 
+}: SearchControlsProps) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const navigation = useNavigation();
   
+  // Track form state for button disabling
+  const [currentQuery, setCurrentQuery] = useState(query);
+  const [currentCardType, setCurrentCardType] = useState(cardType);
+  const [currentColors, setCurrentColors] = useState(selectedColors);
+  const [currentPowerMin, setCurrentPowerMin] = useState(powerMin);
+  const [currentPowerMax, setCurrentPowerMax] = useState(powerMax);
+  const [currentToughnessMin, setCurrentToughnessMin] = useState(toughnessMin);
+  const [currentToughnessMax, setCurrentToughnessMax] = useState(toughnessMax);
+  
   const isSearching =
     navigation.state === "loading" &&
     navigation.location?.search.includes("query=");
+
+  // Check if search should be disabled (no query and all defaults)
+  const isSearchDisabled = !currentQuery.trim() && 
+    currentCardType === "" && 
+    currentColors.length === 0 && 
+    currentPowerMin === 0 && 
+    currentPowerMax === 13 && 
+    currentToughnessMin === 0 && 
+    currentToughnessMax === 13;
 
   const cardTypes = [
     { value: "", label: t("allCardTypes") },
@@ -55,6 +86,7 @@ export function SearchControls({ query, cardType, colors: selectedColors }: Sear
             name="query"
             defaultValue={query}
             placeholder={t("searchPlaceholder")}
+            onChange={(e) => setCurrentQuery(e.target.value)}
             style={{
               flex: 1,
               minWidth: "200px",
@@ -68,22 +100,29 @@ export function SearchControls({ query, cardType, colors: selectedColors }: Sear
           />
           <button
             type="submit"
-            disabled={isSearching}
+            disabled={isSearching || isSearchDisabled}
             style={{
               padding: "0.75rem 1.5rem",
-              backgroundColor: isSearching ? colors.button.disabled : colors.button.primary,
+              backgroundColor: (isSearching || isSearchDisabled) ? colors.button.disabled : colors.button.primary,
               color: colors.button.text,
               border: "none",
               borderRadius: "6px",
               fontSize: "1rem",
-              cursor: isSearching ? "not-allowed" : "pointer",
+              cursor: (isSearching || isSearchDisabled) ? "not-allowed" : "pointer",
             }}
           >
             {isSearching ? t("searching") : t("search")}
           </button>
         </div>
 
-        <Accordion title={t("advancedSearch")} defaultExpanded={cardType !== "" || selectedColors.length > 0}>
+        <Accordion title={t("advancedSearch")} defaultExpanded={
+          cardType !== "" || 
+          selectedColors.length > 0 || 
+          powerMin !== 0 || 
+          powerMax !== 13 || 
+          toughnessMin !== 0 || 
+          toughnessMax !== 13
+        }>
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <div>
               <label
@@ -100,8 +139,9 @@ export function SearchControls({ query, cardType, colors: selectedColors }: Sear
               </label>
               <select
                 id="cardType"
-                name="cardType"
+                name={currentCardType !== "" ? "cardType" : undefined}
                 defaultValue={cardType}
+                onChange={(e) => setCurrentCardType(e.target.value)}
                 style={{
                   width: "100%",
                   padding: "0.5rem",
@@ -152,6 +192,13 @@ export function SearchControls({ query, cardType, colors: selectedColors }: Sear
                       name="colors"
                       value={color.value}
                       defaultChecked={selectedColors.includes(color.value)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setCurrentColors([...currentColors, color.value]);
+                        } else {
+                          setCurrentColors(currentColors.filter(c => c !== color.value));
+                        }
+                      }}
                       style={{
                         width: "1rem",
                         height: "1rem",
@@ -161,6 +208,128 @@ export function SearchControls({ query, cardType, colors: selectedColors }: Sear
                     <span>{color.label}</span>
                   </label>
                 ))}
+              </div>
+            </div>
+
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  fontSize: "0.875rem",
+                  fontWeight: "600",
+                  color: colors.text.primary,
+                }}
+              >
+                {t("power")}
+              </label>
+              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                <select
+                  name={currentPowerMin !== 0 || currentPowerMax !== 13 ? "powerMin" : undefined}
+                  defaultValue={powerMin}
+                  onChange={(e) => setCurrentPowerMin(parseInt(e.target.value))}
+                  style={{
+                    flex: 1,
+                    padding: "0.5rem",
+                    border: `1px solid ${colors.border.primary}`,
+                    borderRadius: "6px",
+                    fontSize: "0.875rem",
+                    backgroundColor: colors.background.primary,
+                    color: colors.text.primary,
+                    cursor: "pointer",
+                    outline: "none",
+                  }}
+                >
+                  {Array.from({ length: 14 }, (_, i) => (
+                    <option key={i} value={i}>
+                      {i}
+                    </option>
+                  ))}
+                </select>
+                <span style={{ color: colors.text.secondary, fontSize: "0.875rem" }}>{t("to")}</span>
+                <select
+                  name={currentPowerMin !== 0 || currentPowerMax !== 13 ? "powerMax" : undefined}
+                  defaultValue={powerMax}
+                  onChange={(e) => setCurrentPowerMax(parseInt(e.target.value))}
+                  style={{
+                    flex: 1,
+                    padding: "0.5rem",
+                    border: `1px solid ${colors.border.primary}`,
+                    borderRadius: "6px",
+                    fontSize: "0.875rem",
+                    backgroundColor: colors.background.primary,
+                    color: colors.text.primary,
+                    cursor: "pointer",
+                    outline: "none",
+                  }}
+                >
+                  {Array.from({ length: 14 }, (_, i) => (
+                    <option key={i} value={i}>
+                      {i}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  fontSize: "0.875rem",
+                  fontWeight: "600",
+                  color: colors.text.primary,
+                }}
+              >
+                {t("toughness")}
+              </label>
+              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                <select
+                  name={currentToughnessMin !== 0 || currentToughnessMax !== 13 ? "toughnessMin" : undefined}
+                  defaultValue={toughnessMin}
+                  onChange={(e) => setCurrentToughnessMin(parseInt(e.target.value))}
+                  style={{
+                    flex: 1,
+                    padding: "0.5rem",
+                    border: `1px solid ${colors.border.primary}`,
+                    borderRadius: "6px",
+                    fontSize: "0.875rem",
+                    backgroundColor: colors.background.primary,
+                    color: colors.text.primary,
+                    cursor: "pointer",
+                    outline: "none",
+                  }}
+                >
+                  {Array.from({ length: 14 }, (_, i) => (
+                    <option key={i} value={i}>
+                      {i}
+                    </option>
+                  ))}
+                </select>
+                <span style={{ color: colors.text.secondary, fontSize: "0.875rem" }}>{t("to")}</span>
+                <select
+                  name={currentToughnessMin !== 0 || currentToughnessMax !== 13 ? "toughnessMax" : undefined}
+                  defaultValue={toughnessMax}
+                  onChange={(e) => setCurrentToughnessMax(parseInt(e.target.value))}
+                  style={{
+                    flex: 1,
+                    padding: "0.5rem",
+                    border: `1px solid ${colors.border.primary}`,
+                    borderRadius: "6px",
+                    fontSize: "0.875rem",
+                    backgroundColor: colors.background.primary,
+                    color: colors.text.primary,
+                    cursor: "pointer",
+                    outline: "none",
+                  }}
+                >
+                  {Array.from({ length: 14 }, (_, i) => (
+                    <option key={i} value={i}>
+                      {i}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>
