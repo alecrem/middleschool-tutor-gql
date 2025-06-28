@@ -26,27 +26,29 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const query = url.searchParams.get("query");
   const cardType = url.searchParams.get("cardType") || "";
+  const colors = url.searchParams.getAll("colors");
 
   if (!query || query.trim() === "") {
-    return json({ searchResult: null, query: "", cardType, error: null });
+    return json({ searchResult: null, query: "", cardType, colors, error: null });
   }
 
   try {
-    const searchResult = await searchCards(query.trim(), cardType);
-    return json({ searchResult, query, cardType, error: null });
+    const searchResult = await searchCards(query.trim(), cardType, colors);
+    return json({ searchResult, query, cardType, colors, error: null });
   } catch (error) {
     console.error("Search error:", error);
     return json({
       searchResult: { cards: [], total: 0 } as CardSearchResult,
       query,
       cardType,
+      colors,
       error: "searchError", // Pass translation key instead of hardcoded text
     });
   }
 }
 
 export default function Index() {
-  const { searchResult, query, cardType, error } = useLoaderData<typeof loader>();
+  const { searchResult, query, cardType, colors: selectedColors, error } = useLoaderData<typeof loader>();
   const { t } = useTranslation();
   const { colors } = useThemedStyles();
 
@@ -93,7 +95,7 @@ export default function Index() {
           </Link>
         </div>
 
-        <SearchControls query={query} cardType={cardType} />
+        <SearchControls query={query} cardType={cardType} colors={selectedColors} />
 
         {error && (
           <div

@@ -5,6 +5,7 @@ const API_URL = process.env.API_URL || "http://localhost:3001/graphql";
 export async function searchCards(
   query: string,
   cardType?: string,
+  colors?: string[],
   limit: number = 50
 ): Promise<CardSearchResult> {
   const response = await fetch(API_URL, {
@@ -14,8 +15,8 @@ export async function searchCards(
     },
     body: JSON.stringify({
       query: `
-        query SearchCards($query: String!, $cardType: String, $limit: Int) {
-          searchCards(query: $query, cardType: $cardType, limit: $limit) {
+        query SearchCards($query: String!, $cardType: String, $colors: [String!], $limit: Int) {
+          searchCards(query: $query, cardType: $cardType, colors: $colors, limit: $limit) {
             cards {
               oracle_id
               name
@@ -40,7 +41,7 @@ export async function searchCards(
           }
         }
       `,
-      variables: { query, cardType, limit },
+      variables: { query, cardType, colors, limit },
     }),
   });
 

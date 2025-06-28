@@ -27,6 +27,7 @@ export function loadCards(): MagicCard[] {
 export function searchCards(
   query: string,
   cardType?: string,
+  colors?: string[],
   limit: number = 50
 ): { cards: MagicCard[]; total: number } {
   const cards = loadCards();
@@ -54,6 +55,28 @@ export function searchCards(
     matches = matches.filter((card) =>
       card.type.toLowerCase().includes(normalizedCardType)
     );
+  }
+
+  // Apply color filter if specified
+  if (colors && colors.length > 0) {
+    matches = matches.filter((card) => {
+      return colors.every((color) => {
+        switch (color.toLowerCase()) {
+          case "w":
+            return card.w;
+          case "u":
+            return card.u;
+          case "b":
+            return card.b;
+          case "r":
+            return card.r;
+          case "g":
+            return card.g;
+          default:
+            return false;
+        }
+      });
+    });
   }
 
   // Add perfectMatch flag and sort matches to prioritize perfect matches

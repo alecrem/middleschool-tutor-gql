@@ -6,9 +6,10 @@ import { useTheme } from "../hooks/useTheme";
 interface SearchControlsProps {
   query: string;
   cardType: string;
+  colors: string[];
 }
 
-export function SearchControls({ query, cardType }: SearchControlsProps) {
+export function SearchControls({ query, cardType, colors: selectedColors }: SearchControlsProps) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const navigation = useNavigation();
@@ -25,6 +26,14 @@ export function SearchControls({ query, cardType }: SearchControlsProps) {
     { value: "instant", label: t("instant") },
     { value: "land", label: t("land") },
     { value: "sorcery", label: t("sorcery") },
+  ];
+
+  const colorOptions = [
+    { value: "w", label: t("colorWhite"), symbol: "W" },
+    { value: "u", label: t("colorBlue"), symbol: "U" },
+    { value: "b", label: t("colorBlack"), symbol: "B" },
+    { value: "r", label: t("colorRed"), symbol: "R" },
+    { value: "g", label: t("colorGreen"), symbol: "G" },
   ];
 
   return (
@@ -74,7 +83,7 @@ export function SearchControls({ query, cardType }: SearchControlsProps) {
           </button>
         </div>
 
-        <Accordion title={t("advancedSearch")} defaultExpanded={cardType !== ""}>
+        <Accordion title={t("advancedSearch")} defaultExpanded={cardType !== "" || selectedColors.length > 0}>
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <div>
               <label
@@ -111,6 +120,48 @@ export function SearchControls({ query, cardType }: SearchControlsProps) {
                   </option>
                 ))}
               </select>
+            </div>
+
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  fontSize: "0.875rem",
+                  fontWeight: "600",
+                  color: colors.text.primary,
+                }}
+              >
+                {t("colors")}
+              </label>
+              <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+                {colorOptions.map((color) => (
+                  <label
+                    key={color.value}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      cursor: "pointer",
+                      fontSize: "0.875rem",
+                      color: colors.text.primary,
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      name="colors"
+                      value={color.value}
+                      defaultChecked={selectedColors.includes(color.value)}
+                      style={{
+                        width: "1rem",
+                        height: "1rem",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <span>{color.label}</span>
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
         </Accordion>

@@ -41,5 +41,6 @@ export interface DeckValidationResult {
 export interface SearchParams {
   query: string;
   cardType?: string;
+  colors?: string[];
   limit?: number;
 }
