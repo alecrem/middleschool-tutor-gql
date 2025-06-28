@@ -66,6 +66,7 @@ export const translations = {
       toughness: "Toughness",
       cmc: "Mana Value",
       to: "to",
+      resetToDefaults: "Reset to Defaults",
     },
   },
   ja: {
@@ -136,6 +137,7 @@ export const translations = {
       toughness: "タフネス",
       cmc: "マナ総量",
       to: "〜",
+      resetToDefaults: "デフォルトにリセット",
     },
   },
 } as const;

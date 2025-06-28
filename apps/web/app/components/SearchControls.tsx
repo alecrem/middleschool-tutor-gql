@@ -403,6 +403,93 @@ export function SearchControls({
                 </select>
               </div>
             </div>
+
+            {/* Action buttons */}
+            <div style={{
+              display: "flex",
+              gap: "0.75rem",
+              marginTop: "1.5rem",
+              paddingTop: "1rem",
+              borderTop: `1px solid ${colors.border.primary}`,
+            }}>
+              <button
+                type="button"
+                onClick={() => {
+                  // Reset all form state to defaults
+                  setCurrentCardType("");
+                  setCurrentColors([]);
+                  setCurrentCmcMin(0);
+                  setCurrentCmcMax(16);
+                  setCurrentPowerMin(0);
+                  setCurrentPowerMax(13);
+                  setCurrentToughnessMin(0);
+                  setCurrentToughnessMax(13);
+                  
+                  // Navigate to clean URL (no query params)
+                  const form = document.querySelector('form') as HTMLFormElement;
+                  if (form) {
+                    // Reset form inputs
+                    const inputs = form.querySelectorAll('input, select') as NodeListOf<HTMLInputElement | HTMLSelectElement>;
+                    inputs.forEach(input => {
+                      if (input.type === 'checkbox') {
+                        (input as HTMLInputElement).checked = false;
+                      } else if (input.type === 'text') {
+                        input.value = '';
+                      } else if (input.tagName === 'SELECT') {
+                        const select = input as HTMLSelectElement;
+                        if (select.name === 'cardType') {
+                          select.value = '';
+                        } else if (select.name?.includes('cmc')) {
+                          select.value = select.name.includes('Min') ? '0' : '16';
+                        } else if (select.name?.includes('power') || select.name?.includes('toughness')) {
+                          select.value = select.name.includes('Min') ? '0' : '13';
+                        }
+                      }
+                    });
+                  }
+                }}
+                style={{
+                  flex: 1,
+                  padding: "0.75rem 1rem",
+                  border: `1px solid ${colors.border.primary}`,
+                  borderRadius: "6px",
+                  fontSize: "0.875rem",
+                  fontWeight: "500",
+                  backgroundColor: colors.background.primary,
+                  color: colors.text.primary,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = colors.background.secondary;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = colors.background.primary;
+                }}
+              >
+                {t("resetToDefaults")}
+              </button>
+              
+              <button
+                type="submit"
+                disabled={isSearching || isSearchDisabled}
+                style={{
+                  flex: 1,
+                  padding: "0.75rem 1rem",
+                  border: "none",
+                  borderRadius: "6px",
+                  fontSize: "0.875rem",
+                  fontWeight: "500",
+                  backgroundColor: (isSearching || isSearchDisabled) ? colors.background.secondary : colors.button.primary,
+                  color: (isSearching || isSearchDisabled) ? colors.text.disabled : colors.button.text,
+                  cursor: (isSearching || isSearchDisabled) ? "not-allowed" : "pointer",
+                  transition: "all 0.2s ease",
+                  opacity: (isSearching || isSearchDisabled) ? 0.6 : 1,
+                }}
+              >
+                {isSearching ? t("searching") : t("search")}
+              </button>
+            </div>
           </div>
         </Accordion>
       </Form>
