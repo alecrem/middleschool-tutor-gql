@@ -45,13 +45,17 @@ function CardImage({ imageUrl, cardName }: CardImageProps) {
   }, []);
 
   return (
-    <div ref={imgRef} className="card-image" style={{ 
-      width: "200px", 
-      height: "280px", 
-      flexShrink: 0,
-      maxWidth: "30vw",
-      aspectRatio: "5/7" // Standard Magic card ratio
-    }}>
+    <div
+      ref={imgRef}
+      className="card-image"
+      style={{
+        width: "200px",
+        height: "280px",
+        flexShrink: 0,
+        maxWidth: "30vw",
+        aspectRatio: "5/7", // Standard Magic card ratio
+      }}
+    >
       {isVisible && !hasError && (
         <img
           src={imageUrl}
@@ -62,7 +66,7 @@ function CardImage({ imageUrl, cardName }: CardImageProps) {
             height: "100%",
             objectFit: "cover",
             borderRadius: "8px",
-            backgroundColor: colors.background.secondary
+            backgroundColor: colors.background.secondary,
           }}
         />
       )}
@@ -77,7 +81,7 @@ function CardImage({ imageUrl, cardName }: CardImageProps) {
             alignItems: "center",
             justifyContent: "center",
             color: colors.text.secondary,
-            fontSize: "0.875rem"
+            fontSize: "0.875rem",
           }}
         >
           {t("noImage")}
@@ -89,7 +93,7 @@ function CardImage({ imageUrl, cardName }: CardImageProps) {
             width: "100%",
             height: "100%",
             backgroundColor: colors.background.secondary,
-            borderRadius: "8px"
+            borderRadius: "8px",
           }}
         />
       )}
@@ -102,7 +106,13 @@ export function CardList({ cards }: CardListProps) {
   const { colors } = useThemedStyles();
   if (cards.length === 0) {
     return (
-      <div style={{ textAlign: "center", padding: "2rem", color: colors.text.secondary }}>
+      <div
+        style={{
+          textAlign: "center",
+          padding: "2rem",
+          color: colors.text.secondary,
+        }}
+      >
         {t("noCardsFound")}
       </div>
     );
@@ -114,8 +124,8 @@ export function CardList({ cards }: CardListProps) {
         <div
           key={card.oracle_id}
           style={{
-            border: card.perfectMatch 
-              ? `3px solid ${colors.text.primary}` 
+            border: card.perfectMatch
+              ? `3px solid ${colors.text.primary}`
               : `1px solid ${colors.border.primary}`,
             borderRadius: "8px",
             padding: "1rem",
@@ -125,16 +135,19 @@ export function CardList({ cards }: CardListProps) {
               : "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
             display: "flex",
             flexDirection: "column",
-            gap: "1rem"
+            gap: "1rem",
           }}
         >
           {/* Mobile-first layout with responsive image placement */}
-          <div className="card-layout" style={{
-            display: "flex", 
-            flexDirection: "row", 
-            gap: "1rem",
-            minWidth: 0 // Allow flex items to shrink below their content size
-          }}>
+          <div
+            className="card-layout"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "1rem",
+              minWidth: 0, // Allow flex items to shrink below their content size
+            }}
+          >
             <div style={{ flex: 1, minWidth: 0 }}>
               <div
                 style={{
@@ -143,7 +156,7 @@ export function CardList({ cards }: CardListProps) {
                   alignItems: "flex-start",
                   marginBottom: "0.5rem",
                   flexWrap: "wrap",
-                  gap: "0.5rem"
+                  gap: "0.5rem",
                 }}
               >
                 <h3
@@ -151,9 +164,11 @@ export function CardList({ cards }: CardListProps) {
                     fontSize: "1.125rem",
                     fontWeight: "600",
                     margin: 0,
-                    color: card.banned ? colors.accent.red : colors.text.primary,
+                    color: card.banned
+                      ? colors.accent.red
+                      : colors.text.primary,
                     minWidth: 0,
-                    wordBreak: "break-word"
+                    wordBreak: "break-word",
                   }}
                 >
                   {i18n.language === "ja" &&
@@ -172,7 +187,9 @@ export function CardList({ cards }: CardListProps) {
                     {card.name}
                   </a>
                   {card.banned && (
-                    <span style={{ color: colors.accent.red, marginLeft: "0.5rem" }}>
+                    <span
+                      style={{ color: colors.accent.red, marginLeft: "0.5rem" }}
+                    >
                       ({t("banned")})
                     </span>
                   )}
@@ -194,17 +211,20 @@ export function CardList({ cards }: CardListProps) {
                   marginBottom: "0.75rem",
                   fontSize: "0.875rem",
                   color: colors.text.secondary,
-                  flexWrap: "wrap"
+                  flexWrap: "wrap",
                 }}
               >
                 <span>{card.type}</span>
                 <span>•</span>
-                <span>CMC {card.mv}</span>
+                <span>
+                  {t("cmc")}: {card.mv}
+                </span>
                 {card.power && card.toughness && (
                   <>
                     <span>•</span>
                     <span>
-                      {formatPowerToughness(card.power)}/{formatPowerToughness(card.toughness)}
+                      {formatPowerToughness(card.power)}/
+                      {formatPowerToughness(card.toughness)}
                     </span>
                   </>
                 )}
@@ -218,14 +238,14 @@ export function CardList({ cards }: CardListProps) {
                     color: colors.text.secondary,
                     margin: 0,
                     whiteSpace: "pre-wrap",
-                    wordBreak: "break-word"
+                    wordBreak: "break-word",
                   }}
                 >
                   {card.text}
                 </p>
               )}
             </div>
-            
+
             {/* Image container with responsive sizing */}
             <div style={{ flexShrink: 0 }}>
               <CardImage imageUrl={card.image_small} cardName={card.name} />

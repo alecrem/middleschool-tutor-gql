@@ -6,7 +6,13 @@ export async function searchCards(
   query: string,
   cardType?: string,
   colors?: string[],
-  limit: number = 50
+  limit: number = 50,
+  powerMin?: number,
+  powerMax?: number,
+  toughnessMin?: number,
+  toughnessMax?: number,
+  cmcMin?: number,
+  cmcMax?: number
 ): Promise<CardSearchResult> {
   const response = await fetch(API_URL, {
     method: "POST",
@@ -15,8 +21,8 @@ export async function searchCards(
     },
     body: JSON.stringify({
       query: `
-        query SearchCards($query: String!, $cardType: String, $colors: [String!], $limit: Int) {
-          searchCards(query: $query, cardType: $cardType, colors: $colors, limit: $limit) {
+        query SearchCards($query: String!, $cardType: String, $colors: [String!], $limit: Int, $powerMin: Int, $powerMax: Int, $toughnessMin: Int, $toughnessMax: Int, $cmcMin: Int, $cmcMax: Int) {
+          searchCards(query: $query, cardType: $cardType, colors: $colors, limit: $limit, powerMin: $powerMin, powerMax: $powerMax, toughnessMin: $toughnessMin, toughnessMax: $toughnessMax, cmcMin: $cmcMin, cmcMax: $cmcMax) {
             cards {
               oracle_id
               name
@@ -41,7 +47,7 @@ export async function searchCards(
           }
         }
       `,
-      variables: { query, cardType, colors, limit },
+      variables: { query, cardType, colors, limit, powerMin, powerMax, toughnessMin, toughnessMax, cmcMin, cmcMax },
     }),
   });
 

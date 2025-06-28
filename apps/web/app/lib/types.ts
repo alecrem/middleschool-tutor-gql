@@ -43,4 +43,10 @@ export interface SearchParams {
   cardType?: string;
   colors?: string[];
   limit?: number;
+  powerMin?: number;
+  powerMax?: number;
+  toughnessMin?: number;
+  toughnessMax?: number;
+  cmcMin?: number;
+  cmcMax?: number;
 }
