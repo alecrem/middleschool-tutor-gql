@@ -481,7 +481,7 @@ export function SearchControls({
                   fontSize: "0.875rem",
                   fontWeight: "500",
                   backgroundColor: (isSearching || isSearchDisabled) ? colors.background.secondary : colors.button.primary,
-                  color: (isSearching || isSearchDisabled) ? colors.text.disabled : colors.button.text,
+                  color: (isSearching || isSearchDisabled) ? colors.text.secondary : colors.button.text,
                   cursor: (isSearching || isSearchDisabled) ? "not-allowed" : "pointer",
                   transition: "all 0.2s ease",
                   opacity: (isSearching || isSearchDisabled) ? 0.6 : 1,

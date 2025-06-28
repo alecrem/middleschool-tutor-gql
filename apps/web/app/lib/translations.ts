@@ -67,6 +67,9 @@ export const translations = {
       cmc: "Mana Value",
       to: "to",
       resetToDefaults: "Reset to Defaults",
+      previous: "Previous",
+      next: "Next",
+      pageInfo: "Page {{current}} of {{total}}",
     },
   },
   ja: {
@@ -138,6 +141,9 @@ export const translations = {
       cmc: "マナ総量",
       to: "〜",
       resetToDefaults: "デフォルトにリセット",
+      previous: "前へ",
+      next: "次へ",
+      pageInfo: "{{current}}ページ / {{total}}ページ",
     },
   },
 } as const;

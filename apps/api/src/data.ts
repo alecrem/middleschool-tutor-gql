@@ -28,7 +28,8 @@ export function searchCards(
   query: string,
   cardType?: string,
   colors?: string[],
-  limit: number = 50,
+  limit: number = 20,
+  offset: number = 0,
   powerMin?: number,
   powerMax?: number,
   toughnessMin?: number,
@@ -144,7 +145,7 @@ export function searchCards(
   });
 
   return {
-    cards: sortedMatches.slice(0, limit),
+    cards: sortedMatches.slice(offset, offset + limit),
     total: sortedMatches.length,
   };
 }
