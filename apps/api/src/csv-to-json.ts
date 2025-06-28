@@ -24,18 +24,56 @@ interface MagicCard {
   image_small: string;
 }
 
+function parseCSVRecords(csvContent: string): string[] {
+  const records: string[] = [];
+  let currentRecord = "";
+  let inQuotes = false;
+  
+  for (let i = 0; i < csvContent.length; i++) {
+    const char = csvContent[i];
+    const nextChar = csvContent[i + 1];
+    
+    if (char === '"') {
+      // Handle escaped quotes ("")
+      if (nextChar === '"' && inQuotes) {
+        currentRecord += '""';
+        i++; // Skip the next quote
+      } else {
+        inQuotes = !inQuotes;
+        currentRecord += char;
+      }
+    } else if (char === '\n' && !inQuotes) {
+      // End of record (only when not in quotes)
+      if (currentRecord.trim()) {
+        records.push(currentRecord);
+      }
+      currentRecord = "";
+    } else {
+      currentRecord += char;
+    }
+  }
+  
+  // Add the last record if it exists
+  if (currentRecord.trim()) {
+    records.push(currentRecord);
+  }
+  
+  return records;
+}
+
 function parseCSV(csvContent: string): MagicCard[] {
-  const lines = csvContent.split("\n");
-  const headers = lines[0].split(",").map((h) => h.trim());
+  // Split into records properly handling multiline quoted fields
+  const records = parseCSVRecords(csvContent);
+  const headers = parseCSVLine(records[0]).map((h) => h.trim());
 
   const cards: MagicCard[] = [];
 
-  for (let i = 1; i < lines.length; i++) {
-    const line = lines[i].trim();
-    if (!line) continue;
+  for (let i = 1; i < records.length; i++) {
+    const record = records[i].trim();
+    if (!record) continue;
 
     // Parse CSV with proper quote handling
-    const values = parseCSVLine(line);
+    const values = parseCSVLine(record);
     if (values.length < headers.length) continue;
 
     const card: any = {};
@@ -65,6 +103,13 @@ function parseCSV(csvContent: string): MagicCard[] {
         case "power":
         case "toughness":
           card[cleanHeader] = value === "" ? null : value;
+          break;
+        case "text":
+          // Clean up text field - remove surrounding quotes and normalize newlines
+          card[cleanHeader] = value
+            .replace(/^["']|["']$/g, "")
+            .replace(/\r\n/g, "\n")
+            .replace(/\r/g, "\n");
           break;
         case "image_small":
           card[cleanHeader] = value.replace(/^["']|["']$/g, "");

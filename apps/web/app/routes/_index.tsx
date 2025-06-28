@@ -28,11 +28,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const cardType = url.searchParams.get("cardType") || "";
   const colors = url.searchParams.getAll("colors");
   
-  // Parse power/toughness parameters with defaults
+  // Parse power/toughness/CMC parameters with defaults
   const powerMin = url.searchParams.get("powerMin") ? parseInt(url.searchParams.get("powerMin")!) : 0;
   const powerMax = url.searchParams.get("powerMax") ? parseInt(url.searchParams.get("powerMax")!) : 13;
   const toughnessMin = url.searchParams.get("toughnessMin") ? parseInt(url.searchParams.get("toughnessMin")!) : 0;
   const toughnessMax = url.searchParams.get("toughnessMax") ? parseInt(url.searchParams.get("toughnessMax")!) : 13;
+  const cmcMin = url.searchParams.get("cmcMin") ? parseInt(url.searchParams.get("cmcMin")!) : 0;
+  const cmcMax = url.searchParams.get("cmcMax") ? parseInt(url.searchParams.get("cmcMax")!) : 16;
 
   // Check if there are any filters applied
   const hasFilters = cardType !== "" || 
@@ -40,7 +42,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
                     powerMin !== 0 || 
                     powerMax !== 13 || 
                     toughnessMin !== 0 || 
-                    toughnessMax !== 13;
+                    toughnessMax !== 13 || 
+                    cmcMin !== 0 || 
+                    cmcMax !== 16;
 
   if (!query || query.trim() === "") {
     // If no query and no filters, show empty state
@@ -54,6 +58,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
         powerMax, 
         toughnessMin, 
         toughnessMax, 
+        cmcMin, 
+        cmcMax, 
         error: null 
       });
     }
@@ -70,7 +76,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
       powerMin !== 0 || powerMax !== 13 ? powerMin : undefined,
       powerMin !== 0 || powerMax !== 13 ? powerMax : undefined,
       toughnessMin !== 0 || toughnessMax !== 13 ? toughnessMin : undefined,
-      toughnessMin !== 0 || toughnessMax !== 13 ? toughnessMax : undefined
+      toughnessMin !== 0 || toughnessMax !== 13 ? toughnessMax : undefined,
+      cmcMin !== 0 || cmcMax !== 16 ? cmcMin : undefined,
+      cmcMin !== 0 || cmcMax !== 16 ? cmcMax : undefined
     );
     return json({ 
       searchResult, 
@@ -81,6 +89,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       powerMax, 
       toughnessMin, 
       toughnessMax, 
+      cmcMin, 
+      cmcMax, 
       error: null 
     });
   } catch (error) {
@@ -94,6 +104,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       powerMax,
       toughnessMin,
       toughnessMax,
+      cmcMin,
+      cmcMax,
       error: "searchError", // Pass translation key instead of hardcoded text
     });
   }
@@ -109,6 +121,8 @@ export default function Index() {
     powerMax, 
     toughnessMin, 
     toughnessMax, 
+    cmcMin, 
+    cmcMax, 
     error 
   } = useLoaderData<typeof loader>();
   const { t } = useTranslation();
@@ -165,6 +179,8 @@ export default function Index() {
           powerMax={powerMax}
           toughnessMin={toughnessMin}
           toughnessMax={toughnessMax}
+          cmcMin={cmcMin}
+          cmcMax={cmcMax}
         />
 
         {error && (

@@ -32,7 +32,9 @@ export function searchCards(
   powerMin?: number,
   powerMax?: number,
   toughnessMin?: number,
-  toughnessMax?: number
+  toughnessMax?: number,
+  cmcMin?: number,
+  cmcMax?: number
 ): { cards: MagicCard[]; total: number } {
   const cards = loadCards();
 
@@ -44,7 +46,8 @@ export function searchCards(
     // If there's no query and no filters, return empty result to prompt for search
     if (!cardType && (!colors || colors.length === 0) && 
         powerMin === undefined && powerMax === undefined && 
-        toughnessMin === undefined && toughnessMax === undefined) {
+        toughnessMin === undefined && toughnessMax === undefined &&
+        cmcMin === undefined && cmcMax === undefined) {
       return {
         cards: [],
         total: 0,
@@ -105,6 +108,13 @@ export function searchCards(
     matches = matches.filter((card) => {
       const toughness = parseFloat(card.toughness || "0");
       return toughness >= toughnessMin && toughness <= toughnessMax;
+    });
+  }
+
+  // Apply CMC filter if specified (only filter if parameters are provided and not default range)
+  if (cmcMin !== undefined && cmcMax !== undefined) {
+    matches = matches.filter((card) => {
+      return card.mv >= cmcMin && card.mv <= cmcMax;
     });
   }
 

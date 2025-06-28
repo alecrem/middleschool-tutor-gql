@@ -47,4 +47,6 @@ export interface SearchParams {
   powerMax?: number;
   toughnessMin?: number;
   toughnessMax?: number;
+  cmcMin?: number;
+  cmcMax?: number;
 }

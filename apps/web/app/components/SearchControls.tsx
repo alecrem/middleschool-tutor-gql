@@ -12,6 +12,8 @@ interface SearchControlsProps {
   powerMax?: number;
   toughnessMin?: number;
   toughnessMax?: number;
+  cmcMin?: number;
+  cmcMax?: number;
 }
 
 export function SearchControls({ 
@@ -21,7 +23,9 @@ export function SearchControls({
   powerMin = 0, 
   powerMax = 13, 
   toughnessMin = 0, 
-  toughnessMax = 13 
+  toughnessMax = 13,
+  cmcMin = 0,
+  cmcMax = 16
 }: SearchControlsProps) {
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -35,6 +39,8 @@ export function SearchControls({
   const [currentPowerMax, setCurrentPowerMax] = useState(powerMax);
   const [currentToughnessMin, setCurrentToughnessMin] = useState(toughnessMin);
   const [currentToughnessMax, setCurrentToughnessMax] = useState(toughnessMax);
+  const [currentCmcMin, setCurrentCmcMin] = useState(cmcMin);
+  const [currentCmcMax, setCurrentCmcMax] = useState(cmcMax);
   
   const isSearching =
     navigation.state === "loading" &&
@@ -47,7 +53,9 @@ export function SearchControls({
     currentPowerMin === 0 && 
     currentPowerMax === 13 && 
     currentToughnessMin === 0 && 
-    currentToughnessMax === 13;
+    currentToughnessMax === 13 && 
+    currentCmcMin === 0 && 
+    currentCmcMax === 16;
 
   const cardTypes = [
     { value: "", label: t("allCardTypes") },
@@ -121,7 +129,9 @@ export function SearchControls({
           powerMin !== 0 || 
           powerMax !== 13 || 
           toughnessMin !== 0 || 
-          toughnessMax !== 13
+          toughnessMax !== 13 || 
+          cmcMin !== 0 || 
+          cmcMax !== 16
         }>
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <div>
@@ -208,6 +218,67 @@ export function SearchControls({
                     <span>{color.label}</span>
                   </label>
                 ))}
+              </div>
+            </div>
+
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  fontSize: "0.875rem",
+                  fontWeight: "600",
+                  color: colors.text.primary,
+                }}
+              >
+                {t("cmc")}
+              </label>
+              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                <select
+                  name={currentCmcMin !== 0 || currentCmcMax !== 16 ? "cmcMin" : undefined}
+                  defaultValue={cmcMin}
+                  onChange={(e) => setCurrentCmcMin(parseInt(e.target.value))}
+                  style={{
+                    flex: 1,
+                    padding: "0.5rem",
+                    border: `1px solid ${colors.border.primary}`,
+                    borderRadius: "6px",
+                    fontSize: "0.875rem",
+                    backgroundColor: colors.background.primary,
+                    color: colors.text.primary,
+                    cursor: "pointer",
+                    outline: "none",
+                  }}
+                >
+                  {Array.from({ length: 17 }, (_, i) => (
+                    <option key={i} value={i}>
+                      {i}
+                    </option>
+                  ))}
+                </select>
+                <span style={{ color: colors.text.secondary, fontSize: "0.875rem" }}>{t("to")}</span>
+                <select
+                  name={currentCmcMin !== 0 || currentCmcMax !== 16 ? "cmcMax" : undefined}
+                  defaultValue={cmcMax}
+                  onChange={(e) => setCurrentCmcMax(parseInt(e.target.value))}
+                  style={{
+                    flex: 1,
+                    padding: "0.5rem",
+                    border: `1px solid ${colors.border.primary}`,
+                    borderRadius: "6px",
+                    fontSize: "0.875rem",
+                    backgroundColor: colors.background.primary,
+                    color: colors.text.primary,
+                    cursor: "pointer",
+                    outline: "none",
+                  }}
+                >
+                  {Array.from({ length: 17 }, (_, i) => (
+                    <option key={i} value={i}>
+                      {i}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
