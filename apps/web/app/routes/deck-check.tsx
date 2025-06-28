@@ -2,7 +2,7 @@ import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, Form, useNavigation, Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { validateCards } from "../lib/api";
 import { parseDeckList } from "../lib/deck-parser";
 import { generateScryfallUrl } from "../lib/utils";
@@ -28,6 +28,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (!deckList || deckList.trim() === "") {
     return json({ results: null, deckList: "", error: null });
+  }
+
+  // Check line count before processing
+  const lines = deckList.split('\n').filter(line => line.trim().length > 0);
+  if (lines.length > 100) {
+    return json({
+      results: null,
+      deckList,
+      error: "deckLineLimitError",
+    });
   }
 
   try {
@@ -71,6 +81,17 @@ export default function DeckCheck() {
   const notFoundCards = results?.filter((result) => !result.found) ?? [];
 
   const [copyStatus, setCopyStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [currentDeckList, setCurrentDeckList] = useState(deckList);
+  const [lineCount, setLineCount] = useState(0);
+
+  // Count lines in deck list
+  useEffect(() => {
+    const lines = currentDeckList.split('\n').filter(line => line.trim().length > 0);
+    setLineCount(lines.length);
+  }, [currentDeckList]);
+
+  const isOverLimit = lineCount > 100;
+  const isNearLimit = lineCount > 90 && lineCount <= 100;
 
   const copyDeckListToClipboard = async () => {
     if (!results) return;
@@ -149,22 +170,62 @@ export default function DeckCheck() {
             marginBottom: "2rem",
           }}
         >
-          <Form method="get">
+          <Form method="get" onSubmit={(e) => {
+            if (isOverLimit) {
+              e.preventDefault();
+            }
+          }}>
             <div style={{ marginBottom: "1rem" }}>
-              <h2>{t("deckCheck")}</h2>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+                <h2 style={{ margin: 0 }}>{t("deckCheck")}</h2>
+                <div style={{ 
+                  fontSize: "0.875rem", 
+                  color: isOverLimit ? colors.accent.red : isNearLimit ? colors.accent.orange : colors.text.secondary,
+                  fontWeight: isOverLimit || isNearLimit ? "600" : "normal"
+                }}>
+                  {lineCount}/100 lines
+                </div>
+              </div>
               <p
                 dangerouslySetInnerHTML={{ __html: t("deckCheckDescription") }}
               />
+              {isOverLimit && (
+                <div style={{
+                  backgroundColor: colors.background.error,
+                  color: colors.text.error,
+                  padding: "0.75rem",
+                  borderRadius: "6px",
+                  marginBottom: "1rem",
+                  border: `1px solid ${colors.border.error}`,
+                  fontSize: "0.875rem"
+                }}>
+                  {t("deckLineLimitExceeded", { current: lineCount })}
+                </div>
+              )}
+              {isNearLimit && !isOverLimit && (
+                <div style={{
+                  backgroundColor: "#fff3cd",
+                  color: "#856404",
+                  padding: "0.75rem",
+                  borderRadius: "6px",
+                  marginBottom: "1rem",
+                  border: "1px solid #ffeaa7",
+                  fontSize: "0.875rem"
+                }}>
+                  {t("deckLineLimitWarning", { current: lineCount })}
+                </div>
+              )}
               <textarea
                 id="decklist"
                 name="decklist"
-                defaultValue={deckList}
+                value={currentDeckList}
+                onChange={(e) => setCurrentDeckList(e.target.value)}
                 placeholder={t("deckListPlaceholder")}
                 rows={10}
                 style={{
                   width: "100%",
                   padding: "0.75rem",
-                  border: `1px solid ${colors.border.primary}`,
+                  border: `1px solid ${isOverLimit ? colors.border.error : colors.border.primary}`,
                   borderRadius: "6px",
                   fontSize: "0.875rem",
                   fontFamily: "monospace",
@@ -176,15 +237,16 @@ export default function DeckCheck() {
             </div>
             <button
               type="submit"
-              disabled={isValidating}
+              disabled={isValidating || isOverLimit}
               style={{
                 padding: "0.75rem 1.5rem",
-                backgroundColor: isValidating ? colors.button.disabled : colors.button.primary,
+                backgroundColor: (isValidating || isOverLimit) ? colors.button.disabled : colors.button.primary,
                 color: colors.button.text,
                 border: "none",
                 borderRadius: "6px",
                 fontSize: "1rem",
-                cursor: isValidating ? "not-allowed" : "pointer",
+                cursor: (isValidating || isOverLimit) ? "not-allowed" : "pointer",
+                opacity: (isValidating || isOverLimit) ? 0.6 : 1,
               }}
             >
               {isValidating ? t("validating") : t("validateDeck")}
@@ -203,7 +265,7 @@ export default function DeckCheck() {
               border: `1px solid ${colors.border.error}`,
             }}
           >
-            {t("deckValidationError")}
+{t(error)}
           </div>
         )}
 

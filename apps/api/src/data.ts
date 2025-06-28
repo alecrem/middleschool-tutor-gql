@@ -183,6 +183,11 @@ export function getCardsByColor(colors: string[]): MagicCard[] {
 export function validateCards(
   cardNames: string[]
 ): Array<{ name: string; found: boolean; banned: boolean; matchedName: string | null; matchedNameJa: string | null }> {
+  // Reject requests with more than 100 cards
+  if (cardNames.length > 100) {
+    throw new Error("Deck list must not exceed 100 lines");
+  }
+
   const cards = loadCards();
   
   return cardNames.map((cardName) => {
