@@ -70,6 +70,9 @@ export const translations = {
       previous: "Previous",
       next: "Next",
       pageInfo: "Page {{current}} of {{total}}",
+      deckLineLimitWarning: "Approaching line limit ({{current}}/100)",
+      deckLineLimitExceeded: "Deck list exceeds 100 line limit ({{current}}/100)",
+      deckLineLimitError: "Deck list must not exceed 100 lines",
     },
   },
   ja: {
@@ -144,6 +147,9 @@ export const translations = {
       previous: "前へ",
       next: "次へ",
       pageInfo: "{{current}}ページ / {{total}}ページ",
+      deckLineLimitWarning: "行数制限に近づいています ({{current}}/100)",
+      deckLineLimitExceeded: "デッキリストが100行の制限を超えています ({{current}}/100)",
+      deckLineLimitError: "デッキリストは100行を超えてはいけません",
     },
   },
 } as const;
