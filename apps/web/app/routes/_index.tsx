@@ -8,6 +8,7 @@ import { LanguageSwitcher } from "../components/LanguageSwitcher";
 import { ThemeSwitcher } from "../components/ThemeSwitcher";
 import { SearchControls } from "../components/SearchControls";
 import { Footer } from "../components/Footer";
+import { Pagination } from "../components/Pagination";
 import { useThemedStyles } from "../hooks/useTheme";
 import type { CardSearchResult } from "../lib/types";
 
@@ -27,6 +28,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const query = url.searchParams.get("query");
   const cardType = url.searchParams.get("cardType") || "";
   const colors = url.searchParams.getAll("colors");
+  const page = parseInt(url.searchParams.get("page") || "1");
+  const limit = 20;
+  const offset = (page - 1) * limit;
 
   // Parse power/toughness/CMC parameters with defaults
   const powerMin = url.searchParams.get("powerMin")
@@ -73,6 +77,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
         toughnessMax,
         cmcMin,
         cmcMax,
+        page: 1,
+        totalPages: 0,
         error: null,
       });
     }
@@ -85,7 +91,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       query ? query.trim() : "",
       cardType,
       colors,
-      50, // limit
+      limit,
+      offset,
       powerMin !== 0 || powerMax !== 13 ? powerMin : undefined,
       powerMin !== 0 || powerMax !== 13 ? powerMax : undefined,
       toughnessMin !== 0 || toughnessMax !== 13 ? toughnessMin : undefined,
@@ -104,6 +111,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       toughnessMax,
       cmcMin,
       cmcMax,
+      page,
+      totalPages: Math.ceil(searchResult.total / limit),
       error: null,
     });
   } catch (error) {
@@ -119,6 +128,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       toughnessMax,
       cmcMin,
       cmcMax,
+      page,
+      totalPages: 0,
       error: "searchError", // Pass translation key instead of hardcoded text
     });
   }
@@ -136,6 +147,8 @@ export default function Index() {
     toughnessMax,
     cmcMin,
     cmcMax,
+    page,
+    totalPages,
     error,
   } = useLoaderData<typeof loader>();
   const { t } = useTranslation();
@@ -226,13 +239,19 @@ export default function Index() {
               {searchResult.total > searchResult.cards.length
                 ? t("foundCardsGenericPartial", {
                     total: searchResult.total,
-                    shown: searchResult.cards.length,
+                    start: (page - 1) * 20 + 1,
+                    end: (page - 1) * 20 + searchResult.cards.length,
                   })
                 : t("foundCardsGeneric", {
                     total: searchResult.total,
                   })}
             </div>
             <CardList cards={searchResult.cards} />
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              hasResults={searchResult.total > 0}
+            />
           </div>
         ) : (
           <div style={{ textAlign: "center", color: colors.text.secondary }}>

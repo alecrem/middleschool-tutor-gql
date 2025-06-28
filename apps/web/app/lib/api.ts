@@ -6,7 +6,8 @@ export async function searchCards(
   query: string,
   cardType?: string,
   colors?: string[],
-  limit: number = 50,
+  limit: number = 20,
+  offset: number = 0,
   powerMin?: number,
   powerMax?: number,
   toughnessMin?: number,
@@ -21,8 +22,8 @@ export async function searchCards(
     },
     body: JSON.stringify({
       query: `
-        query SearchCards($query: String!, $cardType: String, $colors: [String!], $limit: Int, $powerMin: Int, $powerMax: Int, $toughnessMin: Int, $toughnessMax: Int, $cmcMin: Int, $cmcMax: Int) {
-          searchCards(query: $query, cardType: $cardType, colors: $colors, limit: $limit, powerMin: $powerMin, powerMax: $powerMax, toughnessMin: $toughnessMin, toughnessMax: $toughnessMax, cmcMin: $cmcMin, cmcMax: $cmcMax) {
+        query SearchCards($query: String!, $cardType: String, $colors: [String!], $limit: Int, $offset: Int, $powerMin: Int, $powerMax: Int, $toughnessMin: Int, $toughnessMax: Int, $cmcMin: Int, $cmcMax: Int) {
+          searchCards(query: $query, cardType: $cardType, colors: $colors, limit: $limit, offset: $offset, powerMin: $powerMin, powerMax: $powerMax, toughnessMin: $toughnessMin, toughnessMax: $toughnessMax, cmcMin: $cmcMin, cmcMax: $cmcMax) {
             cards {
               oracle_id
               name
@@ -47,7 +48,7 @@ export async function searchCards(
           }
         }
       `,
-      variables: { query, cardType, colors, limit, powerMin, powerMax, toughnessMin, toughnessMax, cmcMin, cmcMax },
+      variables: { query, cardType, colors, limit, offset, powerMin, powerMax, toughnessMin, toughnessMax, cmcMin, cmcMax },
     }),
   });
 
