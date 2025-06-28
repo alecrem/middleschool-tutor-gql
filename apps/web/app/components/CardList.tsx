@@ -4,6 +4,12 @@ import type { MagicCard } from "../lib/types";
 import { generateScryfallUrl } from "../lib/utils";
 import { useThemedStyles } from "../hooks/useTheme";
 
+function formatPowerToughness(value: string): string {
+  // Remove trailing .0 from values like "2.0" -> "2", but keep "1.5" -> "1.5"
+  const num = parseFloat(value);
+  return num % 1 === 0 ? Math.floor(num).toString() : value;
+}
+
 interface CardListProps {
   cards: MagicCard[];
 }
@@ -193,14 +199,12 @@ export function CardList({ cards }: CardListProps) {
               >
                 <span>{card.type}</span>
                 <span>•</span>
-                <span>{card.rarity}</span>
-                <span>•</span>
                 <span>CMC {card.mv}</span>
                 {card.power && card.toughness && (
                   <>
                     <span>•</span>
                     <span>
-                      {card.power}/{card.toughness}
+                      {formatPowerToughness(card.power)}/{formatPowerToughness(card.toughness)}
                     </span>
                   </>
                 )}
