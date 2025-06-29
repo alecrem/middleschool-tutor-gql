@@ -1,16 +1,15 @@
-import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
 import { useLoaderData, Form, useNavigation, Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
-import { validateCards } from "../lib/api";
-import { parseDeckList } from "../lib/deck-parser";
-import { generateScryfallUrl } from "../lib/utils";
-import { LanguageSwitcher } from "../components/LanguageSwitcher";
-import { ThemeSwitcher } from "../components/ThemeSwitcher";
-import { Footer } from "../components/Footer";
-import { useThemedStyles } from "../hooks/useTheme";
-import type { DeckValidationResult } from "../lib/types";
+import { generateScryfallUrl } from "../../lib/utils";
+import { LanguageSwitcher } from "../../components/LanguageSwitcher";
+import { ThemeSwitcher } from "../../components/ThemeSwitcher";
+import { Footer } from "../../components/Footer";
+import { useThemedStyles } from "../../hooks/useTheme";
+import { loader } from "./loader";
+
+export { loader };
 
 export const meta: MetaFunction = () => {
   return [
@@ -21,52 +20,6 @@ export const meta: MetaFunction = () => {
     },
   ];
 };
-
-export async function loader({ request }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
-  const deckList = url.searchParams.get("decklist");
-
-  if (!deckList || deckList.trim() === "") {
-    return json({ results: null, deckList: "", error: null });
-  }
-
-  // Check line count before processing
-  const lines = deckList.split('\n').filter(line => line.trim().length > 0);
-  if (lines.length > 100) {
-    return json({
-      results: null,
-      deckList,
-      error: "deckLineLimitError",
-    });
-  }
-
-  try {
-    const entries = parseDeckList(deckList);
-    const cardNames = entries.map((entry) => entry.name);
-    const validationResults = await validateCards(cardNames);
-
-    const results: DeckValidationResult[] = entries.map((entry) => {
-      const validation = validationResults.find((v) => v.name === entry.name);
-      return {
-        name: entry.name,
-        quantity: entry.quantity,
-        found: validation?.found ?? false,
-        banned: validation?.banned ?? false,
-        matchedName: validation?.matchedName ?? null,
-        matchedNameJa: validation?.matchedNameJa ?? null,
-      };
-    });
-
-    return json({ results, deckList, error: null });
-  } catch (error) {
-    console.error("Deck validation error:", error);
-    return json({
-      results: null,
-      deckList,
-      error: "deckValidationError",
-    });
-  }
-}
 
 export default function DeckCheck() {
   const { results, deckList, error } = useLoaderData<typeof loader>();
@@ -183,7 +136,7 @@ export default function DeckCheck() {
                   color: isOverLimit ? colors.accent.red : isNearLimit ? colors.accent.orange : colors.text.secondary,
                   fontWeight: isOverLimit || isNearLimit ? "600" : "normal"
                 }}>
-                  {lineCount}/100 lines
+                  {lineCount}/100 {t("lines")}
                 </div>
               </div>
               <p
