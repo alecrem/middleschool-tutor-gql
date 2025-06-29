@@ -4,7 +4,7 @@ export const translations = {
     common: {
       title: "Middle School Tutor",
       description:
-        'Enter any English or Japanese text to find all <a href="https://www.eternalcentral.com/middleschoolrules/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">Middle School legal</a> card titles which include it.',
+        'Enter any English or Japanese text to find all <a href="https://www.eternalcentral.com/middleschoolrules/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">Middle School legal</a> cards. Searches card names, types, and rules text.',
       searchCards: "Card Search",
       searchPlaceholder: "Search for cards...",
       search: "Search",
@@ -16,7 +16,7 @@ export const translations = {
         'Found {{total}} cards for "{{query}}" — showing results {{start}} to {{end}}',
       foundCardsGeneric: 'Found {{total}} cards',
       foundCardsGenericPartial: 'Found {{total}} cards — showing results {{start}} to {{end}}',
-      enterCardName: "Enter a card name to get started",
+      enterCardName: "Enter any text to search cards",
       noCardsFound: "No cards found. Try a different search term.",
       noImage: "No image",
       banned: "Banned",
@@ -73,13 +73,14 @@ export const translations = {
       deckLineLimitWarning: "Approaching line limit ({{current}}/100)",
       deckLineLimitExceeded: "Deck list exceeds 100 line limit ({{current}}/100)",
       deckLineLimitError: "Deck list must not exceed 100 lines",
+      lines: "lines",
     },
   },
   ja: {
     common: {
       title: "Middle School Tutor",
       description:
-        'カードの英語名か日本語名を入力し始めると<a href="https://www.eternalcentral.com/middleschoolrules/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">ミドルスクールで使用可能</a>なカード名が引っかかります。',
+        '英語または日本語のテキストを入力して<a href="https://www.eternalcentral.com/middleschoolrules/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">ミドルスクールで使用可能</a>なカードを検索します。カード名、タイプ、ルールテキストを検索します。',
       searchCards: "カード検索",
       searchPlaceholder: "カードを検索...",
       search: "検索",
@@ -92,7 +93,7 @@ export const translations = {
         "「{{query}}」で{{total}}枚のカードが見つかりました — {{start}}番目から{{end}}番目を表示",
       foundCardsGeneric: "{{total}}枚のカードが見つかりました",
       foundCardsGenericPartial: "{{total}}枚のカードが見つかりました — {{start}}番目から{{end}}番目を表示",
-      enterCardName: "カード名を入力して開始してください",
+      enterCardName: "任意のテキストを入力してカードを検索してください",
       noCardsFound:
         "カードが見つかりませんでした。別の検索語をお試しください。",
       noImage: "画像なし",
@@ -150,6 +151,7 @@ export const translations = {
       deckLineLimitWarning: "行数制限に近づいています ({{current}}/100)",
       deckLineLimitExceeded: "デッキリストが100行の制限を超えています ({{current}}/100)",
       deckLineLimitError: "デッキリストは100行を超えてはいけません",
+      lines: "行",
     },
   },
 } as const;
