@@ -73,7 +73,12 @@ Need to identify and fix hydration errors that may be caused by invalid HTML bei
 2. **$.tsx** (new splat route):
    - Created catch-all route to handle 404s and source map requests
    - Returns proper 404 response for `.map` files (prevents dev tools errors)
-   - Provides user-friendly 404 page for other missing routes
+   - Provides user-friendly 404 page with navigation back to home
+   - Added localization support with English and Japanese translations
+
+3. **lib/translations.ts**:
+   - Added 404 page translation keys for both English and Japanese
+   - Added `pageNotFound`, `pageNotFoundDescription`, and `goBackHome` keys
 
 ### Build Verification
 ✅ Production build completed successfully with no hydration warnings

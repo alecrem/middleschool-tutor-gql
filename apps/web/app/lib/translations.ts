@@ -74,6 +74,9 @@ export const translations = {
       deckLineLimitExceeded: "Deck list exceeds 100 line limit ({{current}}/100)",
       deckLineLimitError: "Deck list must not exceed 100 lines",
       lines: "lines",
+      pageNotFound: "Page Not Found",
+      pageNotFoundDescription: "The page you're looking for doesn't exist.",
+      goBackHome: "Go back home",
     },
   },
   ja: {
@@ -152,6 +155,9 @@ export const translations = {
       deckLineLimitExceeded: "デッキリストが100行の制限を超えています ({{current}}/100)",
       deckLineLimitError: "デッキリストは100行を超えてはいけません",
       lines: "行",
+      pageNotFound: "ページが見つかりません",
+      pageNotFoundDescription: "お探しのページは存在しません。",
+      goBackHome: "ホームに戻る",
     },
   },
 } as const;
