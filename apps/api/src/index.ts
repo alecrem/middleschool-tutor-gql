@@ -5,6 +5,50 @@ import { searchCards, getCardById, getCardsByColor, validateCards } from "./data
 import type { MagicCard } from "./types.js";
 import { pathToFileURL } from "url";
 
+// GraphQL resolver types
+interface SearchCardsArgs {
+  query: string;
+  cardType?: string;
+  colors?: string[];
+  limit?: number;
+  offset?: number;
+  powerMin?: number;
+  powerMax?: number;
+  toughnessMin?: number;
+  toughnessMax?: number;
+  cmcMin?: number;
+  cmcMax?: number;
+}
+
+interface GetCardArgs {
+  oracleId: string;
+}
+
+interface GetCardsByColorArgs {
+  colors: string[];
+}
+
+interface ValidateCardsArgs {
+  cardNames: string[];
+}
+
+// GraphQL resolver context (empty for now)
+interface ResolverContext {}
+
+// Vercel handler types
+interface VercelRequest {
+  method: string;
+  url: string;
+  headers: Record<string, string | string[]>;
+  body?: unknown;
+}
+
+interface VercelResponse {
+  status: (code: number) => void;
+  setHeader: (key: string, value: string) => void;
+  send: (body: string) => void;
+}
+
 const app = new Hono();
 
 // CORS for frontend access
@@ -66,30 +110,18 @@ const typeDefs = `
 const resolvers = {
   Query: {
     searchCards: (
-      _: any,
-      { query, cardType, colors, limit = 20, offset = 0, powerMin, powerMax, toughnessMin, toughnessMax, cmcMin, cmcMax }: { 
-        query: string; 
-        cardType?: string; 
-        colors?: string[]; 
-        limit?: number;
-        offset?: number;
-        powerMin?: number;
-        powerMax?: number;
-        toughnessMin?: number;
-        toughnessMax?: number;
-        cmcMin?: number;
-        cmcMax?: number;
-      }
+      _: unknown,
+      { query, cardType, colors, limit = 20, offset = 0, powerMin, powerMax, toughnessMin, toughnessMax, cmcMin, cmcMax }: SearchCardsArgs
     ) => {
       return searchCards(query, cardType, colors, limit, offset, powerMin, powerMax, toughnessMin, toughnessMax, cmcMin, cmcMax);
     },
-    getCard: (_: any, { oracleId }: { oracleId: string }) => {
+    getCard: (_: unknown, { oracleId }: GetCardArgs) => {
       return getCardById(oracleId);
     },
-    getCardsByColor: (_: any, { colors }: { colors: string[] }) => {
+    getCardsByColor: (_: unknown, { colors }: GetCardsByColorArgs) => {
       return getCardsByColor(colors);
     },
-    validateCards: (_: any, { cardNames }: { cardNames: string[] }) => {
+    validateCards: (_: unknown, { cardNames }: ValidateCardsArgs) => {
       return validateCards(cardNames);
     },
   },
@@ -120,12 +152,24 @@ app.get("/", (c) => {
 });
 
 // For Vercel serverless functions
-export default async function handler(req: any, res: any) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Convert Vercel request to Web API Request
   const url = `https://${req.headers.host}${req.url}`;
+  
+  // Convert headers to proper format for Request constructor
+  const headers = new Headers();
+  Object.entries(req.headers).forEach(([key, value]) => {
+    if (typeof value === 'string') {
+      headers.set(key, value);
+    } else if (Array.isArray(value)) {
+      // Take the first value if it's an array
+      headers.set(key, value[0]);
+    }
+  });
+  
   const request = new Request(url, {
     method: req.method,
-    headers: req.headers,
+    headers,
     body:
       req.method !== "GET" && req.method !== "HEAD"
         ? JSON.stringify(req.body)
