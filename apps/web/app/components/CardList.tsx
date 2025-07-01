@@ -3,6 +3,12 @@ import type { MagicCard } from "../lib/types";
 import { generateScryfallUrl } from "../lib/utils";
 import { useThemedStyles } from "../hooks/useTheme";
 import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
+import { 
+  StyledCard, 
+  StyledCardLayout, 
+  StyledCardContent, 
+  StyledCardImageContainer 
+} from "./StyledCard";
 
 function formatPowerToughness(value: string): string {
   // Remove trailing .0 from values like "2.0" -> "2", but keep "1.5" -> "1.5"
@@ -21,7 +27,7 @@ interface CardImageProps {
 
 function CardImage({ imageUrl, cardName }: CardImageProps) {
   const { t } = useHydratedTranslation();
-  const { colors } = useThemedStyles();
+  const { colors, cardImage, smallText } = useThemedStyles();
   const [isVisible, setIsVisible] = useState(false);
   const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLDivElement>(null);
@@ -44,58 +50,52 @@ function CardImage({ imageUrl, cardName }: CardImageProps) {
     return () => observer.disconnect();
   }, []);
 
+  const imageContainerStyle = {
+    ...cardImage,
+    flexShrink: 0,
+    maxWidth: "30vw",
+  };
+
+  const imageStyle = {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover" as const,
+    borderRadius: "8px",
+    backgroundColor: colors.background.secondary,
+  };
+
+  const placeholderStyle = {
+    width: "100%",
+    height: "100%",
+    backgroundColor: colors.background.secondary,
+    borderRadius: "8px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    ...smallText,
+  };
+
   return (
     <div
       ref={imgRef}
       className="card-image"
-      style={{
-        width: "200px",
-        height: "280px",
-        flexShrink: 0,
-        maxWidth: "30vw",
-        aspectRatio: "5/7", // Standard Magic card ratio
-      }}
+      style={imageContainerStyle}
     >
       {isVisible && !hasError && (
         <img
           src={imageUrl}
           alt={cardName}
           onError={() => setHasError(true)}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            borderRadius: "8px",
-            backgroundColor: colors.background.secondary,
-          }}
+          style={imageStyle}
         />
       )}
       {isVisible && hasError && (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: colors.background.secondary,
-            borderRadius: "8px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: colors.text.secondary,
-            fontSize: "0.875rem",
-          }}
-        >
+        <div style={placeholderStyle}>
           {t("noImage")}
         </div>
       )}
       {!isVisible && (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: colors.background.secondary,
-            borderRadius: "8px",
-          }}
-        />
+        <div style={{ ...placeholderStyle, color: "transparent" }} />
       )}
     </div>
   );
@@ -103,14 +103,15 @@ function CardImage({ imageUrl, cardName }: CardImageProps) {
 
 export function CardList({ cards }: CardListProps) {
   const { i18n, t } = useHydratedTranslation();
-  const { colors } = useThemedStyles();
+  const { colors, smallText } = useThemedStyles();
+  
   if (cards.length === 0) {
     return (
       <div
         style={{
           textAlign: "center",
           padding: "2rem",
-          color: colors.text.secondary,
+          ...smallText,
         }}
       >
         {t("noCardsFound")}
@@ -121,34 +122,13 @@ export function CardList({ cards }: CardListProps) {
   return (
     <div style={{ display: "grid", gap: "1rem" }}>
       {cards.map((card) => (
-        <div
+        <StyledCard
           key={card.oracle_id}
-          style={{
-            border: card.perfectMatch
-              ? `3px solid ${colors.text.primary}`
-              : `1px solid ${colors.border.primary}`,
-            borderRadius: "8px",
-            padding: "1rem",
-            backgroundColor: colors.background.card,
-            boxShadow: card.perfectMatch
-              ? "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
-              : "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
-            display: "flex",
-            flexDirection: "column",
-            gap: "1rem",
-          }}
+          highlighted={card.perfectMatch}
         >
           {/* Mobile-first layout with responsive image placement */}
-          <div
-            className="card-layout"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: "1rem",
-              minWidth: 0, // Allow flex items to shrink below their content size
-            }}
-          >
-            <div style={{ flex: 1, minWidth: 0 }}>
+          <StyledCardLayout className="card-layout">
+            <StyledCardContent>
               <div
                 style={{
                   display: "flex",
@@ -209,8 +189,7 @@ export function CardList({ cards }: CardListProps) {
                   display: "flex",
                   gap: "0.5rem",
                   marginBottom: "0.75rem",
-                  fontSize: "0.875rem",
-                  color: colors.text.secondary,
+                  ...smallText,
                   flexWrap: "wrap",
                 }}
               >
@@ -233,25 +212,24 @@ export function CardList({ cards }: CardListProps) {
               {card.text && (
                 <p
                   style={{
-                    fontSize: "0.875rem",
                     lineHeight: "1.5",
-                    color: colors.text.secondary,
                     margin: 0,
                     whiteSpace: "pre-wrap",
                     wordBreak: "break-word",
+                    ...smallText,
                   }}
                 >
                   {card.text}
                 </p>
               )}
-            </div>
+            </StyledCardContent>
 
             {/* Image container with responsive sizing */}
-            <div style={{ flexShrink: 0 }}>
+            <StyledCardImageContainer>
               <CardImage imageUrl={card.image_small} cardName={card.name} />
-            </div>
-          </div>
-        </div>
+            </StyledCardImageContainer>
+          </StyledCardLayout>
+        </StyledCard>
       ))}
     </div>
   );

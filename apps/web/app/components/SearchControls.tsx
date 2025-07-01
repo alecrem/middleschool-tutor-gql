@@ -1,11 +1,15 @@
 import { Form, useNavigation } from "@remix-run/react";
 import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
 import { useSearchFormState } from "../hooks/useSearchFormState";
-import { useTheme } from "../hooks/useTheme";
+import { useThemedStyles } from "../hooks/useTheme";
 import { Accordion } from "./Accordion";
 import { FormField } from "./FormField";
 import { NumberRangeSelect } from "./NumberRangeSelect";
 import { ColorCheckboxGroup } from "./ColorCheckboxGroup";
+import { StyledButton } from "./StyledButton";
+import { StyledInput } from "./StyledInput";
+import { StyledSelect } from "./StyledSelect";
+import { StyledContainer } from "./StyledContainer";
 
 interface SearchControlsProps {
   query: string;
@@ -31,7 +35,7 @@ export function SearchControls({
   cmcMax = 16
 }: SearchControlsProps) {
   const { t } = useHydratedTranslation();
-  const { colors } = useTheme();
+  const { colors, flexRow, flexColumn, topBorder } = useThemedStyles();
   const navigation = useNavigation();
   
   // Initialize form state with current URL parameters
@@ -72,89 +76,48 @@ export function SearchControls({
     cmcMin !== defaults.cmcMin || 
     cmcMax !== defaults.cmcMax;
 
-  const containerStyle = {
-    backgroundColor: colors.background.secondary,
-    padding: "1.5rem",
-    borderRadius: "8px",
-    marginBottom: "2rem",
-  };
-
-  const inputStyle = {
-    flex: 1,
-    minWidth: "200px",
-    padding: "0.75rem",
-    border: `1px solid ${colors.border.primary}`,
-    borderRadius: "6px",
-    fontSize: "1rem",
-    backgroundColor: colors.background.primary,
-    color: colors.text.primary,
-  };
-
-  const buttonStyle = (disabled: boolean) => ({
-    padding: "0.75rem 1.5rem",
-    backgroundColor: disabled ? colors.button.disabled : colors.button.primary,
-    color: colors.button.text,
-    border: "none",
-    borderRadius: "6px",
-    fontSize: "1rem",
-    cursor: disabled ? "not-allowed" : "pointer",
-  });
-
-  const selectStyle = {
-    width: "100%",
-    padding: "0.5rem",
-    border: `1px solid ${colors.border.primary}`,
-    borderRadius: "6px",
-    fontSize: "0.875rem",
-    backgroundColor: colors.background.primary,
-    color: colors.text.primary,
-    cursor: "pointer",
-    outline: "none",
-  };
-
   return (
-    <div style={containerStyle}>
+    <StyledContainer variant="section">
       <h2>{t("searchCards")}</h2>
       <p dangerouslySetInnerHTML={{ __html: t("description") }} />
 
       <Form method="get">
         {/* Main search input */}
-        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1rem" }}>
-          <input
+        <div style={{ ...flexRow, flexWrap: "wrap", marginBottom: "1rem" }}>
+          <StyledInput
             type="text"
             name="query"
             defaultValue={query}
             placeholder={t("searchPlaceholder")}
             onChange={(e) => actions.setQuery(e.target.value)}
-            style={inputStyle}
+            variant="search"
           />
-          <button
+          <StyledButton
             type="submit"
             disabled={isSearching || isSearchDisabled}
-            style={buttonStyle(isSearching || isSearchDisabled)}
+            size="lg"
           >
             {isSearching ? t("searching") : t("search")}
-          </button>
+          </StyledButton>
         </div>
 
         {/* Advanced search accordion */}
         <Accordion title={t("advancedSearch")} defaultExpanded={hasAdvancedFilters}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <div style={flexColumn}>
             
             {/* Card Type */}
             <FormField label={t("cardType")}>
-              <select
+              <StyledSelect
                 name={state.cardType !== "" ? "cardType" : undefined}
                 value={state.cardType}
                 onChange={(e) => actions.setCardType(e.target.value)}
-                style={selectStyle}
               >
                 {cardTypes.map((type) => (
                   <option key={type.value} value={type.value}>
                     {type.label}
                   </option>
                 ))}
-              </select>
+              </StyledSelect>
             </FormField>
 
             {/* Colors */}
@@ -209,60 +172,32 @@ export function SearchControls({
 
             {/* Action buttons */}
             <div style={{
-              display: "flex",
+              ...flexRow,
               gap: "0.75rem",
               marginTop: "1.5rem",
-              paddingTop: "1rem",
-              borderTop: `1px solid ${colors.border.primary}`,
+              ...topBorder,
             }}>
-              <button
+              <StyledButton
                 type="button"
                 onClick={actions.resetToDefaults}
-                style={{
-                  flex: 1,
-                  padding: "0.75rem 1rem",
-                  border: `1px solid ${colors.border.primary}`,
-                  borderRadius: "6px",
-                  fontSize: "0.875rem",
-                  fontWeight: "500",
-                  backgroundColor: colors.background.primary,
-                  color: colors.text.primary,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = colors.background.secondary;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = colors.background.primary;
-                }}
+                variant="secondary"
+                fullWidth
               >
                 {t("resetToDefaults")}
-              </button>
+              </StyledButton>
               
-              <button
+              <StyledButton
                 type="submit"
                 disabled={isSearching || isSearchDisabled}
-                style={{
-                  flex: 1,
-                  padding: "0.75rem 1rem",
-                  border: "none",
-                  borderRadius: "6px",
-                  fontSize: "0.875rem",
-                  fontWeight: "500",
-                  backgroundColor: (isSearching || isSearchDisabled) ? colors.background.secondary : colors.button.primary,
-                  color: (isSearching || isSearchDisabled) ? colors.text.secondary : colors.button.text,
-                  cursor: (isSearching || isSearchDisabled) ? "not-allowed" : "pointer",
-                  transition: "all 0.2s ease",
-                  opacity: (isSearching || isSearchDisabled) ? 0.6 : 1,
-                }}
+                variant="primary"
+                fullWidth
               >
                 {isSearching ? t("searching") : t("search")}
-              </button>
+              </StyledButton>
             </div>
           </div>
         </Accordion>
       </Form>
-    </div>
+    </StyledContainer>
   );
 }

@@ -44,6 +44,51 @@ export function useThemedStyles() {
       backgroundColor: colors.background.error,
       color: colors.text.error,
       border: `1px solid ${colors.border.error}`,
-    }
+    },
+    // Layout helpers
+    flexRow: {
+      display: 'flex' as const,
+      alignItems: 'center' as const,
+      gap: '0.5rem',
+    },
+    flexColumn: {
+      display: 'flex' as const,
+      flexDirection: 'column' as const,
+      gap: '1rem',
+    },
+    flexWrap: {
+      display: 'flex' as const,
+      flexWrap: 'wrap' as const,
+      gap: '0.5rem',
+    },
+    // Typography helpers
+    smallText: {
+      fontSize: '0.875rem',
+      color: colors.text.secondary,
+    },
+    labelText: {
+      fontSize: '0.875rem',
+      fontWeight: '600' as const,
+      color: colors.text.primary,
+    },
+    // Card image helpers
+    cardImage: {
+      width: '200px',
+      height: '280px',
+      aspectRatio: '5/7' as const,
+      borderRadius: '8px',
+      backgroundColor: colors.background.secondary,
+    },
+    // Form helpers
+    formGroup: {
+      display: 'flex' as const,
+      flexDirection: 'column' as const,
+      gap: '0.5rem',
+    },
+    // Border helpers
+    topBorder: {
+      borderTop: `1px solid ${colors.border.primary}`,
+      paddingTop: '1rem',
+    },
   };
 }
