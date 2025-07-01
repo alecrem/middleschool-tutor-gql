@@ -1,8 +1,8 @@
-import { useTranslation } from "react-i18next";
 import { useRef, useEffect, useState } from "react";
 import type { MagicCard } from "../lib/types";
 import { generateScryfallUrl } from "../lib/utils";
 import { useThemedStyles } from "../hooks/useTheme";
+import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
 
 function formatPowerToughness(value: string): string {
   // Remove trailing .0 from values like "2.0" -> "2", but keep "1.5" -> "1.5"
@@ -20,7 +20,7 @@ interface CardImageProps {
 }
 
 function CardImage({ imageUrl, cardName }: CardImageProps) {
-  const { t } = useTranslation();
+  const { t } = useHydratedTranslation();
   const { colors } = useThemedStyles();
   const [isVisible, setIsVisible] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -102,7 +102,7 @@ function CardImage({ imageUrl, cardName }: CardImageProps) {
 }
 
 export function CardList({ cards }: CardListProps) {
-  const { i18n, t } = useTranslation();
+  const { i18n, t } = useHydratedTranslation();
   const { colors } = useThemedStyles();
   if (cards.length === 0) {
     return (

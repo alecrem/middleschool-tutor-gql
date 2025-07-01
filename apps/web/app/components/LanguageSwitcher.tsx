@@ -1,8 +1,8 @@
-import { useTranslation } from "react-i18next";
+import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
 import { useThemedStyles } from "../hooks/useTheme";
 
 export function LanguageSwitcher() {
-  const { i18n } = useTranslation();
+  const { i18n } = useHydratedTranslation();
   const { colors } = useThemedStyles();
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
