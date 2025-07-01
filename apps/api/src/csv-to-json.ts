@@ -1,50 +1,9 @@
 import { readFileSync, writeFileSync, mkdirSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import type { MagicCard, PartialMagicCard } from "./types.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-interface MagicCard {
-  oracle_id: string;
-  name: string;
-  name_ja: string | null;
-  banned: boolean;
-  mv: number;
-  rarity: string;
-  text: string;
-  type: string;
-  power: string | null;
-  toughness: string | null;
-  w: boolean;
-  u: boolean;
-  b: boolean;
-  r: boolean;
-  g: boolean;
-  c: boolean;
-  image_small: string;
-}
-
-// Partial card interface for parsing (allows gradual property assignment)
-interface PartialMagicCard {
-  oracle_id?: string;
-  name?: string;
-  name_ja?: string | null;
-  banned?: boolean;
-  mv?: number;
-  rarity?: string;
-  text?: string;
-  type?: string;
-  power?: string | null;
-  toughness?: string | null;
-  w?: boolean;
-  u?: boolean;
-  b?: boolean;
-  r?: boolean;
-  g?: boolean;
-  c?: boolean;
-  image_small?: string;
-  [key: string]: unknown; // Allow additional properties during parsing
-}
 
 function parseCSVRecords(csvContent: string): string[] {
   const records: string[] = [];
