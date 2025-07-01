@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { createYoga, createSchema } from "graphql-yoga";
 import { searchCards, getCardById, getCardsByColor, validateCards } from "./data.js";
-import type { MagicCard } from "./types.js";
+import type { MagicCard } from "@mtg-middle-school/shared-types";
 import { pathToFileURL } from "url";
 
 // GraphQL resolver types

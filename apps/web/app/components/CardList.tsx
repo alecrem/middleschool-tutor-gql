@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import type { MagicCard } from "../lib/types";
+import type { MagicCard } from "@mtg-middle-school/shared-types";
 import { generateScryfallUrl } from "../lib/utils";
 import { useThemedStyles } from "../hooks/useTheme";
 import { useHydratedTranslation } from "../hooks/useHydratedTranslation";

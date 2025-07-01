@@ -1,4 +1,4 @@
-import type { DeckEntry } from "./types";
+import type { DeckEntry } from "@mtg-middle-school/shared-types";
 
 export function parseDeckList(deckListText: string): DeckEntry[] {
   const lines = deckListText

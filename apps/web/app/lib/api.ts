@@ -1,4 +1,4 @@
-import type { CardSearchResult, SearchParams } from "./types";
+import type { CardSearchResult, SearchParams } from "@mtg-middle-school/shared-types";
 
 const API_URL = process.env.API_URL || "http://localhost:3001/graphql";
 

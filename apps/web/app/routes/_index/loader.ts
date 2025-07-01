@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { searchCards } from "../../lib/api";
-import type { CardSearchResult } from "../../lib/types";
+import type { CardSearchResult } from "@mtg-middle-school/shared-types";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);

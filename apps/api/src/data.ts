@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-import type { MagicCard } from "./types.js";
+import type { MagicCard } from "@mtg-middle-school/shared-types";
 
 // Handle both ES modules and CommonJS
 const getCurrentDir = (): string => {

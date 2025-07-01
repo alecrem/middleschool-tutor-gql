@@ -2,7 +2,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { validateCards } from "../../lib/api";
 import { parseDeckList } from "../../lib/deck-parser";
-import type { DeckValidationResult } from "../../lib/types";
+import type { DeckValidationResult } from "@mtg-middle-school/shared-types";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
