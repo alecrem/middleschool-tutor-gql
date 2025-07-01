@@ -7,6 +7,7 @@ import {
 } from "@remix-run/react";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { BodyStyle } from "./components/BodyStyle";
+import { Analytics } from "@vercel/analytics/remix";
 
 export default function App() {
   return (
@@ -18,8 +19,9 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <style dangerouslySetInnerHTML={{
-          __html: `
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
             * {
               box-sizing: border-box;
             }
@@ -47,14 +49,16 @@ export default function App() {
                 transition: none !important;
               }
             }
-          `
-        }} />
+          `,
+          }}
+        />
         <ThemeProvider>
           <BodyStyle />
           <Outlet />
         </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
+        <Analytics />
       </body>
     </html>
   );
