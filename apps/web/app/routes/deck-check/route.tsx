@@ -1,7 +1,7 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useLoaderData, Form, useNavigation, Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { generateScryfallUrl } from "../../lib/utils";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
 import { ThemeSwitcher } from "../../components/ThemeSwitcher";
@@ -277,8 +277,8 @@ export default function DeckCheck() {
                 }}
               >
                 {results.map((result, index) => (
-                  <>
-                    <div key={`${index}-en`} style={{ 
+                  <React.Fragment key={`${index}-row`}>
+                    <div style={{ 
                       color: result.banned ? colors.accent.red : !result.found ? colors.accent.orange : "inherit" 
                     }}>
                       {result.quantity}{" "}
@@ -300,7 +300,7 @@ export default function DeckCheck() {
                       )}
                     </div>
                     {i18n.language === "ja" && (
-                      <div key={`${index}-ja`} style={{ 
+                      <div style={{ 
                         color: result.banned ? colors.accent.red : !result.found ? colors.accent.orange : "inherit" 
                       }}>
                         {result.quantity}{" "}
@@ -311,7 +311,7 @@ export default function DeckCheck() {
                           : result.name}
                       </div>
                     )}
-                    <div key={`${index}-status`}>
+                    <div>
                       {result.banned && (
                         <span style={{ color: colors.accent.red, fontWeight: "600" }}>
                           {t("bannedLabel")}
@@ -323,7 +323,7 @@ export default function DeckCheck() {
                         </span>
                       )}
                     </div>
-                  </>
+                  </React.Fragment>
                 ))}
               </div>
             </div>
