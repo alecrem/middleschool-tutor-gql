@@ -80,9 +80,32 @@ Need to identify and fix hydration errors that may be caused by invalid HTML bei
    - Added 404 page translation keys for both English and Japanese
    - Added `pageNotFound`, `pageNotFoundDescription`, and `goBackHome` keys
 
+4. **hooks/useHydratedTranslation.ts** (new file):
+   - Created comprehensive hydration-safe translation hook
+   - Prevents server/client language mismatch across all pages
+   - Provides English fallback during SSR, localized content after hydration
+   - Includes extensive fallback translations for all UI strings
+   - Type-safe wrapper around react-i18next
+
+5. **All route and component files**:
+   - Updated all components using translations to use `useHydratedTranslation`
+   - Replaced `useTranslation` imports with hydration-safe alternative
+   - Updated routes: `$.tsx`, `deck-check/route.tsx`, `_index/route.tsx`
+   - Updated components: `SearchControls.tsx`, `CardList.tsx`, `Pagination.tsx`, `ThemeSwitcher.tsx`, `LanguageSwitcher.tsx`, `Footer.tsx`
+
 ### Build Verification
 ✅ Production build completed successfully with no hydration warnings
 ✅ No TypeScript errors or console warnings
 ✅ All routes and components properly structured
+✅ Comprehensive hydration-safe translation system implemented
 
-The hydration errors have been resolved through proper React fragment keying in the deck validation results display.
+## Summary
+
+The hydration errors have been comprehensively resolved through:
+
+1. **React Fragment Keying**: Fixed missing keys in deck validation results display
+2. **Translation Hydration**: Created `useHydratedTranslation` hook to prevent server/client language mismatches
+3. **Universal Application**: Applied hydration-safe translations across all components and routes
+4. **Fallback System**: Comprehensive English fallbacks ensure consistent SSR rendering
+
+This solution ensures that all pages render consistently during SSR with English content, then seamlessly update to the user's preferred language after client-side hydration, eliminating all hydration errors across the application.

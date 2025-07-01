@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from "@remix-run/react";
-import { useTranslation } from "react-i18next";
+import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
 import { useThemedStyles } from "../hooks/useTheme";
 
 interface PaginationProps {
@@ -10,7 +10,7 @@ interface PaginationProps {
 
 export function Pagination({ currentPage, totalPages, hasResults }: PaginationProps) {
   const [searchParams] = useSearchParams();
-  const { t } = useTranslation();
+  const { t } = useHydratedTranslation();
   const { colors } = useThemedStyles();
 
   // Don't show pagination if no results or only one page

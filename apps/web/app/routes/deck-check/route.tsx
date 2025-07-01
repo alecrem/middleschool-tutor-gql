@@ -1,7 +1,7 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useLoaderData, Form, useNavigation, Link } from "@remix-run/react";
-import { useTranslation } from "react-i18next";
 import React, { useState, useEffect } from "react";
+import { useHydratedTranslation } from "../../hooks/useHydratedTranslation";
 import { generateScryfallUrl } from "../../lib/utils";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
 import { ThemeSwitcher } from "../../components/ThemeSwitcher";
@@ -23,7 +23,7 @@ export const meta: MetaFunction = () => {
 
 export default function DeckCheck() {
   const { results, deckList, error } = useLoaderData<typeof loader>();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useHydratedTranslation();
   const navigation = useNavigation();
   const { colors } = useThemedStyles();
   const isValidating =

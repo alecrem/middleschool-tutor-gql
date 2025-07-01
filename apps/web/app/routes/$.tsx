@@ -1,7 +1,7 @@
 import { type LoaderFunctionArgs } from "@remix-run/node";
 import { Link } from "@remix-run/react";
-import { useTranslation } from "react-i18next";
 import { useThemedStyles } from "../hooks/useTheme";
+import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -17,7 +17,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export function ErrorBoundary() {
   const { colors } = useThemedStyles();
-  const { t } = useTranslation();
+  const { t } = useHydratedTranslation();
 
   return (
     <div

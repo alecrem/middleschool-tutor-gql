@@ -1,9 +1,9 @@
-import { useTranslation } from "react-i18next";
+import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
 import { useTheme } from "../hooks/useTheme";
 import type { ThemeMode } from "../lib/theme";
 
 export function ThemeSwitcher() {
-  const { t } = useTranslation();
+  const { t } = useHydratedTranslation();
   const { mode, colors, setTheme } = useTheme();
 
   const handleThemeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {

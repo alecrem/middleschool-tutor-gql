@@ -1,6 +1,6 @@
 import { Form, useNavigation } from "@remix-run/react";
-import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
 import { Accordion } from "./Accordion";
 import { useTheme } from "../hooks/useTheme";
 
@@ -27,7 +27,7 @@ export function SearchControls({
   cmcMin = 0,
   cmcMax = 16
 }: SearchControlsProps) {
-  const { t } = useTranslation();
+  const { t } = useHydratedTranslation();
   const { colors } = useTheme();
   const navigation = useNavigation();
   

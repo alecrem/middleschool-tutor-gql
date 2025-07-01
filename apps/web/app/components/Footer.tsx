@@ -1,8 +1,8 @@
-import { useTranslation } from "react-i18next";
+import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
 import { useThemedStyles } from "../hooks/useTheme";
 
 export function Footer() {
-  const { t } = useTranslation();
+  const { t } = useHydratedTranslation();
   const { colors } = useThemedStyles();
 
   return (

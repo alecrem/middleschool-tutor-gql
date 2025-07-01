@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
-import { useTranslation } from "react-i18next";
+import { useHydratedTranslation } from "../../hooks/useHydratedTranslation";
 import { CardList } from "../../components/CardList";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
 import { ThemeSwitcher } from "../../components/ThemeSwitcher";
@@ -39,7 +39,7 @@ export default function Index() {
     totalPages,
     error,
   } = useLoaderData<typeof loader>();
-  const { t } = useTranslation();
+  const { t } = useHydratedTranslation();
   const { colors } = useThemedStyles();
 
   return (
