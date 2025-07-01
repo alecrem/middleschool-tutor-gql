@@ -84,7 +84,7 @@ Need to identify and fix hydration errors that may be caused by invalid HTML bei
    - Created comprehensive hydration-safe translation hook
    - Prevents server/client language mismatch across all pages
    - Provides English fallback during SSR, localized content after hydration
-   - Includes extensive fallback translations for all UI strings
+   - References existing translations.ts as source of truth (no duplication)
    - Type-safe wrapper around react-i18next
 
 5. **All route and component files**:
