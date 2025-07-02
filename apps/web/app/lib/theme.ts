@@ -1,3 +1,5 @@
+import { designTokens, type Spacing, type FontSize, type BorderRadius, type Shadow } from './designTokens';
+
 export type ThemeMode = 'light' | 'dark' | 'system';
 
 export interface ThemeColors {
@@ -124,4 +126,69 @@ export function getActiveTheme(mode: ThemeMode): 'light' | 'dark' {
     return getSystemTheme();
   }
   return mode;
+}
+
+// Enhanced Theme Interface combining colors with design tokens
+export interface EnhancedTheme {
+  colors: ThemeColors;
+  tokens: typeof designTokens;
+}
+
+// Utility types for better TypeScript support
+export type ThemeColorPath = 
+  | `background.${keyof ThemeColors['background']}`
+  | `text.${keyof ThemeColors['text']}`
+  | `border.${keyof ThemeColors['border']}`
+  | `button.${keyof ThemeColors['button']}`
+  | `accent.${keyof ThemeColors['accent']}`;
+
+// Component variant types for better intellisense
+export type ComponentVariant = 'default' | 'primary' | 'secondary' | 'success' | 'error' | 'warning';
+export type ComponentSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
+// Style utility types
+export interface StyleUtilities {
+  spacing: (size: Spacing) => string;
+  fontSize: (size: FontSize) => string;
+  borderRadius: (size: BorderRadius) => string;
+  shadow: (level: Shadow) => string;
+  transition: (property?: string, duration?: string) => string;
+}
+
+// Common component props interface
+export interface BaseComponentProps {
+  variant?: ComponentVariant;
+  size?: ComponentSize;
+  fullWidth?: boolean;
+  disabled?: boolean;
+}
+
+// Layout utility types
+export interface LayoutStyles {
+  flexRow: React.CSSProperties;
+  flexColumn: React.CSSProperties;
+  flexCenter: React.CSSProperties;
+  flexBetween: React.CSSProperties;
+  gridBase: React.CSSProperties;
+  gridResponsive: React.CSSProperties;
+}
+
+// Typography utility types
+export interface TypographyStyles {
+  heading: React.CSSProperties;
+  subheading: React.CSSProperties;
+  body: React.CSSProperties;
+  caption: React.CSSProperties;
+  label: React.CSSProperties;
+}
+
+// Complete theme context type
+export interface ThemeContextType {
+  mode: ThemeMode;
+  colors: ThemeColors;
+  tokens: typeof designTokens;
+  utilities: StyleUtilities;
+  layout: LayoutStyles;
+  typography: TypographyStyles;
+  setTheme: (mode: ThemeMode) => void;
 }

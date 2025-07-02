@@ -1,8 +1,9 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
-import { useThemedStyles } from '../hooks/useTheme';
+import { useThemedStyles, useDesignTokens } from '../hooks/useTheme';
+import type { ComponentSize, ComponentVariant } from '../lib/theme';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'disabled';
-export type ButtonSize = 'sm' | 'md' | 'lg';
+export type ButtonSize = ComponentSize;
 
 interface StyledButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'> {
   variant?: ButtonVariant;
@@ -23,35 +24,54 @@ export function StyledButton({
   onMouseLeave,
   ...props
 }: StyledButtonProps) {
-  const { colors } = useThemedStyles();
+  const { colors, utilities } = useThemedStyles();
+  const tokens = useDesignTokens();
 
   const getBaseStyles = () => ({
     border: 'none',
-    borderRadius: '6px',
-    fontWeight: '500',
+    borderRadius: utilities.borderRadius('md'),
+    fontWeight: tokens.typography.fontWeight.medium,
     cursor: disabled ? 'not-allowed' : 'pointer',
-    transition: 'all 0.2s ease',
+    transition: utilities.transition('all'),
     opacity: disabled ? 0.6 : 1,
     width: fullWidth ? '100%' : 'auto',
     outline: 'none',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   });
 
   const getSizeStyles = () => {
     switch (size) {
+      case 'xs':
+        return {
+          padding: `${utilities.spacing('xs')} ${utilities.spacing('sm')}`,
+          fontSize: utilities.fontSize('xs'),
+          minHeight: '1.5rem',
+        };
       case 'sm':
         return {
-          padding: '0.5rem 0.75rem',
-          fontSize: '0.875rem',
+          padding: `${utilities.spacing('sm')} ${utilities.spacing('md')}`,
+          fontSize: utilities.fontSize('sm'),
+          minHeight: '2rem',
         };
       case 'lg':
         return {
-          padding: '0.75rem 1.5rem',
-          fontSize: '1rem',
+          padding: `${utilities.spacing('lg')} ${utilities.spacing('xl')}`,
+          fontSize: utilities.fontSize('lg'),
+          minHeight: '3rem',
+        };
+      case 'xl':
+        return {
+          padding: `${utilities.spacing('xl')} ${utilities.spacing('2xl')}`,
+          fontSize: utilities.fontSize('xl'),
+          minHeight: '3.5rem',
         };
       default: // md
         return {
-          padding: '0.75rem 1rem',
-          fontSize: '0.875rem',
+          padding: `${utilities.spacing('md')} ${utilities.spacing('lg')}`,
+          fontSize: utilities.fontSize('base'),
+          minHeight: '2.5rem',
         };
     }
   };
