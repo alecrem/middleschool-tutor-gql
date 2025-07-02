@@ -1,8 +1,9 @@
 import { InputHTMLAttributes } from 'react';
 import { useThemedStyles } from '../hooks/useTheme';
+import type { ComponentSize } from '../lib/theme';
 
 export type InputVariant = 'default' | 'search';
-export type InputSize = 'sm' | 'md' | 'lg';
+export type InputSize = ComponentSize;
 
 interface StyledInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   variant?: InputVariant;
@@ -17,34 +18,50 @@ export function StyledInput({
   style: customStyle,
   ...props
 }: StyledInputProps) {
-  const { colors } = useThemedStyles();
+  const { colors, utilities } = useThemedStyles();
 
   const getBaseStyles = () => ({
     border: `1px solid ${colors.border.primary}`,
-    borderRadius: '6px',
+    borderRadius: utilities.borderRadius('md'),
     backgroundColor: colors.background.primary,
     color: colors.text.primary,
     outline: 'none',
     width: fullWidth ? '100%' : 'auto',
-    transition: 'border-color 0.2s ease',
+    transition: utilities.transition('border-color'),
+    fontFamily: 'inherit',
   });
 
   const getSizeStyles = () => {
     switch (size) {
+      case 'xs':
+        return {
+          padding: utilities.spacing('xs'),
+          fontSize: utilities.fontSize('xs'),
+          minHeight: '1.5rem',
+        };
       case 'sm':
         return {
-          padding: '0.5rem',
-          fontSize: '0.875rem',
+          padding: utilities.spacing('sm'),
+          fontSize: utilities.fontSize('sm'),
+          minHeight: '2rem',
         };
       case 'lg':
         return {
-          padding: '0.75rem',
-          fontSize: '1rem',
+          padding: utilities.spacing('lg'),
+          fontSize: utilities.fontSize('lg'),
+          minHeight: '3rem',
+        };
+      case 'xl':
+        return {
+          padding: utilities.spacing('xl'),
+          fontSize: utilities.fontSize('xl'),
+          minHeight: '3.5rem',
         };
       default: // md
         return {
-          padding: '0.75rem',
-          fontSize: '1rem',
+          padding: utilities.spacing('md'),
+          fontSize: utilities.fontSize('base'),
+          minHeight: '2.5rem',
         };
     }
   };
