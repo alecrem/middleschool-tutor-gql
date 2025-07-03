@@ -8,8 +8,10 @@ import { LanguageSwitcher } from "../../components/LanguageSwitcher";
 import { ThemeSwitcher } from "../../components/ThemeSwitcher";
 import { Footer } from "../../components/Footer";
 import { Navigation } from "../../components/Navigation";
+import { ShareButton } from "../../components/ShareButton";
 import { useThemedStyles } from "../../hooks/useTheme";
 import { Icon } from "../../components/Icon";
+import { generateDeckCheckShareUrl } from "../../lib/urlUtils";
 import { loader } from "./loader";
 
 export { loader };
@@ -36,6 +38,7 @@ export default function DeckCheck() {
 
   const bannedCards = results?.filter((result) => result.banned) ?? [];
   const notFoundCards = results?.filter((result) => !result.found) ?? [];
+  const isDeckValid = bannedCards.length + notFoundCards.length === 0;
 
   const [copyStatus, setCopyStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [currentDeckList, setCurrentDeckList] = useState(deckList);
@@ -49,6 +52,9 @@ export default function DeckCheck() {
 
   const isOverLimit = lineCount > 100;
   const isNearLimit = lineCount > 90 && lineCount <= 100;
+
+  // Generate share URL for current deck check
+  const shareUrl = generateDeckCheckShareUrl(currentDeckList);
 
   const copyDeckListToClipboard = async () => {
     if (!results) return;
@@ -230,40 +236,48 @@ export default function DeckCheck() {
             }}>
               <h2 style={{ fontSize: "1.5rem", margin: 0, display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <Icon 
-                  icon={bannedCards.length + notFoundCards.length === 0 ? CheckCircle : AlertTriangle} 
+                  icon={isDeckValid ? CheckCircle : AlertTriangle} 
                   size="sm"
-                  color={bannedCards.length + notFoundCards.length === 0 ? colors.accent.green : colors.text.error}
+                  color={isDeckValid ? colors.accent.green : colors.text.error}
                 />
                 {t("deckResults")}:{" "}
-                {bannedCards.length + notFoundCards.length === 0
+                {isDeckValid
                   ? t("deckValid")
                   : `${bannedCards.length + notFoundCards.length} ${t(
                       "cardsNotAllowed"
                     )}`}
               </h2>
-              <button
-                onClick={copyDeckListToClipboard}
-                disabled={copyStatus !== 'idle'}
-                style={{
-                  padding: "0.5rem 1rem",
-                  backgroundColor: copyStatus === 'success' ? colors.background.secondary : copyStatus === 'error' ? colors.background.error : colors.background.secondary,
-                  color: copyStatus === 'success' ? colors.text.primary : copyStatus === 'error' ? colors.text.error : colors.text.primary,
-                  border: `1px solid ${colors.border.primary}`,
-                  borderRadius: "6px",
-                  fontSize: "0.875rem",
-                  cursor: copyStatus === 'idle' ? "pointer" : "default",
-                  transition: "all 0.2s ease",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                }}
-              >
-                <Icon 
-                  icon={copyStatus === 'success' ? CheckCircle : copyStatus === 'error' ? XCircle : Copy} 
-                  size="xs" 
+              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
+                <button
+                  onClick={copyDeckListToClipboard}
+                  disabled={copyStatus !== 'idle'}
+                  style={{
+                    padding: "0.5rem 1rem",
+                    backgroundColor: copyStatus === 'success' ? colors.background.secondary : copyStatus === 'error' ? colors.background.error : colors.background.secondary,
+                    color: copyStatus === 'success' ? colors.text.primary : copyStatus === 'error' ? colors.text.error : colors.text.primary,
+                    border: `1px solid ${colors.border.primary}`,
+                    borderRadius: "6px",
+                    fontSize: "0.875rem",
+                    cursor: copyStatus === 'idle' ? "pointer" : "default",
+                    transition: "all 0.2s ease",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <Icon 
+                    icon={copyStatus === 'success' ? CheckCircle : copyStatus === 'error' ? XCircle : Copy} 
+                    size="xs" 
+                  />
+                  {copyStatus === 'success' ? t("copied") : copyStatus === 'error' ? t("copyFailed") : t("copyDeckList")}
+                </button>
+                <ShareButton
+                  url={shareUrl}
+                  label={t("shareDeckCheck")}
+                  size="sm"
+                  disabled={!isDeckValid}
                 />
-                {copyStatus === 'success' ? t("copied") : copyStatus === 'error' ? t("copyFailed") : t("copyDeckList")}
-              </button>
+              </div>
             </div>
 
             <div

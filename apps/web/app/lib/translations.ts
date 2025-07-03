@@ -78,6 +78,10 @@ export const translations = {
       pageNotFoundDescription: "The page you're looking for doesn't exist.",
       goBackHome: "Go back home",
       mainNavigation: "Main navigation",
+      shareSearch: "Share Search",
+      shareDeckCheck: "Share Deck",
+      urlCopied: "URL copied!",
+      copyUrlFailed: "Failed to copy URL",
     },
   },
   ja: {
@@ -160,6 +164,10 @@ export const translations = {
       pageNotFoundDescription: "お探しのページは存在しません。",
       goBackHome: "ホームに戻る",
       mainNavigation: "メインナビゲーション",
+      shareSearch: "検索を共有",
+      shareDeckCheck: "デッキを共有",
+      urlCopied: "URLをコピーしました!",
+      copyUrlFailed: "URLのコピーに失敗しました",
     },
   },
 } as const;
