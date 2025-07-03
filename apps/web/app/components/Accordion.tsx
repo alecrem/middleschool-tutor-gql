@@ -1,5 +1,7 @@
 import { useState, ReactNode } from "react";
+import { ChevronDown } from 'lucide-react';
 import { useTheme } from "../hooks/useTheme";
+import { Icon } from './Icon';
 
 interface AccordionProps {
   title: ReactNode;
@@ -41,10 +43,9 @@ export function Accordion({ title, children, defaultExpanded = false }: Accordio
           style={{
             transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
             transition: "transform 0.2s ease",
-            fontSize: "0.75rem",
           }}
         >
-          ▼
+          <Icon icon={ChevronDown} size="sm" />
         </span>
       </button>
       {isExpanded && (
