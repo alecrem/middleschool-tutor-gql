@@ -1,5 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
+import { CheckCircle } from 'lucide-react';
 import { useHydratedTranslation } from "../../hooks/useHydratedTranslation";
 import { CardList } from "../../components/CardList";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
@@ -8,6 +9,7 @@ import { SearchControls } from "../../components/SearchControls";
 import { Footer } from "../../components/Footer";
 import { Pagination } from "../../components/Pagination";
 import { useThemedStyles } from "../../hooks/useTheme";
+import { Icon } from "../../components/Icon";
 import { loader } from "./loader";
 
 export { loader };
@@ -88,8 +90,12 @@ export default function Index() {
               color: colors.text.link,
               textDecoration: "underline",
               fontSize: "0.875rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
             }}
           >
+            <Icon icon={CheckCircle} size="xs" />
             {t("deckCheckLink")}
           </Link>
         </div>

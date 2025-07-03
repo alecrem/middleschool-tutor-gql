@@ -1,12 +1,14 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useLoaderData, Form, useNavigation, Link } from "@remix-run/react";
 import React, { useState, useEffect } from "react";
+import { Check, Copy, AlertTriangle, XCircle, CheckCircle, Search } from 'lucide-react';
 import { useHydratedTranslation } from "../../hooks/useHydratedTranslation";
 import { generateScryfallUrl } from "../../lib/utils";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
 import { ThemeSwitcher } from "../../components/ThemeSwitcher";
 import { Footer } from "../../components/Footer";
 import { useThemedStyles } from "../../hooks/useTheme";
+import { Icon } from "../../components/Icon";
 import { loader } from "./loader";
 
 export { loader };
@@ -109,8 +111,12 @@ export default function DeckCheck() {
               color: colors.text.link,
               textDecoration: "underline",
               fontSize: "0.875rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
             }}
           >
+            <Icon icon={Search} size="xs" />
             {t("cardSearchLink")}
           </Link>
         </div>
@@ -200,8 +206,12 @@ export default function DeckCheck() {
                 fontSize: "1rem",
                 cursor: (isValidating || isOverLimit) ? "not-allowed" : "pointer",
                 opacity: (isValidating || isOverLimit) ? 0.6 : 1,
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
               }}
             >
+              <Icon icon={Check} size="sm" />
               {isValidating ? t("validating") : t("validateDeck")}
             </button>
           </Form>
@@ -232,7 +242,12 @@ export default function DeckCheck() {
               flexWrap: "wrap",
               gap: "1rem"
             }}>
-              <h2 style={{ fontSize: "1.5rem", margin: 0 }}>
+              <h2 style={{ fontSize: "1.5rem", margin: 0, display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <Icon 
+                  icon={bannedCards.length + notFoundCards.length === 0 ? CheckCircle : AlertTriangle} 
+                  size="sm"
+                  color={bannedCards.length + notFoundCards.length === 0 ? colors.accent.green : colors.text.error}
+                />
                 {t("deckResults")}:{" "}
                 {bannedCards.length + notFoundCards.length === 0
                   ? t("deckValid")
@@ -245,15 +260,22 @@ export default function DeckCheck() {
                 disabled={copyStatus !== 'idle'}
                 style={{
                   padding: "0.5rem 1rem",
-                  backgroundColor: copyStatus === 'success' ? colors.button.success : copyStatus === 'error' ? colors.button.error : colors.background.secondary,
-                  color: copyStatus === 'success' || copyStatus === 'error' ? colors.button.text : colors.text.primary,
+                  backgroundColor: copyStatus === 'success' ? colors.background.secondary : copyStatus === 'error' ? colors.background.error : colors.background.secondary,
+                  color: copyStatus === 'success' ? colors.text.primary : copyStatus === 'error' ? colors.text.error : colors.text.primary,
                   border: `1px solid ${colors.border.primary}`,
                   borderRadius: "6px",
                   fontSize: "0.875rem",
                   cursor: copyStatus === 'idle' ? "pointer" : "default",
                   transition: "all 0.2s ease",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
                 }}
               >
+                <Icon 
+                  icon={copyStatus === 'success' ? CheckCircle : copyStatus === 'error' ? XCircle : Copy} 
+                  size="xs" 
+                />
                 {copyStatus === 'success' ? t("copied") : copyStatus === 'error' ? t("copyFailed") : t("copyDeckList")}
               </button>
             </div>

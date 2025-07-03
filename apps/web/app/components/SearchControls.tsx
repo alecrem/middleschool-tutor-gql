@@ -1,4 +1,5 @@
 import { Form, useNavigation } from "@remix-run/react";
+import { Search, RotateCcw } from 'lucide-react';
 import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
 import { useSearchFormState } from "../hooks/useSearchFormState";
 import { useThemedStyles } from "../hooks/useTheme";
@@ -10,6 +11,7 @@ import { StyledButton } from "./StyledButton";
 import { StyledInput } from "./StyledInput";
 import { StyledSelect } from "./StyledSelect";
 import { StyledContainer } from "./StyledContainer";
+import { Icon } from "./Icon";
 
 interface SearchControlsProps {
   query: string;
@@ -91,11 +93,13 @@ export function SearchControls({
             placeholder={t("searchPlaceholder")}
             onChange={(e) => actions.setQuery(e.target.value)}
             variant="search"
+            icon={Search}
           />
           <StyledButton
             type="submit"
             disabled={isSearching || isSearchDisabled}
             size="lg"
+            icon={Search}
           >
             {isSearching ? t("searching") : t("search")}
           </StyledButton>
@@ -182,6 +186,7 @@ export function SearchControls({
                 onClick={actions.resetToDefaults}
                 variant="secondary"
                 fullWidth
+                icon={RotateCcw}
               >
                 {t("resetToDefaults")}
               </StyledButton>
@@ -191,6 +196,7 @@ export function SearchControls({
                 disabled={isSearching || isSearchDisabled}
                 variant="primary"
                 fullWidth
+                icon={Search}
               >
                 {isSearching ? t("searching") : t("search")}
               </StyledButton>
