@@ -77,6 +77,7 @@ export const translations = {
       pageNotFound: "Page Not Found",
       pageNotFoundDescription: "The page you're looking for doesn't exist.",
       goBackHome: "Go back home",
+      mainNavigation: "Main navigation",
     },
   },
   ja: {
@@ -158,6 +159,7 @@ export const translations = {
       pageNotFound: "ページが見つかりません",
       pageNotFoundDescription: "お探しのページは存在しません。",
       goBackHome: "ホームに戻る",
+      mainNavigation: "メインナビゲーション",
     },
   },
 } as const;
