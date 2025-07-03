@@ -8,7 +8,9 @@ import { SearchControls } from "../../components/SearchControls";
 import { Footer } from "../../components/Footer";
 import { Pagination } from "../../components/Pagination";
 import { Navigation } from "../../components/Navigation";
+import { ShareButton } from "../../components/ShareButton";
 import { useThemedStyles } from "../../hooks/useTheme";
+import { generateSearchShareUrl, extractSearchParamsFromUrl } from "../../lib/urlUtils";
 import { loader } from "./loader";
 
 export { loader };
@@ -43,6 +45,10 @@ export default function Index() {
   const { t } = useHydratedTranslation();
   const { colors } = useThemedStyles();
   const location = useLocation();
+
+  // Generate share URL for current search
+  const currentSearchParams = extractSearchParamsFromUrl(new URLSearchParams(location.search));
+  const shareUrl = generateSearchShareUrl(currentSearchParams);
 
   return (
     <div
@@ -113,16 +119,32 @@ export default function Index() {
 
         {searchResult ? (
           <div>
-            <div style={{ marginBottom: "1rem", color: colors.text.secondary }}>
-              {searchResult.total > searchResult.cards.length
-                ? t("foundCardsGenericPartial", {
-                    total: searchResult.total,
-                    start: (page - 1) * 20 + 1,
-                    end: (page - 1) * 20 + searchResult.cards.length,
-                  })
-                : t("foundCardsGeneric", {
-                    total: searchResult.total,
-                  })}
+            <div style={{ 
+              display: "flex", 
+              justifyContent: "space-between", 
+              alignItems: "center",
+              marginBottom: "1rem", 
+              flexWrap: "wrap",
+              gap: "1rem"
+            }}>
+              <div style={{ color: colors.text.secondary }}>
+                {searchResult.total > searchResult.cards.length
+                  ? t("foundCardsGenericPartial", {
+                      total: searchResult.total,
+                      start: (page - 1) * 20 + 1,
+                      end: (page - 1) * 20 + searchResult.cards.length,
+                    })
+                  : t("foundCardsGeneric", {
+                      total: searchResult.total,
+                    })}
+              </div>
+              {searchResult.total > 0 && (
+                <ShareButton
+                  url={shareUrl}
+                  label={t("shareSearch")}
+                  size="sm"
+                />
+              )}
             </div>
             <CardList cards={searchResult.cards} />
             <Pagination
