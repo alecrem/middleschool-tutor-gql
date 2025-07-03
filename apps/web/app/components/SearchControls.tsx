@@ -108,6 +108,7 @@ export function SearchControls({
             disabled={isSearching || isSearchDisabled}
             size="md"
             icon={Search}
+            style={{ whiteSpace: 'nowrap', minWidth: 'max-content' }}
           >
             {isSearching ? t("searching") : t("search")}
           </StyledButton>
@@ -207,6 +208,7 @@ export function SearchControls({
                 variant="secondary"
                 fullWidth
                 icon={RotateCcw}
+                style={{ whiteSpace: 'nowrap' }}
               >
                 {t("resetToDefaults")}
               </StyledButton>
@@ -217,6 +219,7 @@ export function SearchControls({
                 variant="primary"
                 fullWidth
                 icon={Search}
+                style={{ whiteSpace: 'nowrap' }}
               >
                 {isSearching ? t("searching") : t("search")}
               </StyledButton>
