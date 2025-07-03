@@ -36,21 +36,20 @@ export function Navigation({ currentPath }: NavigationProps) {
     alignItems: 'center',
     gap: utilities.spacing('sm'),
     padding: `${utilities.spacing('md')} ${utilities.spacing('lg')}`,
-    borderRadius: utilities.borderRadius('md'),
     textDecoration: 'none',
     fontSize: utilities.fontSize('base'),
     fontWeight: isActive ? '600' : '500',
     color: isActive ? colors.text.primary : colors.text.secondary,
-    backgroundColor: isActive ? colors.background.secondary : 'transparent',
-    border: `1px solid ${isActive ? colors.border.primary : 'transparent'}`,
+    backgroundColor: 'transparent',
+    borderBottom: `2px solid ${isActive ? colors.text.primary : 'transparent'}`,
     transition: utilities.transition('all'),
     cursor: 'pointer',
+    position: 'relative' as const,
   });
 
   const getHoverStyles = (isActive: boolean) => ({
     color: colors.text.primary,
-    backgroundColor: isActive ? colors.background.secondary : colors.background.secondary,
-    borderColor: colors.border.primary,
+    borderBottomColor: isActive ? colors.text.primary : colors.text.secondary,
   });
 
   return (
@@ -59,10 +58,9 @@ export function Navigation({ currentPath }: NavigationProps) {
       aria-label={t('mainNavigation')}
       style={{
         display: 'flex',
-        gap: utilities.spacing('sm'),
+        gap: utilities.spacing('md'),
         marginBottom: utilities.spacing('xl'),
-        padding: `${utilities.spacing('md')} 0`,
-        borderBottom: `1px solid ${colors.border.primary}`,
+        padding: `${utilities.spacing('sm')} 0`,
       }}
     >
       {navigationItems.map((item) => {
