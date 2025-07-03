@@ -1,6 +1,8 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { LucideIcon } from 'lucide-react';
 import { useThemedStyles, useDesignTokens } from '../hooks/useTheme';
 import type { ComponentSize, ComponentVariant } from '../lib/theme';
+import { Icon } from './Icon';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'disabled';
 export type ButtonSize = ComponentSize;
@@ -11,6 +13,8 @@ interface StyledButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>
   children: ReactNode;
   disabled?: boolean;
   fullWidth?: boolean;
+  icon?: LucideIcon;
+  iconPosition?: 'left' | 'right';
 }
 
 export function StyledButton({
@@ -19,6 +23,8 @@ export function StyledButton({
   children,
   disabled = false,
   fullWidth = false,
+  icon,
+  iconPosition = 'left',
   style: customStyle,
   onMouseEnter,
   onMouseLeave,
@@ -139,6 +145,44 @@ export function StyledButton({
     onMouseLeave?.(e);
   };
 
+  const getIconSize = () => {
+    switch (size) {
+      case 'xs':
+      case 'sm':
+        return 'xs';
+      case 'lg':
+      case 'xl':
+        return 'sm';
+      default:
+        return 'xs';
+    }
+  };
+
+  const renderContent = () => {
+    if (!icon) {
+      return children;
+    }
+
+    const iconElement = <Icon icon={icon} size={getIconSize()} />;
+    const gap = utilities.spacing('xs');
+
+    if (iconPosition === 'right') {
+      return (
+        <span style={{ display: 'flex', alignItems: 'center', gap }}>
+          {children}
+          {iconElement}
+        </span>
+      );
+    }
+
+    return (
+      <span style={{ display: 'flex', alignItems: 'center', gap }}>
+        {iconElement}
+        {children}
+      </span>
+    );
+  };
+
   return (
     <button
       style={combinedStyles}
@@ -147,7 +191,7 @@ export function StyledButton({
       onMouseLeave={handleMouseLeave}
       {...props}
     >
-      {children}
+      {renderContent()}
     </button>
   );
 }

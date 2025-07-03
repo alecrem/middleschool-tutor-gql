@@ -1,4 +1,5 @@
 import { Form, useNavigation } from "@remix-run/react";
+import { Search, RotateCcw } from "lucide-react";
 import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
 import { useSearchFormState } from "../hooks/useSearchFormState";
 import { useThemedStyles } from "../hooks/useTheme";
@@ -10,6 +11,7 @@ import { StyledButton } from "./StyledButton";
 import { StyledInput } from "./StyledInput";
 import { StyledSelect } from "./StyledSelect";
 import { StyledContainer } from "./StyledContainer";
+import { Icon } from "./Icon";
 
 interface SearchControlsProps {
   query: string;
@@ -23,21 +25,21 @@ interface SearchControlsProps {
   cmcMax?: number;
 }
 
-export function SearchControls({ 
-  query, 
-  cardType, 
-  colors: selectedColors, 
-  powerMin = 0, 
-  powerMax = 13, 
-  toughnessMin = 0, 
+export function SearchControls({
+  query,
+  cardType,
+  colors: selectedColors,
+  powerMin = 0,
+  powerMax = 13,
+  toughnessMin = 0,
   toughnessMax = 13,
   cmcMin = 0,
-  cmcMax = 16
+  cmcMax = 16,
 }: SearchControlsProps) {
   const { t } = useHydratedTranslation();
   const { colors, flexRow, flexColumn, topBorder } = useThemedStyles();
   const navigation = useNavigation();
-  
+
   // Initialize form state with current URL parameters
   const { state, actions, isSearchDisabled, defaults } = useSearchFormState({
     query,
@@ -51,7 +53,8 @@ export function SearchControls({
     cmcMax,
   });
 
-  const isSearching = navigation.state === "loading" && 
+  const isSearching =
+    navigation.state === "loading" &&
     navigation.location?.search.includes("query=");
 
   // Card type options
@@ -66,14 +69,14 @@ export function SearchControls({
   ];
 
   // Check if advanced search should be expanded by default
-  const hasAdvancedFilters = 
-    cardType !== "" || 
-    selectedColors.length > 0 || 
-    powerMin !== defaults.powerMin || 
-    powerMax !== defaults.powerMax || 
-    toughnessMin !== defaults.toughnessMin || 
-    toughnessMax !== defaults.toughnessMax || 
-    cmcMin !== defaults.cmcMin || 
+  const hasAdvancedFilters =
+    cardType !== "" ||
+    selectedColors.length > 0 ||
+    powerMin !== defaults.powerMin ||
+    powerMax !== defaults.powerMax ||
+    toughnessMin !== defaults.toughnessMin ||
+    toughnessMax !== defaults.toughnessMax ||
+    cmcMin !== defaults.cmcMin ||
     cmcMax !== defaults.cmcMax;
 
   return (
@@ -83,7 +86,12 @@ export function SearchControls({
 
       <Form method="get">
         {/* Main search input */}
-        <div style={{ ...flexRow, flexWrap: "wrap", marginBottom: "1rem" }}>
+        <div style={{ 
+          display: "flex", 
+          alignItems: "stretch",
+          gap: "0.5rem", 
+          marginBottom: "1rem" 
+        }}>
           <StyledInput
             type="text"
             name="query"
@@ -91,20 +99,27 @@ export function SearchControls({
             placeholder={t("searchPlaceholder")}
             onChange={(e) => actions.setQuery(e.target.value)}
             variant="search"
+            icon={Search}
+            fullWidth
+            style={{ flex: 1 }}
           />
           <StyledButton
             type="submit"
             disabled={isSearching || isSearchDisabled}
-            size="lg"
+            size="md"
+            icon={Search}
+            style={{ whiteSpace: 'nowrap', minWidth: 'max-content' }}
           >
             {isSearching ? t("searching") : t("search")}
           </StyledButton>
         </div>
 
         {/* Advanced search accordion */}
-        <Accordion title={t("advancedSearch")} defaultExpanded={hasAdvancedFilters}>
+        <Accordion
+          title={t("advancedSearch")}
+          defaultExpanded={hasAdvancedFilters}
+        >
           <div style={flexColumn}>
-            
             {/* Card Type */}
             <FormField label={t("cardType")}>
               <StyledSelect
@@ -150,8 +165,12 @@ export function SearchControls({
                 minDefault={defaults.powerMin}
                 maxDefault={defaults.powerMax}
                 maxRange={13}
-                onMinChange={(min) => actions.setPowerRange(min, state.powerMax)}
-                onMaxChange={(max) => actions.setPowerRange(state.powerMin, max)}
+                onMinChange={(min) =>
+                  actions.setPowerRange(min, state.powerMax)
+                }
+                onMaxChange={(max) =>
+                  actions.setPowerRange(state.powerMin, max)
+                }
                 namePrefix="power"
               />
             </FormField>
@@ -164,33 +183,43 @@ export function SearchControls({
                 minDefault={defaults.toughnessMin}
                 maxDefault={defaults.toughnessMax}
                 maxRange={13}
-                onMinChange={(min) => actions.setToughnessRange(min, state.toughnessMax)}
-                onMaxChange={(max) => actions.setToughnessRange(state.toughnessMin, max)}
+                onMinChange={(min) =>
+                  actions.setToughnessRange(min, state.toughnessMax)
+                }
+                onMaxChange={(max) =>
+                  actions.setToughnessRange(state.toughnessMin, max)
+                }
                 namePrefix="toughness"
               />
             </FormField>
 
             {/* Action buttons */}
-            <div style={{
-              ...flexRow,
-              gap: "0.75rem",
-              marginTop: "1.5rem",
-              ...topBorder,
-            }}>
+            <div
+              style={{
+                ...flexRow,
+                gap: "0.75rem",
+                marginTop: "1.5rem",
+                ...topBorder,
+              }}
+            >
               <StyledButton
                 type="button"
                 onClick={actions.resetToDefaults}
                 variant="secondary"
                 fullWidth
+                icon={RotateCcw}
+                style={{ whiteSpace: 'nowrap' }}
               >
                 {t("resetToDefaults")}
               </StyledButton>
-              
+
               <StyledButton
                 type="submit"
                 disabled={isSearching || isSearchDisabled}
                 variant="primary"
                 fullWidth
+                icon={Search}
+                style={{ whiteSpace: 'nowrap' }}
               >
                 {isSearching ? t("searching") : t("search")}
               </StyledButton>

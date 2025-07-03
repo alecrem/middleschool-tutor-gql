@@ -1,6 +1,8 @@
 import { InputHTMLAttributes } from 'react';
+import { LucideIcon } from 'lucide-react';
 import { useThemedStyles } from '../hooks/useTheme';
 import type { ComponentSize } from '../lib/theme';
+import { Icon } from './Icon';
 
 export type InputVariant = 'default' | 'search';
 export type InputSize = ComponentSize;
@@ -9,12 +11,14 @@ interface StyledInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, '
   variant?: InputVariant;
   size?: InputSize;
   fullWidth?: boolean;
+  icon?: LucideIcon;
 }
 
 export function StyledInput({
   variant = 'default',
   size = 'md',
   fullWidth = false,
+  icon,
   style: customStyle,
   ...props
 }: StyledInputProps) {
@@ -85,10 +89,49 @@ export function StyledInput({
     ...customStyle,
   };
 
+  // If no icon, render simple input
+  if (!icon) {
+    return (
+      <input
+        style={combinedStyles}
+        {...props}
+      />
+    );
+  }
+
+  // With icon, render input with icon wrapper
+  const iconSize = size === 'xs' || size === 'sm' ? 'xs' : 'sm';
+  const iconPadding = utilities.spacing('sm');
+  
+  const wrapperStyles = {
+    position: 'relative' as const,
+    display: 'inline-block',
+    width: fullWidth ? '100%' : 'auto',
+  };
+
+  const inputWithIconStyles = {
+    ...combinedStyles,
+    paddingLeft: `calc(${iconPadding} + 20px + ${iconPadding})`, // icon size + padding
+  };
+
+  const iconWrapperStyles = {
+    position: 'absolute' as const,
+    left: iconPadding,
+    top: '50%',
+    transform: 'translateY(-50%)',
+    pointerEvents: 'none' as const,
+    zIndex: 1,
+  };
+
   return (
-    <input
-      style={combinedStyles}
-      {...props}
-    />
+    <div style={wrapperStyles}>
+      <div style={iconWrapperStyles}>
+        <Icon icon={icon} size={iconSize} />
+      </div>
+      <input
+        style={inputWithIconStyles}
+        {...props}
+      />
+    </div>
   );
 }

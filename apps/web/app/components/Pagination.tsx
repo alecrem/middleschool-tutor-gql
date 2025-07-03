@@ -1,6 +1,8 @@
 import { Link, useSearchParams } from "@remix-run/react";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
 import { useThemedStyles } from "../hooks/useTheme";
+import { Icon } from './Icon';
 
 interface PaginationProps {
   currentPage: number;
@@ -56,7 +58,8 @@ export function Pagination({ currentPage, totalPages, hasResults }: PaginationPr
             transition: "all 0.2s ease",
           }}
         >
-          ← {t("previous")}
+          <Icon icon={ChevronLeft} size="sm" style={{ marginRight: '4px' }} />
+          {t("previous")}
         </Link>
       ) : (
         <span
@@ -70,7 +73,8 @@ export function Pagination({ currentPage, totalPages, hasResults }: PaginationPr
             fontWeight: "500",
           }}
         >
-          ← {t("previous")}
+          <Icon icon={ChevronLeft} size="sm" style={{ marginRight: '4px' }} />
+          {t("previous")}
         </span>
       )}
 
@@ -101,7 +105,8 @@ export function Pagination({ currentPage, totalPages, hasResults }: PaginationPr
             transition: "all 0.2s ease",
           }}
         >
-          {t("next")} →
+          {t("next")}
+          <Icon icon={ChevronRight} size="sm" style={{ marginLeft: '4px' }} />
         </Link>
       ) : (
         <span
@@ -115,7 +120,8 @@ export function Pagination({ currentPage, totalPages, hasResults }: PaginationPr
             fontWeight: "500",
           }}
         >
-          {t("next")} →
+          {t("next")}
+          <Icon icon={ChevronRight} size="sm" style={{ marginLeft: '4px' }} />
         </span>
       )}
     </div>
