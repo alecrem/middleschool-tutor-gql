@@ -1,12 +1,13 @@
 import type { MetaFunction } from "@remix-run/node";
-import { useLoaderData, Form, useNavigation, Link } from "@remix-run/react";
+import { useLoaderData, Form, useNavigation, useLocation } from "@remix-run/react";
 import React, { useState, useEffect } from "react";
-import { Check, Copy, AlertTriangle, XCircle, CheckCircle, Search } from 'lucide-react';
+import { Check, Copy, AlertTriangle, XCircle, CheckCircle } from 'lucide-react';
 import { useHydratedTranslation } from "../../hooks/useHydratedTranslation";
 import { generateScryfallUrl } from "../../lib/utils";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
 import { ThemeSwitcher } from "../../components/ThemeSwitcher";
 import { Footer } from "../../components/Footer";
+import { Navigation } from "../../components/Navigation";
 import { useThemedStyles } from "../../hooks/useTheme";
 import { Icon } from "../../components/Icon";
 import { loader } from "./loader";
@@ -27,6 +28,7 @@ export default function DeckCheck() {
   const { results, deckList, error } = useLoaderData<typeof loader>();
   const { t, i18n } = useHydratedTranslation();
   const navigation = useNavigation();
+  const location = useLocation();
   const { colors } = useThemedStyles();
   const isValidating =
     navigation.state === "loading" &&
@@ -103,23 +105,7 @@ export default function DeckCheck() {
           </div>
         </div>
 
-        <div style={{ marginBottom: "2rem" }}>
-          <Link
-            to="/"
-            aria-label={t("cardSearchLink")}
-            style={{
-              color: colors.text.link,
-              textDecoration: "underline",
-              fontSize: "0.875rem",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            <Icon icon={Search} size="xs" />
-            {t("cardSearchLink")}
-          </Link>
-        </div>
+        <Navigation currentPath={location.pathname} />
 
         <div
           style={{
