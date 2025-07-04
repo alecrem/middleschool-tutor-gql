@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { validateCards } from "../../lib/api";
+import { validateCards, searchCards } from "../../lib/api";
 import { parseDeckList } from "../../lib/deck-parser";
 import type { DeckValidationResult } from "../../lib/types";
 
@@ -27,8 +27,37 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const cardNames = entries.map((entry) => entry.name);
     const validationResults = await validateCards(cardNames);
 
+    // Get unique found card names for fetching details
+    const foundCardNames = validationResults
+      .filter(v => v.found && v.matchedName)
+      .map(v => v.matchedName!)
+      .filter((name, index, arr) => arr.indexOf(name) === index); // Remove duplicates
+
+    // Fetch card details for all found cards
+    const cardDetailsMap = new Map();
+    if (foundCardNames.length > 0) {
+      try {
+        const cardDetailsPromises = foundCardNames.map(cardName =>
+          searchCards(cardName, undefined, undefined, 1, 0)
+            .then(({ cards }) => ({ cardName, details: cards[0] || null }))
+            .catch(() => ({ cardName, details: null }))
+        );
+        
+        const cardDetailsResults = await Promise.all(cardDetailsPromises);
+        cardDetailsResults.forEach(({ cardName, details }) => {
+          if (details) {
+            cardDetailsMap.set(cardName, details);
+          }
+        });
+      } catch (error) {
+        console.error("Failed to fetch some card details:", error);
+      }
+    }
+
     const results: DeckValidationResult[] = entries.map((entry) => {
       const validation = validationResults.find((v) => v.name === entry.name);
+      const cardDetails = validation?.matchedName ? cardDetailsMap.get(validation.matchedName) || null : null;
+      
       return {
         name: entry.name,
         quantity: entry.quantity,
@@ -36,6 +65,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         banned: validation?.banned ?? false,
         matchedName: validation?.matchedName ?? null,
         matchedNameJa: validation?.matchedNameJa ?? null,
+        cardDetails,
       };
     });
 

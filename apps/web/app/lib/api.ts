@@ -101,3 +101,4 @@ export async function validateCards(
 
   return data.data.validateCards;
 }
+
