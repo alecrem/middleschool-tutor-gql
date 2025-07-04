@@ -95,7 +95,6 @@ export function ExpandableCardRow({ result, index, isJapanese = false, isLast = 
             icon={Ban} 
             size="sm" 
             color={colors.accent.red}
-            title={t("bannedLabel")}
           />
         )}
         {!result.found && (
@@ -103,7 +102,6 @@ export function ExpandableCardRow({ result, index, isJapanese = false, isLast = 
             icon={MessageCircleQuestion} 
             size="sm" 
             color={colors.accent.orange}
-            title={t("notFound")}
           />
         )}
       </div>
