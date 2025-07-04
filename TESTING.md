@@ -60,7 +60,7 @@ pnpm test:ui       # Visual UI
 
 ## Writing Tests
 
-### Example Test Structure
+### Basic Function Tests
 
 ```typescript
 import { describe, test, expect } from 'vitest'
@@ -78,6 +78,59 @@ describe('functionToTest', () => {
 })
 ```
 
+### React Component Tests
+
+```typescript
+import { describe, test, expect, vi } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { MyComponent } from './MyComponent'
+
+// Mock dependencies if needed
+vi.mock('../hooks/useTheme', () => ({
+  useThemedStyles: () => ({
+    colors: { primary: '#3B82F6' },
+    utilities: { spacing: (size: string) => '8px' }
+  })
+}))
+
+describe('MyComponent', () => {
+  test('renders with props', () => {
+    render(<MyComponent title="Test Title" />)
+    expect(screen.getByText('Test Title')).toBeInTheDocument()
+  })
+
+  test('handles user interactions', async () => {
+    const handleClick = vi.fn()
+    const user = userEvent.setup()
+    
+    render(<MyComponent onClick={handleClick} />)
+    await user.click(screen.getByRole('button'))
+    expect(handleClick).toHaveBeenCalledTimes(1)
+  })
+
+  test('matches snapshot', () => {
+    const { container } = render(<MyComponent />)
+    expect(container.firstChild).toMatchSnapshot()
+  })
+})
+```
+
+### Snapshot Testing
+
+Snapshot tests capture the exact output of a component and alert you to any changes:
+
+```typescript
+test('matches snapshot', () => {
+  const { container } = render(<MyComponent />)
+  expect(container.firstChild).toMatchSnapshot()
+})
+```
+
+- Snapshots are stored in `__snapshots__` folders
+- Update snapshots with `pnpm test -- --update-snapshots`
+- Review snapshot changes carefully in PRs
+
 ### Test Organization
 - Place test files next to the source files they test
 - Use descriptive test names that explain the behavior being tested
@@ -92,6 +145,14 @@ describe('functionToTest', () => {
   - Split card name handling (Fire // Ice, Fire//Ice, etc.)
   - Comment parsing vs. split card detection
   - Various quantity formats (4x, x4, etc.)
+- **React Components** (`app/components/StyledButton.test.tsx`)
+  - Component rendering with different props
+  - Variant testing (primary, secondary, disabled)
+  - Size variations (xs, sm, md, lg, xl)
+  - User interactions (click, hover, keyboard)
+  - Icon positioning and rendering
+  - Accessibility features
+  - Snapshot testing for visual regression
 
 ### API App (`apps/api`)
 - **Card Validation** (`src/data.test.ts`)

@@ -30,6 +30,9 @@
   },
   "devDependencies": {
     "@remix-run/dev": "^2.0.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/jsdom": "^21.1.7",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
