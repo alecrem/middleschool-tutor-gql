@@ -62,7 +62,8 @@ export function searchCards(
         card.name.toLowerCase().includes(searchTerm) ||
         (card.name_ja && card.name_ja.toLowerCase().includes(searchTerm)) ||
         card.type.toLowerCase().includes(searchTerm) ||
-        card.text.toLowerCase().includes(searchTerm)
+        card.text.toLowerCase().includes(searchTerm) ||
+        matchesSplitCardSearch(card, searchTerm)
     );
   }
 
@@ -126,7 +127,12 @@ export function searchCards(
     
     const isExactMatch = cardNameLower === searchTerm;
     const isExactMatchJa = cardNameJa === searchTerm;
-    const perfectMatch = isExactMatch || isExactMatchJa;
+    
+    // Check for normalized split card match
+    const isNormalizedMatch = cardNameLower.includes(" // ") && 
+                             normalizeSlashPattern(cardNameLower) === normalizeSlashPattern(searchTerm);
+    
+    const perfectMatch = isExactMatch || isExactMatchJa || isNormalizedMatch;
     
     return { ...card, perfectMatch };
   });
@@ -195,11 +201,16 @@ export function validateCards(
     const normalizedName = trimmedName.toLowerCase();
     
     // Find card by exact name match (case-insensitive)
-    const foundCard = cards.find(
+    let foundCard = cards.find(
       (card) =>
         card.name.toLowerCase() === normalizedName ||
         (card.name_ja && card.name_ja.toLowerCase() === normalizedName)
     );
+    
+    // If no exact match found, check for split card patterns
+    if (!foundCard) {
+      foundCard = findSplitCardMatch(cards, normalizedName);
+    }
     
     return {
       name: trimmedName,
@@ -209,4 +220,60 @@ export function validateCards(
       matchedNameJa: foundCard?.name_ja ?? null,
     };
   });
+}
+
+function findSplitCardMatch(cards: MagicCard[], searchName: string): MagicCard | undefined {
+  // Normalize the search name by handling various slash patterns
+  const normalizedSearchName = normalizeSlashPattern(searchName);
+  
+  return cards.find((card) => {
+    const cardName = card.name.toLowerCase();
+    
+    // Check if this is a split card (contains " // ")
+    if (cardName.includes(" // ")) {
+      const normalizedCardName = normalizeSlashPattern(cardName);
+      
+      // Direct match after normalization
+      if (normalizedCardName === normalizedSearchName) {
+        return true;
+      }
+    }
+    
+    return false;
+  });
+}
+
+function normalizeSlashPattern(name: string): string {
+  // First handle double slashes, then single slashes (but not already processed ones)
+  let result = name.replace(/\s*\/\/\s*/g, " // ");  // "Fire//Ice" → "Fire // Ice"
+  
+  // Only replace single slashes if they're not already part of a " // " pattern
+  if (!result.includes(" // ")) {
+    result = result.replace(/\s*\/\s*/g, " // ");    // "Fire / Ice" or "Fire/Ice" → "Fire // Ice"
+  }
+  
+  return result.trim();
+}
+
+function matchesSplitCardSearch(card: MagicCard, searchTerm: string): boolean {
+  const cardName = card.name.toLowerCase();
+  
+  // Check if this is a split card (contains " // ")
+  if (cardName.includes(" // ")) {
+    const normalizedSearchTerm = normalizeSlashPattern(searchTerm);
+    const normalizedCardName = normalizeSlashPattern(cardName);
+    
+    // Direct match after normalization
+    if (normalizedCardName.includes(normalizedSearchTerm)) {
+      return true;
+    }
+    
+    // Check if search matches either half of the split card
+    const [leftHalf, rightHalf] = cardName.split(" // ");
+    if (leftHalf.includes(searchTerm) || rightHalf.includes(searchTerm)) {
+      return true;
+    }
+  }
+  
+  return false;
 }
