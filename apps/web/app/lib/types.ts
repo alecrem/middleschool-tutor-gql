@@ -36,6 +36,7 @@ export interface DeckValidationResult {
   banned: boolean;
   matchedName: string | null;
   matchedNameJa: string | null;
+  cardDetails?: MagicCard | null;
 }
 
 export interface SearchParams {

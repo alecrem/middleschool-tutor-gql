@@ -2,6 +2,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { useLoaderData, Form, useNavigation, useLocation } from "@remix-run/react";
 import React, { useState, useEffect } from "react";
 import { Check, Copy, AlertTriangle, XCircle, CheckCircle } from 'lucide-react';
+import { ExpandableCardRow } from '../../components/ExpandableCardRow';
 import { useHydratedTranslation } from "../../hooks/useHydratedTranslation";
 import { generateScryfallUrl } from "../../lib/utils";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
@@ -293,60 +294,20 @@ export default function DeckCheck() {
                 style={{
                   display: "grid",
                   gridTemplateColumns:
-                    i18n.language === "ja" ? "1fr 1fr auto" : "1fr auto",
-                  gap: "0.5rem 1rem",
+                    i18n.language === "ja" ? "1fr 1fr auto auto" : "1fr auto auto",
+                  gap: "0.5rem 0.5rem",
                   fontFamily: "monospace",
                   fontSize: "0.875rem",
                 }}
               >
                 {results.map((result, index) => (
-                  <React.Fragment key={`${index}-row`}>
-                    <div style={{ 
-                      color: result.banned ? colors.accent.red : !result.found ? colors.accent.orange : "inherit" 
-                    }}>
-                      {result.quantity}{" "}
-                      {result.found && result.matchedName ? (
-                        <a
-                          href={generateScryfallUrl(result.matchedName)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            color: "inherit",
-                            textDecoration: "underline",
-                            textDecorationColor: colors.text.secondary,
-                          }}
-                        >
-                          {result.matchedName}
-                        </a>
-                      ) : (
-                        result.name
-                      )}
-                    </div>
-                    {i18n.language === "ja" && (
-                      <div style={{ 
-                        color: result.banned ? colors.accent.red : !result.found ? colors.accent.orange : "inherit" 
-                      }}>
-                        {result.quantity}{" "}
-                        {result.found && result.matchedNameJa
-                          ? result.matchedNameJa
-                          : result.found && result.matchedName
-                          ? result.matchedName
-                          : result.name}
-                      </div>
-                    )}
-                    <div>
-                      {result.banned && (
-                        <span style={{ color: colors.accent.red, fontWeight: "600" }}>
-                          {t("bannedLabel")}
-                        </span>
-                      )}
-                      {!result.found && (
-                        <span style={{ color: colors.accent.orange, fontWeight: "600" }}>
-                          {t("notFound")}
-                        </span>
-                      )}
-                    </div>
-                  </React.Fragment>
+                  <ExpandableCardRow
+                    key={`${index}-expandable-row`}
+                    result={result}
+                    index={index}
+                    isJapanese={i18n.language === "ja"}
+                    isLast={index === results.length - 1}
+                  />
                 ))}
               </div>
             </div>
