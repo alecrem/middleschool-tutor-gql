@@ -52,6 +52,7 @@ export default function DeckCheck() {
 
   const isOverLimit = lineCount > 100;
   const isNearLimit = lineCount > 90 && lineCount <= 100;
+  const isDeckListEmpty = currentDeckList.trim().length === 0;
 
   // Generate share URL for current deck check
   const shareUrl = generateDeckCheckShareUrl(currentDeckList);
@@ -122,7 +123,7 @@ export default function DeckCheck() {
           }}
         >
           <Form method="get" onSubmit={(e) => {
-            if (isOverLimit) {
+            if (isOverLimit || isDeckListEmpty) {
               e.preventDefault();
             }
           }}>
@@ -188,16 +189,16 @@ export default function DeckCheck() {
             </div>
             <button
               type="submit"
-              disabled={isValidating || isOverLimit}
+              disabled={isValidating || isOverLimit || isDeckListEmpty}
               style={{
                 padding: "0.75rem 1.5rem",
-                backgroundColor: (isValidating || isOverLimit) ? colors.button.disabled : colors.button.primary,
+                backgroundColor: (isValidating || isOverLimit || isDeckListEmpty) ? colors.button.disabled : colors.button.primary,
                 color: colors.button.text,
                 border: "none",
                 borderRadius: "6px",
                 fontSize: "1rem",
-                cursor: (isValidating || isOverLimit) ? "not-allowed" : "pointer",
-                opacity: (isValidating || isOverLimit) ? 0.6 : 1,
+                cursor: (isValidating || isOverLimit || isDeckListEmpty) ? "not-allowed" : "pointer",
+                opacity: (isValidating || isOverLimit || isDeckListEmpty) ? 0.6 : 1,
                 display: "flex",
                 alignItems: "center",
                 gap: "0.5rem",
