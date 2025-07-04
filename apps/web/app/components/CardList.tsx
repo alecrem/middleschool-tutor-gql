@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import type { MagicCard } from "../lib/types";
-import { generateScryfallUrl } from "../lib/utils";
+import { generateScryfallUrl, formatPowerToughness } from "../lib/utils";
 import { useThemedStyles } from "../hooks/useTheme";
 import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
 import { 
@@ -9,12 +9,6 @@ import {
   StyledCardContent, 
   StyledCardImageContainer 
 } from "./StyledCard";
-
-function formatPowerToughness(value: string): string {
-  // Remove trailing .0 from values like "2.0" -> "2", but keep "1.5" -> "1.5"
-  const num = parseFloat(value);
-  return num % 1 === 0 ? Math.floor(num).toString() : value;
-}
 
 interface CardListProps {
   cards: MagicCard[];

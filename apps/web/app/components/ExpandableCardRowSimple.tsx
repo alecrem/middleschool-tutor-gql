@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { generateScryfallUrl } from '../lib/utils';
+import { generateScryfallUrl, formatPowerToughness } from '../lib/utils';
 import { useThemedStyles } from '../hooks/useTheme';
 import { Icon } from './Icon';
 import type { DeckValidationResult } from '../lib/types';
@@ -155,8 +155,8 @@ export function ExpandableCardRowSimple({ result, index, isJapanese = false }: E
                 src={result.cardDetails.image_small}
                 alt={result.cardDetails.name}
                 style={{
-                  maxWidth: isMobile ? '80vw' : '30vw',
-                  minWidth: isMobile ? '150px' : '200px',
+                  maxWidth: '30vw',
+                  minWidth: '200px',
                   width: 'auto',
                   height: 'auto',
                   borderRadius: '8px',
@@ -183,6 +183,11 @@ export function ExpandableCardRowSimple({ result, index, isJapanese = false }: E
                 color: result.cardDetails.banned ? colors.accent.red : colors.text.primary
               }}>
                 {result.cardDetails.name}
+                {result.cardDetails.banned && (
+                  <span style={{ color: colors.accent.red, marginLeft: '0.5rem' }}>
+                    ({t('banned')})
+                  </span>
+                )}
                 {result.cardDetails.name_ja && !isJapanese && (
                   <div style={{ 
                     fontSize: '0.875rem',
@@ -197,14 +202,16 @@ export function ExpandableCardRowSimple({ result, index, isJapanese = false }: E
               
               <div style={{ 
                 fontSize: '0.875rem',
-                display: 'grid',
-                gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(150px, 1fr))',
-                gap: '0.5rem'
+                marginBottom: '0.75rem'
               }}>
-                <div><strong>Type:</strong> {result.cardDetails.type}</div>
-                <div><strong>Mana Value:</strong> {result.cardDetails.mv}</div>
+                <span>{result.cardDetails.type}</span>
+                <span> • </span>
+                <span>{t('cmc')}: {result.cardDetails.mv}</span>
                 {result.cardDetails.power && result.cardDetails.toughness && (
-                  <div><strong>P/T:</strong> {result.cardDetails.power}/{result.cardDetails.toughness}</div>
+                  <>
+                    <span> • </span>
+                    <span>{formatPowerToughness(result.cardDetails.power)}/{formatPowerToughness(result.cardDetails.toughness)}</span>
+                  </>
                 )}
               </div>
               
