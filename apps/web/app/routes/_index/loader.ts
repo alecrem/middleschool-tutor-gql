@@ -1,5 +1,4 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { searchCards } from "../../lib/api";
 import type { CardSearchResult } from "../../lib/types";
 
@@ -46,7 +45,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!query || query.trim() === "") {
     // If no query and no filters, show empty state
     if (!hasFilters) {
-      return json({
+      return {
         searchResult: null,
         query: "",
         cardType,
@@ -60,7 +59,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         page: 1,
         totalPages: 0,
         error: null,
-      });
+      };
     }
     // If filters but no query, search with empty query (will return filtered results)
   }
@@ -80,7 +79,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       cmcMin !== 0 || cmcMax !== 16 ? cmcMin : undefined,
       cmcMin !== 0 || cmcMax !== 16 ? cmcMax : undefined
     );
-    return json({
+    return {
       searchResult,
       query,
       cardType,
@@ -94,10 +93,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
       page,
       totalPages: Math.ceil(searchResult.total / limit),
       error: null,
-    });
+    };
   } catch (error) {
     console.error("Search error:", error);
-    return json({
+    return {
       searchResult: { cards: [], total: 0 } as CardSearchResult,
       query,
       cardType,
@@ -111,6 +110,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       page,
       totalPages: 0,
       error: "searchError", // Pass translation key instead of hardcoded text
-    });
+    };
   }
 }

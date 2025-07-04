@@ -1,5 +1,4 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { validateCards, searchCards } from "../../lib/api";
 import { parseDeckList } from "../../lib/deck-parser";
 import type { DeckValidationResult } from "../../lib/types";
@@ -9,17 +8,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const deckList = url.searchParams.get("decklist");
 
   if (!deckList || deckList.trim() === "") {
-    return json({ results: null, deckList: "", error: null });
+    return { results: null, deckList: "", error: null };
   }
 
   // Check line count before processing
   const lines = deckList.split('\n').filter(line => line.trim().length > 0);
   if (lines.length > 100) {
-    return json({
+    return {
       results: null,
       deckList,
       error: "deckLineLimitError",
-    });
+    };
   }
 
   try {
@@ -69,13 +68,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
       };
     });
 
-    return json({ results, deckList, error: null });
+    return { results, deckList, error: null };
   } catch (error) {
     console.error("Deck validation error:", error);
-    return json({
+    return {
       results: null,
       deckList,
       error: "deckValidationError",
-    });
+    };
   }
 }
