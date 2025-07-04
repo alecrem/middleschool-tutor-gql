@@ -2,7 +2,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { useLoaderData, Form, useNavigation, useLocation } from "@remix-run/react";
 import React, { useState, useEffect } from "react";
 import { Check, Copy, AlertTriangle, XCircle, CheckCircle } from 'lucide-react';
-import { ExpandableCardRowSimple } from '../../components/ExpandableCardRowSimple';
+import { ExpandableCardRow } from '../../components/ExpandableCardRow';
 import { useHydratedTranslation } from "../../hooks/useHydratedTranslation";
 import { generateScryfallUrl } from "../../lib/utils";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
@@ -295,17 +295,18 @@ export default function DeckCheck() {
                   display: "grid",
                   gridTemplateColumns:
                     i18n.language === "ja" ? "1fr 1fr auto auto" : "1fr auto auto",
-                  gap: "0.5rem 1rem",
+                  gap: "0.5rem 0.5rem",
                   fontFamily: "monospace",
                   fontSize: "0.875rem",
                 }}
               >
                 {results.map((result, index) => (
-                  <ExpandableCardRowSimple
+                  <ExpandableCardRow
                     key={`${index}-expandable-row`}
                     result={result}
                     index={index}
                     isJapanese={i18n.language === "ja"}
+                    isLast={index === results.length - 1}
                   />
                 ))}
               </div>
