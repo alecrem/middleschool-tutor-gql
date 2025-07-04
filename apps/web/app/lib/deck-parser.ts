@@ -19,8 +19,30 @@ export function parseDeckList(deckListText: string): DeckEntry[] {
 }
 
 function parseDeckLine(line: string): DeckEntry | null {
-  // Remove comments (everything after //)
-  const cleanLine = line.split('//')[0].trim();
+  // Remove comments (everything after // that's not part of a split card name)
+  // Split card names use " // " (space before and after), comments use "//" without spaces
+  let cleanLine = line;
+  
+  // Only treat // as a comment if it's not part of a split card name
+  // Split cards always have a specific pattern: "word // word" 
+  // Comments are everything after // that isn't part of a split card
+  if (line.includes('//')) {
+    // Check if this looks like a split card pattern (word // word)
+    const splitCardPattern = /\b\w+\s*\/\/\s*\w+\b/;
+    if (!splitCardPattern.test(line)) {
+      // No split card pattern found, treat // as comment
+      const commentIndex = line.indexOf('//');
+      cleanLine = line.substring(0, commentIndex).trim();
+    } else {
+      // Contains split card pattern, only remove comments after the split card
+      const match = line.match(/^(.*?\b\w+\s*\/\/\s*\w+\b)(.*)/);
+      if (match && match[2].includes('//')) {
+        // There's a comment after the split card
+        cleanLine = match[1].trim();
+      }
+    }
+  }
+  
   if (!cleanLine) return null;
 
   // Pattern 1: "40 Lightning Bolt" or "40x Lightning Bolt"
