@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { generateScryfallUrl } from '../lib/utils';
 import { useThemedStyles } from '../hooks/useTheme';
@@ -14,8 +14,23 @@ interface ExpandableCardRowProps {
 
 export function ExpandableCardRowSimple({ result, index, isJapanese = false }: ExpandableCardRowProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { colors } = useThemedStyles();
   const { t } = useHydratedTranslation();
+
+  // Handle responsive layout
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    // Initial check (client-side only)
+    if (typeof window !== 'undefined') {
+      checkMobile();
+      window.addEventListener('resize', checkMobile);
+      return () => window.removeEventListener('resize', checkMobile);
+    }
+  }, []);
 
   const canExpand = result.found && result.matchedName && result.cardDetails;
 
@@ -67,7 +82,7 @@ export function ExpandableCardRowSimple({ result, index, isJapanese = false }: E
         </div>
       )}
       
-      {/* Status column with expand button */}
+      {/* Status column */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         {result.banned && (
           <span style={{ color: colors.accent.red, fontWeight: "600" }}>
@@ -79,6 +94,16 @@ export function ExpandableCardRowSimple({ result, index, isJapanese = false }: E
             {t("notFound")}
           </span>
         )}
+      </div>
+      
+      {/* Expand button column - dedicated column for consistent alignment */}
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        width: '2rem',
+        flexShrink: 0
+      }}>
         {canExpand && (
           <button
             onClick={toggleExpanded}
@@ -105,7 +130,7 @@ export function ExpandableCardRowSimple({ result, index, isJapanese = false }: E
       {/* Expanded card details - using pre-loaded data */}
       {isExpanded && canExpand && result.cardDetails && (
         <div style={{ 
-          gridColumn: isJapanese ? 'span 3' : 'span 2',
+          gridColumn: isJapanese ? 'span 4' : 'span 3',
           padding: '1rem',
           backgroundColor: colors.background.secondary,
           borderRadius: '8px',
@@ -113,18 +138,26 @@ export function ExpandableCardRowSimple({ result, index, isJapanese = false }: E
           border: `1px solid ${colors.border.primary}`,
         }}>
           <div style={{ 
-            display: 'grid',
-            gridTemplateColumns: 'auto 1fr',
-            gap: '1rem',
-            alignItems: 'start'
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: '1.5rem',
+            alignItems: 'flex-start'
           }}>
-            {/* Card image */}
-            <div style={{ minWidth: '150px', maxWidth: '200px' }}>
+            {/* Card image - full size like Card Search */}
+            <div style={{ 
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              flexShrink: 0,
+              width: isMobile ? '100%' : 'auto'
+            }}>
               <img
                 src={result.cardDetails.image_small}
                 alt={result.cardDetails.name}
                 style={{
-                  width: '100%',
+                  maxWidth: isMobile ? '80vw' : '30vw',
+                  minWidth: isMobile ? '150px' : '200px',
+                  width: 'auto',
                   height: 'auto',
                   borderRadius: '8px',
                   border: `1px solid ${colors.border.primary}`,
@@ -140,6 +173,7 @@ export function ExpandableCardRowSimple({ result, index, isJapanese = false }: E
               display: 'flex',
               flexDirection: 'column',
               gap: '0.75rem',
+              width: '100%',
               minWidth: 0
             }}>
               <h4 style={{ 
@@ -149,7 +183,7 @@ export function ExpandableCardRowSimple({ result, index, isJapanese = false }: E
                 color: result.cardDetails.banned ? colors.accent.red : colors.text.primary
               }}>
                 {result.cardDetails.name}
-                {result.cardDetails.name_ja && (
+                {result.cardDetails.name_ja && !isJapanese && (
                   <div style={{ 
                     fontSize: '0.875rem',
                     fontWeight: '400',
@@ -161,13 +195,17 @@ export function ExpandableCardRowSimple({ result, index, isJapanese = false }: E
                 )}
               </h4>
               
-              <div style={{ fontSize: '0.875rem' }}>
+              <div style={{ 
+                fontSize: '0.875rem',
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(150px, 1fr))',
+                gap: '0.5rem'
+              }}>
                 <div><strong>Type:</strong> {result.cardDetails.type}</div>
                 <div><strong>Mana Value:</strong> {result.cardDetails.mv}</div>
                 {result.cardDetails.power && result.cardDetails.toughness && (
                   <div><strong>P/T:</strong> {result.cardDetails.power}/{result.cardDetails.toughness}</div>
                 )}
-                <div><strong>Rarity:</strong> {result.cardDetails.rarity}</div>
               </div>
               
               {result.cardDetails.text && (

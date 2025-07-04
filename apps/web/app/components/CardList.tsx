@@ -210,17 +210,22 @@ export function CardList({ cards }: CardListProps) {
               </div>
 
               {card.text && (
-                <p
+                <div
                   style={{
+                    fontSize: '0.875rem',
                     lineHeight: "1.5",
-                    margin: 0,
                     whiteSpace: "pre-wrap",
                     wordBreak: "break-word",
-                    ...smallText,
+                    color: colors.text.primary,
+                    backgroundColor: colors.background.primary,
+                    padding: '0.75rem',
+                    borderRadius: '6px',
+                    border: `1px solid ${colors.border.primary}`,
+                    margin: 0,
                   }}
                 >
                   {card.text}
-                </p>
+                </div>
               )}
             </StyledCardContent>
 

@@ -294,7 +294,7 @@ export default function DeckCheck() {
                 style={{
                   display: "grid",
                   gridTemplateColumns:
-                    i18n.language === "ja" ? "1fr 1fr auto" : "1fr auto",
+                    i18n.language === "ja" ? "1fr 1fr auto auto" : "1fr auto auto",
                   gap: "0.5rem 1rem",
                   fontFamily: "monospace",
                   fontSize: "0.875rem",
