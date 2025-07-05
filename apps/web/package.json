@@ -9,6 +9,9 @@
     "dev": "remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
+    "test": "vitest --config vite.config.test.ts",
+    "test:ui": "vitest --ui --config vite.config.test.ts",
+    "test:run": "vitest run --config vite.config.test.ts",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -27,10 +30,17 @@
   },
   "devDependencies": {
     "@remix-run/dev": "^2.0.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jsdom": "^21.1.7",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
+    "@vitest/ui": "^3.2.4",
+    "jsdom": "^26.1.0",
     "typescript": "^5.1.6",
-    "vite": "^5.1.0"
+    "vite": "^5.1.0",
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=20.0.0"

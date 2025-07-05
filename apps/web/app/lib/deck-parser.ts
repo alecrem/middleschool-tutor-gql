@@ -23,23 +23,24 @@ function parseDeckLine(line: string): DeckEntry | null {
   // Split card names use " // " (space before and after), comments use "//" without spaces
   let cleanLine = line;
   
-  // Only treat // as a comment if it's not part of a split card name
-  // Split cards always have a specific pattern: "word // word" 
-  // Comments are everything after // that isn't part of a split card
+  // Handle comments vs split cards more carefully
+  // Split cards are typically at the start/middle of card names, comments are at the end
   if (line.includes('//')) {
-    // Check if this looks like a split card pattern (word // word)
-    const splitCardPattern = /\b\w+\s*\/\/\s*\w+\b/;
-    if (!splitCardPattern.test(line)) {
-      // No split card pattern found, treat // as comment
-      const commentIndex = line.indexOf('//');
-      cleanLine = line.substring(0, commentIndex).trim();
-    } else {
-      // Contains split card pattern, only remove comments after the split card
-      const match = line.match(/^(.*?\b\w+\s*\/\/\s*\w+\b)(.*)/);
-      if (match && match[2].includes('//')) {
+    // Look for known split card patterns first
+    const knownSplitCardPattern = /\b(Fire|Life|Assault|Night|Illusion|Rise|Wax|Order|Stand|Turn|Hit)\s*\/\/\s*\w+/i;
+    
+    if (knownSplitCardPattern.test(line)) {
+      // This contains a known split card, check if there's a comment after it
+      const match = line.match(/^(.*?\b\w+\s*\/\/\s*\w+)(.*)/);
+      if (match && match[2].trim().startsWith('//')) {
         // There's a comment after the split card
         cleanLine = match[1].trim();
       }
+      // Otherwise leave the line as-is (it's just a split card)
+    } else {
+      // No known split card pattern, treat // as comment
+      const commentIndex = line.indexOf('//');
+      cleanLine = line.substring(0, commentIndex).trim();
     }
   }
   
