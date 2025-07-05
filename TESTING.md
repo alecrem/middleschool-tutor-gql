@@ -2,23 +2,6 @@
 
 This project uses [Vitest](https://vitest.dev/) as the testing framework for both the web and API applications.
 
-## Quick Start
-
-```bash
-# Run all tests
-npm test
-
-# Run tests for a specific app
-cd apps/web && pnpm test
-cd apps/api && pnpm test
-
-# Run tests with UI
-pnpm test:ui
-
-# Run tests once (no watch mode)
-pnpm test:run
-```
-
 ## Project Structure
 
 ### Web App (`apps/web`)
@@ -36,26 +19,24 @@ pnpm test:run
 ### All Apps (from root)
 ```bash
 # Run all tests across the monorepo
-npm test
+pnpm test
 
-# Run specific test files
-turbo test --filter=web
-turbo test --filter=api
+# Run tests for specific apps
+pnpm --filter=web test
+pnpm --filter=api test
 ```
 
 ### Individual Apps
 ```bash
 # Web app
-cd apps/web
-pnpm test          # Watch mode
-pnpm test:run      # Single run
-pnpm test:ui       # Visual UI
+pnpm --filter=web test          # Watch mode
+pnpm --filter=web test:run      # Single run
+pnpm --filter=web test:ui       # Visual UI
 
 # API app
-cd apps/api
-pnpm test          # Watch mode
-pnpm test:run      # Single run
-pnpm test:ui       # Visual UI
+pnpm --filter=api test          # Watch mode
+pnpm --filter=api test:run      # Single run
+pnpm --filter=api test:ui       # Visual UI
 ```
 
 ## Writing Tests
@@ -81,18 +62,14 @@ describe('functionToTest', () => {
 ### React Component Tests
 
 ```typescript
-import { describe, test, expect, vi } from 'vitest'
+import { describe, test, expect } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MyComponent } from './MyComponent'
+import { mockUseTheme } from '../test-utils/theme-mocks'
 
-// Mock dependencies if needed
-vi.mock('../hooks/useTheme', () => ({
-  useThemedStyles: () => ({
-    colors: { primary: '#3B82F6' },
-    utilities: { spacing: (size: string) => '8px' }
-  })
-}))
+// Mock theme hooks for components that use theme context
+mockUseTheme()
 
 describe('MyComponent', () => {
   test('renders with props', () => {
@@ -136,6 +113,7 @@ test('matches snapshot', () => {
 - Use descriptive test names that explain the behavior being tested
 - Group related tests using `describe` blocks
 - Use `test.skip()` for temporarily disabled tests
+- Use shared test utilities from `app/test-utils/` for common mocks and helpers
 
 ## Current Test Coverage
 
@@ -167,7 +145,7 @@ test('matches snapshot', () => {
 
 ## Known Issues
 
-- **Split Card Partial Search**: There's a known issue where split cards like "Fire // Ice" don't appear in partial search results (e.g., searching for "Ice"). The validation logic works correctly, but something in the search function filtering needs investigation.
+- None currently identified.
 
 ## Configuration Files
 
@@ -201,6 +179,5 @@ export default defineConfig({
 - Add test coverage reporting
 - Set up CI/CD integration for automated testing
 - Add more comprehensive test coverage for remaining modules
-- Investigate and fix the split card partial search issue
 - Add performance testing for large datasets
 - Add integration tests for the GraphQL API
