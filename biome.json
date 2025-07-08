@@ -209,16 +209,6 @@
           }
         }
       }
-    },
-    {
-      "includes": ["**/root.tsx", "**/route.tsx", "**/SearchControls.tsx"],
-      "linter": {
-        "rules": {
-          "security": {
-            "noDangerouslySetInnerHtml": "off"
-          }
-        }
-      }
     }
   ]
 }

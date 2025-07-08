@@ -175,9 +175,18 @@ export default function DeckCheck() {
                   {lineCount}/100 {t("lines")}
                 </div>
               </div>
-              <p
-                dangerouslySetInnerHTML={{ __html: t("deckCheckDescription") }}
-              />
+              <p>
+                {t("deckCheckDescriptionBefore")}
+                <a
+                  href="https://www.eternalcentral.com/middleschoolrules/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "inherit", textDecoration: "underline" }}
+                >
+                  {t("deckCheckDescriptionLink")}
+                </a>
+                {t("deckCheckDescriptionAfter")}
+              </p>
               {isOverLimit && (
                 <div
                   style={{

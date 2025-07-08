@@ -81,7 +81,18 @@ export function SearchControls({
   return (
     <StyledContainer variant="section">
       <h2>{t("searchCards")}</h2>
-      <p dangerouslySetInnerHTML={{ __html: t("description") }} />
+      <p>
+        {t("descriptionBefore")}
+        <a
+          href="https://www.eternalcentral.com/middleschoolrules/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "inherit", textDecoration: "underline" }}
+        >
+          {t("descriptionLink")}
+        </a>
+        {t("descriptionAfter")}
+      </p>
 
       <Form method="get">
         {/* Main search input */}

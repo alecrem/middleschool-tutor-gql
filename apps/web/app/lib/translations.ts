@@ -3,8 +3,9 @@ export const translations = {
   en: {
     common: {
       title: "Middle School Tutor",
-      description:
-        'Enter any English or Japanese text to find all <a href="https://www.eternalcentral.com/middleschoolrules/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">Middle School legal</a> cards. Searches card names, types, and rules text.',
+      descriptionBefore: "Enter any English or Japanese text to find all ",
+      descriptionLink: "Middle School legal",
+      descriptionAfter: " cards. Searches card names, types, and rules text.",
       searchCards: "Card Search",
       searchPlaceholder: "Search for cards...",
       search: "Search",
@@ -14,8 +15,9 @@ export const translations = {
       foundCards: 'Found {{total}} cards for "{{query}}"',
       foundCardsPartial:
         'Found {{total}} cards for "{{query}}" — showing results {{start}} to {{end}}',
-      foundCardsGeneric: 'Found {{total}} cards',
-      foundCardsGenericPartial: 'Found {{total}} cards — showing results {{start}} to {{end}}',
+      foundCardsGeneric: "Found {{total}} cards",
+      foundCardsGenericPartial:
+        "Found {{total}} cards — showing results {{start}} to {{end}}",
       enterCardName: "Enter any text to search cards",
       noCardsFound: "No cards found. Try a different search term.",
       noImage: "No image",
@@ -24,8 +26,10 @@ export const translations = {
         "Portions of Middle School Tutor are unofficial Fan Content permitted under the Wizards of the Coast Fan Content Policy. The literal and graphical information presented on this site about Magic: The Gathering, including card images, mana symbols, and Oracle text, is copyright Wizards of the Coast, LLC, a subsidiary of Hasbro, Inc. Middle School Tutor is not produced by or endorsed by Wizards of the Coast. The GitHub and Twitter logos are copyright their respective owners. Middle School Tutor is not produced by or endorsed by these services.",
       footerLicense: "All other content MIT licensed since 2022 by",
       deckCheck: "Deck Check",
-      deckCheckDescription:
-        'Paste or type your list here to confirm that every card in it is <a href="https://www.eternalcentral.com/middleschoolrules/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">Middle School legal</a>.',
+      deckCheckDescriptionBefore:
+        "Paste or type your list here to confirm that every card in it is ",
+      deckCheckDescriptionLink: "Middle School legal",
+      deckCheckDescriptionAfter: ".",
       deckListPlaceholder:
         'Enter your deck list (e.g., "40 Lightning Bolt" or "20x Mountain")',
       validateDeck: "Validate Deck",
@@ -71,7 +75,8 @@ export const translations = {
       next: "Next",
       pageInfo: "Page {{current}} of {{total}}",
       deckLineLimitWarning: "Approaching line limit ({{current}}/100)",
-      deckLineLimitExceeded: "Deck list exceeds 100 line limit ({{current}}/100)",
+      deckLineLimitExceeded:
+        "Deck list exceeds 100 line limit ({{current}}/100)",
       deckLineLimitError: "Deck list must not exceed 100 lines",
       lines: "lines",
       pageNotFound: "Page Not Found",
@@ -87,8 +92,10 @@ export const translations = {
   ja: {
     common: {
       title: "Middle School Tutor",
-      description:
-        '英語または日本語のテキストを入力して<a href="https://www.eternalcentral.com/middleschoolrules/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">ミドルスクールで使用可能</a>なカードを検索します。カード名、タイプ、ルールテキストを検索します。',
+      descriptionBefore: "英語または日本語のテキストを入力して",
+      descriptionLink: "ミドルスクールで使用可能",
+      descriptionAfter:
+        "なカードを検索します。カード名、タイプ、ルールテキストが引っかかります。",
       searchCards: "カード検索",
       searchPlaceholder: "カードを検索...",
       search: "検索",
@@ -100,7 +107,8 @@ export const translations = {
       foundCardsPartial:
         "「{{query}}」で{{total}}枚のカードが見つかりました — {{start}}番目から{{end}}番目を表示",
       foundCardsGeneric: "{{total}}枚のカードが見つかりました",
-      foundCardsGenericPartial: "{{total}}枚のカードが見つかりました — {{start}}番目から{{end}}番目を表示",
+      foundCardsGenericPartial:
+        "{{total}}枚のカードが見つかりました — {{start}}番目から{{end}}番目を表示",
       enterCardName: "任意のテキストを入力してカードを検索してください",
       noCardsFound:
         "カードが見つかりませんでした。別の検索語をお試しください。",
@@ -110,8 +118,10 @@ export const translations = {
         "Portions of Middle School Tutor are unofficial Fan Content permitted under the Wizards of the Coast Fan Content Policy. The literal and graphical information presented on this site about Magic: The Gathering, including card images, mana symbols, and Oracle text, is copyright Wizards of the Coast, LLC, a subsidiary of Hasbro, Inc. Middle School Tutor is not produced by or endorsed by Wizards of the Coast. The GitHub and Twitter logos are copyright their respective owners. Middle School Tutor is not produced by or endorsed by these services.",
       footerLicense: "All other content MIT licensed since 2022 by",
       deckCheck: "デッキ検証",
-      deckCheckDescription:
-        '各カードが<a href="https://www.eternalcentral.com/middleschoolrules/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">ミドルスクールで使用可能</a>かどうかを確認するには、ここにリストを貼り付けたり入力したりしてください。',
+      deckCheckDescriptionBefore: "各カードが",
+      deckCheckDescriptionLink: "ミドルスクールで使用可能",
+      deckCheckDescriptionAfter:
+        "かどうかを確認するには、ここにリストを貼り付けたり入力したりしてください。",
       deckListPlaceholder:
         "デッキリストを入力（例：「40 Lightning Bolt」または「20x Mountain」）",
       validateDeck: "検証",
@@ -157,7 +167,8 @@ export const translations = {
       next: "次へ",
       pageInfo: "{{current}}ページ / {{total}}ページ",
       deckLineLimitWarning: "行数制限に近づいています ({{current}}/100)",
-      deckLineLimitExceeded: "デッキリストが100行の制限を超えています ({{current}}/100)",
+      deckLineLimitExceeded:
+        "デッキリストが100行の制限を超えています ({{current}}/100)",
       deckLineLimitError: "デッキリストは100行を超えてはいけません",
       lines: "行",
       pageNotFound: "ページが見つかりません",
