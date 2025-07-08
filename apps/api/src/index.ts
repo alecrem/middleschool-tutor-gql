@@ -1,7 +1,12 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { createYoga, createSchema } from "graphql-yoga";
-import { searchCards, getCardById, getCardsByColor, validateCards } from "./data.js";
+import {
+  searchCards,
+  getCardById,
+  getCardsByColor,
+  validateCards,
+} from "./data.js";
 import { pathToFileURL } from "node:url";
 
 // GraphQL resolver types
@@ -30,9 +35,6 @@ interface GetCardsByColorArgs {
 interface ValidateCardsArgs {
   cardNames: string[];
 }
-
-// GraphQL resolver context (empty for now)
-type ResolverContext = {}
 
 // Vercel handler types
 interface VercelRequest {
@@ -107,12 +109,37 @@ const typeDefs = `
 `;
 
 const resolvers = {
+  // biome-ignore lint/style/useNamingConvention: GraphQL requires 'Query' naming
   Query: {
     searchCards: (
       _: unknown,
-      { query, cardType, colors, limit = 20, offset = 0, powerMin, powerMax, toughnessMin, toughnessMax, cmcMin, cmcMax }: SearchCardsArgs
+      {
+        query,
+        cardType,
+        colors,
+        limit = 20,
+        offset = 0,
+        powerMin,
+        powerMax,
+        toughnessMin,
+        toughnessMax,
+        cmcMin,
+        cmcMax,
+      }: SearchCardsArgs
     ) => {
-      return searchCards(query, cardType, colors, limit, offset, powerMin, powerMax, toughnessMin, toughnessMax, cmcMin, cmcMax);
+      return searchCards(
+        query,
+        cardType,
+        colors,
+        limit,
+        offset,
+        powerMin,
+        powerMax,
+        toughnessMin,
+        toughnessMax,
+        cmcMin,
+        cmcMax
+      );
     },
     getCard: (_: unknown, { oracleId }: GetCardArgs) => {
       return getCardById(oracleId);
@@ -154,18 +181,18 @@ app.get("/", (c) => {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Convert Vercel request to Web API Request
   const url = `https://${req.headers.host}${req.url}`;
-  
+
   // Convert headers to proper format for Request constructor
   const headers = new Headers();
   Object.entries(req.headers).forEach(([key, value]) => {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       headers.set(key, value);
     } else if (Array.isArray(value)) {
       // Take the first value if it's an array
       headers.set(key, value[0]);
     }
   });
-  
+
   const request = new Request(url, {
     method: req.method,
     headers,

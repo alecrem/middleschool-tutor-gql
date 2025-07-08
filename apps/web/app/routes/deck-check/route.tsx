@@ -1,8 +1,13 @@
 import type { MetaFunction } from "@remix-run/node";
-import { useLoaderData, Form, useNavigation, useLocation } from "@remix-run/react";
+import {
+  useLoaderData,
+  Form,
+  useNavigation,
+  useLocation,
+} from "@remix-run/react";
 import { useState, useEffect } from "react";
-import { Check, Copy, AlertTriangle, XCircle, CheckCircle } from 'lucide-react';
-import { ExpandableCardRow } from '../../components/ExpandableCardRow';
+import { Check, Copy, AlertTriangle, XCircle, CheckCircle } from "lucide-react";
+import { ExpandableCardRow } from "../../components/ExpandableCardRow";
 import { useHydratedTranslation } from "../../hooks/useHydratedTranslation";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
 import { ThemeSwitcher } from "../../components/ThemeSwitcher";
@@ -40,13 +45,17 @@ export default function DeckCheck() {
   const notFoundCards = results?.filter((result) => !result.found) ?? [];
   const isDeckValid = bannedCards.length + notFoundCards.length === 0;
 
-  const [copyStatus, setCopyStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [copyStatus, setCopyStatus] = useState<"idle" | "success" | "error">(
+    "idle"
+  );
   const [currentDeckList, setCurrentDeckList] = useState(deckList);
   const [lineCount, setLineCount] = useState(0);
 
   // Count lines in deck list
   useEffect(() => {
-    const lines = currentDeckList.split('\n').filter(line => line.trim().length > 0);
+    const lines = currentDeckList
+      .split("\n")
+      .filter((line) => line.trim().length > 0);
     setLineCount(lines.length);
   }, [currentDeckList]);
 
@@ -64,34 +73,39 @@ export default function DeckCheck() {
       const deckListText = results
         .map((result) => {
           // Clean quantity - remove 'x' suffix and ensure it's a number
-          const cleanQuantity = result.quantity.toString().replace(/x$/i, '');
+          const cleanQuantity = result.quantity.toString().replace(/x$/i, "");
           const quantity = Number.parseInt(cleanQuantity) || 1;
-          
+
           // Use English matched name if found, otherwise original input
-          const cardName = result.found && result.matchedName ? result.matchedName : result.name;
-          
+          const cardName =
+            result.found && result.matchedName
+              ? result.matchedName
+              : result.name;
+
           return `${quantity} ${cardName}`;
         })
-        .join('\n');
+        .join("\n");
 
       await navigator.clipboard.writeText(deckListText);
-      setCopyStatus('success');
-      setTimeout(() => setCopyStatus('idle'), 2000);
+      setCopyStatus("success");
+      setTimeout(() => setCopyStatus("idle"), 2000);
     } catch (_error) {
-      setCopyStatus('error');
-      setTimeout(() => setCopyStatus('idle'), 2000);
+      setCopyStatus("error");
+      setTimeout(() => setCopyStatus("idle"), 2000);
     }
   };
 
   return (
-    <div style={{ 
-      fontFamily: "system-ui, sans-serif", 
-      lineHeight: "1.8",
-      backgroundColor: colors.background.primary,
-      color: colors.text.primary,
-      minHeight: "100vh",
-      transition: "background-color 0.2s ease, color 0.2s ease"
-    }}>
+    <div
+      style={{
+        fontFamily: "system-ui, sans-serif",
+        lineHeight: "1.8",
+        backgroundColor: colors.background.primary,
+        color: colors.text.primary,
+        minHeight: "100vh",
+        transition: "background-color 0.2s ease, color 0.2s ease",
+      }}
+    >
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "1rem" }}>
         <div
           style={{
@@ -106,7 +120,14 @@ export default function DeckCheck() {
           <h1 style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)", margin: 0 }}>
             {t("title")}
           </h1>
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+              flexWrap: "wrap",
+            }}
+          >
             <LanguageSwitcher />
             <ThemeSwitcher />
           </div>
@@ -122,19 +143,35 @@ export default function DeckCheck() {
             marginBottom: "2rem",
           }}
         >
-          <Form method="get" onSubmit={(e) => {
-            if (isOverLimit || isDeckListEmpty) {
-              e.preventDefault();
-            }
-          }}>
+          <Form
+            method="get"
+            onSubmit={(e) => {
+              if (isOverLimit || isDeckListEmpty) {
+                e.preventDefault();
+              }
+            }}
+          >
             <div style={{ marginBottom: "1rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "0.5rem",
+                }}
+              >
                 <h2 style={{ margin: 0 }}>{t("deckCheck")}</h2>
-                <div style={{ 
-                  fontSize: "0.875rem", 
-                  color: isOverLimit ? colors.accent.red : isNearLimit ? colors.accent.orange : colors.text.secondary,
-                  fontWeight: isOverLimit || isNearLimit ? "600" : "normal"
-                }}>
+                <div
+                  style={{
+                    fontSize: "0.875rem",
+                    color: isOverLimit
+                      ? colors.accent.red
+                      : isNearLimit
+                        ? colors.accent.orange
+                        : colors.text.secondary,
+                    fontWeight: isOverLimit || isNearLimit ? "600" : "normal",
+                  }}
+                >
                   {lineCount}/100 {t("lines")}
                 </div>
               </div>
@@ -142,28 +179,32 @@ export default function DeckCheck() {
                 dangerouslySetInnerHTML={{ __html: t("deckCheckDescription") }}
               />
               {isOverLimit && (
-                <div style={{
-                  backgroundColor: colors.background.error,
-                  color: colors.text.error,
-                  padding: "0.75rem",
-                  borderRadius: "6px",
-                  marginBottom: "1rem",
-                  border: `1px solid ${colors.border.error}`,
-                  fontSize: "0.875rem"
-                }}>
+                <div
+                  style={{
+                    backgroundColor: colors.background.error,
+                    color: colors.text.error,
+                    padding: "0.75rem",
+                    borderRadius: "6px",
+                    marginBottom: "1rem",
+                    border: `1px solid ${colors.border.error}`,
+                    fontSize: "0.875rem",
+                  }}
+                >
                   {t("deckLineLimitExceeded", { current: lineCount })}
                 </div>
               )}
               {isNearLimit && !isOverLimit && (
-                <div style={{
-                  backgroundColor: "#fff3cd",
-                  color: "#856404",
-                  padding: "0.75rem",
-                  borderRadius: "6px",
-                  marginBottom: "1rem",
-                  border: "1px solid #ffeaa7",
-                  fontSize: "0.875rem"
-                }}>
+                <div
+                  style={{
+                    backgroundColor: "#fff3cd",
+                    color: "#856404",
+                    padding: "0.75rem",
+                    borderRadius: "6px",
+                    marginBottom: "1rem",
+                    border: "1px solid #ffeaa7",
+                    fontSize: "0.875rem",
+                  }}
+                >
                   {t("deckLineLimitWarning", { current: lineCount })}
                 </div>
               )}
@@ -192,13 +233,20 @@ export default function DeckCheck() {
               disabled={isValidating || isOverLimit || isDeckListEmpty}
               style={{
                 padding: "0.75rem 1.5rem",
-                backgroundColor: (isValidating || isOverLimit || isDeckListEmpty) ? colors.button.disabled : colors.button.primary,
+                backgroundColor:
+                  isValidating || isOverLimit || isDeckListEmpty
+                    ? colors.button.disabled
+                    : colors.button.primary,
                 color: colors.button.text,
                 border: "none",
                 borderRadius: "6px",
                 fontSize: "1rem",
-                cursor: (isValidating || isOverLimit || isDeckListEmpty) ? "not-allowed" : "pointer",
-                opacity: (isValidating || isOverLimit || isDeckListEmpty) ? 0.6 : 1,
+                cursor:
+                  isValidating || isOverLimit || isDeckListEmpty
+                    ? "not-allowed"
+                    : "pointer",
+                opacity:
+                  isValidating || isOverLimit || isDeckListEmpty ? 0.6 : 1,
                 display: "flex",
                 alignItems: "center",
                 gap: "0.5rem",
@@ -221,23 +269,33 @@ export default function DeckCheck() {
               border: `1px solid ${colors.border.error}`,
             }}
           >
-{t(error)}
+            {t(error)}
           </div>
         )}
 
         {results && (
           <div>
-            <div style={{ 
-              display: "flex", 
-              justifyContent: "space-between", 
-              alignItems: "center", 
-              marginBottom: "1rem",
-              flexWrap: "wrap",
-              gap: "1rem"
-            }}>
-              <h2 style={{ fontSize: "1.5rem", margin: 0, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <Icon 
-                  icon={isDeckValid ? CheckCircle : AlertTriangle} 
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "1rem",
+                flexWrap: "wrap",
+                gap: "1rem",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "1.5rem",
+                  margin: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                }}
+              >
+                <Icon
+                  icon={isDeckValid ? CheckCircle : AlertTriangle}
                   size="sm"
                   color={isDeckValid ? colors.accent.green : colors.text.error}
                 />
@@ -248,29 +306,57 @@ export default function DeckCheck() {
                       "cardsNotAllowed"
                     )}`}
               </h2>
-              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "0.5rem",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                }}
+              >
                 <button
+                  type="button"
                   onClick={copyDeckListToClipboard}
-                  disabled={copyStatus !== 'idle'}
+                  disabled={copyStatus !== "idle"}
                   style={{
                     padding: "0.5rem 1rem",
-                    backgroundColor: copyStatus === 'success' ? colors.background.secondary : copyStatus === 'error' ? colors.background.error : colors.background.secondary,
-                    color: copyStatus === 'success' ? colors.text.primary : copyStatus === 'error' ? colors.text.error : colors.text.primary,
+                    backgroundColor:
+                      copyStatus === "success"
+                        ? colors.background.secondary
+                        : copyStatus === "error"
+                          ? colors.background.error
+                          : colors.background.secondary,
+                    color:
+                      copyStatus === "success"
+                        ? colors.text.primary
+                        : copyStatus === "error"
+                          ? colors.text.error
+                          : colors.text.primary,
                     border: `1px solid ${colors.border.primary}`,
                     borderRadius: "6px",
                     fontSize: "0.875rem",
-                    cursor: copyStatus === 'idle' ? "pointer" : "default",
+                    cursor: copyStatus === "idle" ? "pointer" : "default",
                     transition: "all 0.2s ease",
                     display: "flex",
                     alignItems: "center",
                     gap: "0.5rem",
                   }}
                 >
-                  <Icon 
-                    icon={copyStatus === 'success' ? CheckCircle : copyStatus === 'error' ? XCircle : Copy} 
-                    size="xs" 
+                  <Icon
+                    icon={
+                      copyStatus === "success"
+                        ? CheckCircle
+                        : copyStatus === "error"
+                          ? XCircle
+                          : Copy
+                    }
+                    size="xs"
                   />
-                  {copyStatus === 'success' ? t("copied") : copyStatus === 'error' ? t("copyFailed") : t("copyDeckList")}
+                  {copyStatus === "success"
+                    ? t("copied")
+                    : copyStatus === "error"
+                      ? t("copyFailed")
+                      : t("copyDeckList")}
                 </button>
                 <ShareButton
                   url={shareUrl}
@@ -293,7 +379,9 @@ export default function DeckCheck() {
                 style={{
                   display: "grid",
                   gridTemplateColumns:
-                    i18n.language === "ja" ? "1fr 1fr auto auto" : "1fr auto auto",
+                    i18n.language === "ja"
+                      ? "1fr 1fr auto auto"
+                      : "1fr auto auto",
                   gap: "0.5rem 0.5rem",
                   fontFamily: "monospace",
                   fontSize: "0.875rem",
@@ -301,7 +389,7 @@ export default function DeckCheck() {
               >
                 {results.map((result, index) => (
                   <ExpandableCardRow
-                    key={`${index}-expandable-row`}
+                    key={`${result.input}-${result.found ? "found" : "not-found"}-${index}`}
                     result={result}
                     index={index}
                     isJapanese={i18n.language === "ja"}

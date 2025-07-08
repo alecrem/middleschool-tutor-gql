@@ -36,7 +36,7 @@ export function SearchControls({
   cmcMax = 16,
 }: SearchControlsProps) {
   const { t } = useHydratedTranslation();
-  const { colors, flexRow, flexColumn, topBorder } = useThemedStyles();
+  const { flexRow, flexColumn, topBorder } = useThemedStyles();
   const navigation = useNavigation();
 
   // Initialize form state with current URL parameters
@@ -85,12 +85,14 @@ export function SearchControls({
 
       <Form method="get">
         {/* Main search input */}
-        <div style={{ 
-          display: "flex", 
-          alignItems: "stretch",
-          gap: "0.5rem", 
-          marginBottom: "1rem" 
-        }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "stretch",
+            gap: "0.5rem",
+            marginBottom: "1rem",
+          }}
+        >
           <StyledInput
             type="text"
             name="query"
@@ -107,7 +109,7 @@ export function SearchControls({
             disabled={isSearching || isSearchDisabled}
             size="md"
             icon={Search}
-            style={{ whiteSpace: 'nowrap', minWidth: 'max-content' }}
+            style={{ whiteSpace: "nowrap", minWidth: "max-content" }}
           >
             {isSearching ? t("searching") : t("search")}
           </StyledButton>
@@ -207,7 +209,7 @@ export function SearchControls({
                 variant="secondary"
                 fullWidth
                 icon={RotateCcw}
-                style={{ whiteSpace: 'nowrap' }}
+                style={{ whiteSpace: "nowrap" }}
               >
                 {t("resetToDefaults")}
               </StyledButton>
@@ -218,7 +220,7 @@ export function SearchControls({
                 variant="primary"
                 fullWidth
                 icon={Search}
-                style={{ whiteSpace: 'nowrap' }}
+                style={{ whiteSpace: "nowrap" }}
               >
                 {isSearching ? t("searching") : t("search")}
               </StyledButton>

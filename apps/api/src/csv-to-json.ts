@@ -9,11 +9,11 @@ function parseCSVRecords(csvContent: string): string[] {
   const records: string[] = [];
   let currentRecord = "";
   let inQuotes = false;
-  
+
   for (let i = 0; i < csvContent.length; i++) {
     const char = csvContent[i];
     const nextChar = csvContent[i + 1];
-    
+
     if (char === '"') {
       // Handle escaped quotes ("")
       if (nextChar === '"' && inQuotes) {
@@ -23,7 +23,7 @@ function parseCSVRecords(csvContent: string): string[] {
         inQuotes = !inQuotes;
         currentRecord += char;
       }
-    } else if (char === '\n' && !inQuotes) {
+    } else if (char === "\n" && !inQuotes) {
       // End of record (only when not in quotes)
       if (currentRecord.trim()) {
         records.push(currentRecord);
@@ -33,12 +33,12 @@ function parseCSVRecords(csvContent: string): string[] {
       currentRecord += char;
     }
   }
-  
+
   // Add the last record if it exists
   if (currentRecord.trim()) {
     records.push(currentRecord);
   }
-  
+
   return records;
 }
 
@@ -116,9 +116,7 @@ function parseCSVLine(line: string): string[] {
   let current = "";
   let inQuotes = false;
 
-  for (let i = 0; i < line.length; i++) {
-    const char = line[i];
-
+  for (const char of line) {
     if (char === '"') {
       inQuotes = !inQuotes;
     } else if (char === "," && !inQuotes) {
@@ -146,7 +144,7 @@ try {
 
   // Ensure assets directory exists
   mkdirSync(dirname(jsonPath), { recursive: true });
-  
+
   writeFileSync(jsonPath, JSON.stringify(cards, null, 2));
   console.log(`✅ Converted ${cards.length} cards to JSON`);
   console.log(`📁 Saved to: ${jsonPath}`);
