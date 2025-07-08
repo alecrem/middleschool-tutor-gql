@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { ThemeMode, ThemeColors } from '../lib/theme';
-import { themes, getSystemTheme, getStoredTheme, setStoredTheme, getActiveTheme } from '../lib/theme';
+import { themes, getStoredTheme, setStoredTheme, getActiveTheme } from '../lib/theme';
 
 interface ThemeContextType {
   mode: ThemeMode;
@@ -29,7 +29,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   useEffect(() => {
     if (!mounted) return;
 
-    const handleSystemThemeChange = (e: MediaQueryList | MediaQueryListEvent) => {
+    const handleSystemThemeChange = (_e: MediaQueryList | MediaQueryListEvent) => {
       if (mode === 'system') {
         // Force re-render when system theme changes while in system mode
         setMode('system');

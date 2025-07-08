@@ -1,5 +1,5 @@
-import { InputHTMLAttributes } from 'react';
-import { LucideIcon } from 'lucide-react';
+import type { InputHTMLAttributes } from 'react';
+import type { LucideIcon } from 'lucide-react';
 import { useThemedStyles } from '../hooks/useTheme';
 import type { ComponentSize } from '../lib/theme';
 import { Icon } from './Icon';

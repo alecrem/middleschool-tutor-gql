@@ -10,6 +10,8 @@
       "persistent": true
     },
     "lint": {},
+    "lint:fix": {},
+    "lint:ci": {},
     "test": {},
     "typecheck": {}
   }

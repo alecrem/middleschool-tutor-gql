@@ -1,7 +1,7 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react';
-import { LucideIcon } from 'lucide-react';
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { LucideIcon } from 'lucide-react';
 import { useThemedStyles, useDesignTokens } from '../hooks/useTheme';
-import type { ComponentSize, ComponentVariant } from '../lib/theme';
+import type { ComponentSize, } from '../lib/theme';
 import { Icon } from './Icon';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'disabled';
@@ -97,7 +97,6 @@ export function StyledButton({
           color: colors.text.primary,
           border: `1px solid ${colors.border.primary}`,
         };
-      case 'primary':
       default:
         return {
           backgroundColor: colors.button.primary,
@@ -114,7 +113,6 @@ export function StyledButton({
         return {
           backgroundColor: colors.background.secondary,
         };
-      case 'primary':
       default:
         return {
           opacity: '0.9',

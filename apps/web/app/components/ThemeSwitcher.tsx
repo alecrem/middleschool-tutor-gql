@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
 import { useTheme } from "../hooks/useTheme";
-import { Sun, Moon, Monitor } from 'lucide-react';
+import { Sun, Moon, } from 'lucide-react';
 import { Icon } from './Icon';
 import type { ThemeMode } from "../lib/theme";
 import { getSystemTheme } from "../lib/theme";

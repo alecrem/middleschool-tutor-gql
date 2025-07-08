@@ -1,9 +1,9 @@
-import { readFileSync, writeFileSync, mkdirSync } from "fs";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { MagicCard, PartialMagicCard } from "./types.js";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const Dirname = dirname(fileURLToPath(import.meta.url));
 
 function parseCSVRecords(csvContent: string): string[] {
   const records: string[] = [];
@@ -59,7 +59,7 @@ function parseCSV(csvContent: string): MagicCard[] {
 
     const card: PartialMagicCard = {};
     headers.forEach((header, index) => {
-      let value = values[index]?.trim() || "";
+      const value = values[index]?.trim() || "";
 
       // Clean up header names
       const cleanHeader = header
@@ -78,7 +78,7 @@ function parseCSV(csvContent: string): MagicCard[] {
           card[cleanHeader] = value.toLowerCase() === "true";
           break;
         case "mv":
-          card[cleanHeader] = parseInt(value) || 0;
+          card[cleanHeader] = Number.parseInt(value) || 0;
           break;
         case "name_ja":
         case "power":
@@ -135,10 +135,10 @@ function parseCSVLine(line: string): string[] {
 
 // Convert CSV to JSON
 const csvPath = join(
-  __dirname,
+  Dirname,
   "../data/middleschool_extra_fields_with_banned_images.csv"
 );
-const jsonPath = join(__dirname, "assets/cards.json");
+const jsonPath = join(Dirname, "assets/cards.json");
 
 try {
   const csvContent = readFileSync(csvPath, "utf-8");

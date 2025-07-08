@@ -9,7 +9,7 @@ export function generateScryfallUrl(cardName: string): string {
 
 export function formatPowerToughness(value: string): string {
   // Remove trailing .0 from values like "2.0" -> "2", but keep "1.5" -> "1.5"
-  const num = parseFloat(value);
+  const num = Number.parseFloat(value);
   return num % 1 === 0 ? Math.floor(num).toString() : value;
 }
 

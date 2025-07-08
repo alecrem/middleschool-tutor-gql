@@ -1,4 +1,4 @@
-import { designTokens, type Spacing, type FontSize, type BorderRadius, type Shadow } from './designTokens';
+import type { designTokens, Spacing, FontSize, BorderRadius, Shadow } from './designTokens';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 

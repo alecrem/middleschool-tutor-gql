@@ -2,8 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { createYoga, createSchema } from "graphql-yoga";
 import { searchCards, getCardById, getCardsByColor, validateCards } from "./data.js";
-import type { MagicCard } from "./types.js";
-import { pathToFileURL } from "url";
+import { pathToFileURL } from "node:url";
 
 // GraphQL resolver types
 interface SearchCardsArgs {
@@ -33,7 +32,7 @@ interface ValidateCardsArgs {
 }
 
 // GraphQL resolver context (empty for now)
-interface ResolverContext {}
+type ResolverContext = {}
 
 // Vercel handler types
 interface VercelRequest {

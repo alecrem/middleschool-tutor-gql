@@ -1,10 +1,9 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useLoaderData, Form, useNavigation, useLocation } from "@remix-run/react";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Check, Copy, AlertTriangle, XCircle, CheckCircle } from 'lucide-react';
 import { ExpandableCardRow } from '../../components/ExpandableCardRow';
 import { useHydratedTranslation } from "../../hooks/useHydratedTranslation";
-import { generateScryfallUrl } from "../../lib/utils";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
 import { ThemeSwitcher } from "../../components/ThemeSwitcher";
 import { Footer } from "../../components/Footer";
@@ -66,7 +65,7 @@ export default function DeckCheck() {
         .map((result) => {
           // Clean quantity - remove 'x' suffix and ensure it's a number
           const cleanQuantity = result.quantity.toString().replace(/x$/i, '');
-          const quantity = parseInt(cleanQuantity) || 1;
+          const quantity = Number.parseInt(cleanQuantity) || 1;
           
           // Use English matched name if found, otherwise original input
           const cardName = result.found && result.matchedName ? result.matchedName : result.name;
@@ -78,7 +77,7 @@ export default function DeckCheck() {
       await navigator.clipboard.writeText(deckListText);
       setCopyStatus('success');
       setTimeout(() => setCopyStatus('idle'), 2000);
-    } catch (error) {
+    } catch (_error) {
       setCopyStatus('error');
       setTimeout(() => setCopyStatus('idle'), 2000);
     }

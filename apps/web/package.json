@@ -7,7 +7,9 @@
   "scripts": {
     "build": "remix vite:build",
     "dev": "remix vite:dev",
-    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint": "biome lint app/",
+    "lint:fix": "biome lint --write app/",
+    "lint:ci": "biome lint --reporter=github app/",
     "start": "remix-serve ./build/server/index.js",
     "test": "vitest --config vite.config.test.ts",
     "test:ui": "vitest --ui --config vite.config.test.ts",

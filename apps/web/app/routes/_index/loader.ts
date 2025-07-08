@@ -7,28 +7,28 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const query = url.searchParams.get("query");
   const cardType = url.searchParams.get("cardType") || "";
   const colors = url.searchParams.getAll("colors");
-  const page = parseInt(url.searchParams.get("page") || "1");
+  const page = Number.parseInt(url.searchParams.get("page") || "1");
   const limit = 20;
   const offset = (page - 1) * limit;
 
   // Parse power/toughness/CMC parameters with defaults
   const powerMin = url.searchParams.get("powerMin")
-    ? parseInt(url.searchParams.get("powerMin")!)
+    ? Number.parseInt(url.searchParams.get("powerMin")!)
     : 0;
   const powerMax = url.searchParams.get("powerMax")
-    ? parseInt(url.searchParams.get("powerMax")!)
+    ? Number.parseInt(url.searchParams.get("powerMax")!)
     : 13;
   const toughnessMin = url.searchParams.get("toughnessMin")
-    ? parseInt(url.searchParams.get("toughnessMin")!)
+    ? Number.parseInt(url.searchParams.get("toughnessMin")!)
     : 0;
   const toughnessMax = url.searchParams.get("toughnessMax")
-    ? parseInt(url.searchParams.get("toughnessMax")!)
+    ? Number.parseInt(url.searchParams.get("toughnessMax")!)
     : 13;
   const cmcMin = url.searchParams.get("cmcMin")
-    ? parseInt(url.searchParams.get("cmcMin")!)
+    ? Number.parseInt(url.searchParams.get("cmcMin")!)
     : 0;
   const cmcMax = url.searchParams.get("cmcMax")
-    ? parseInt(url.searchParams.get("cmcMax")!)
+    ? Number.parseInt(url.searchParams.get("cmcMax")!)
     : 16;
 
   // Check if there are any filters applied

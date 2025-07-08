@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDown, ChevronRight, Ban, MessageCircleQuestion } from 'lucide-react';
 import { generateScryfallUrl } from '../lib/utils';
 import { useThemedStyles } from '../hooks/useTheme';

@@ -1,4 +1,4 @@
-import { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useThemedStyles } from '../hooks/useTheme';
 import type { ComponentSize } from '../lib/theme';
 

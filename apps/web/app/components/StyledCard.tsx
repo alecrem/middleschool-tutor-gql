@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 import { useThemedStyles } from '../hooks/useTheme';
 
 interface StyledCardProps extends HTMLAttributes<HTMLDivElement> {

@@ -11,7 +11,6 @@ import { StyledButton } from "./StyledButton";
 import { StyledInput } from "./StyledInput";
 import { StyledSelect } from "./StyledSelect";
 import { StyledContainer } from "./StyledContainer";
-import { Icon } from "./Icon";
 
 interface SearchControlsProps {
   query: string;

@@ -12,7 +12,9 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src/**/*.ts"
+    "lint": "biome lint src/",
+    "lint:fix": "biome lint --write src/",
+    "lint:ci": "biome lint --reporter=github src/"
   },
   "dependencies": {
     "@hono/node-server": "^1.0.0",

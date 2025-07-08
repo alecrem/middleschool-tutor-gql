@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useTheme } from '../hooks/useTheme';
-import { generateAllCSSVariables, variablesToCSSString } from '../lib/cssVariables';
+import { generateAllCSSVariables, } from '../lib/cssVariables';
 
 export function BodyStyle() {
   const { colors } = useTheme();

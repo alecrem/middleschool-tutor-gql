@@ -22,7 +22,7 @@ export function generateSearchShareUrl(searchParams: SearchParams): string {
   const params = new URLSearchParams();
 
   // Add all search parameters if they exist
-  if (searchParams.query && searchParams.query.trim()) {
+  if (searchParams.query?.trim()) {
     params.set('query', searchParams.query.trim());
   }
   
@@ -70,7 +70,7 @@ export function generateSearchShareUrl(searchParams: SearchParams): string {
  * Generate a shareable URL for deck check with the current deck list
  */
 export function generateDeckCheckShareUrl(deckList: string): string {
-  if (deckList && deckList.trim()) {
+  if (deckList?.trim()) {
     const params = new URLSearchParams();
     params.set('decklist', deckList.trim());
     return `/deck-check?${params.toString()}`;
@@ -95,22 +95,22 @@ export function extractSearchParamsFromUrl(searchParams: URLSearchParams): Searc
   if (colors) result.colors = colors.split(',').filter(Boolean);
 
   const powerMin = searchParams.get('powerMin');
-  if (powerMin !== null) result.powerMin = parseInt(powerMin, 10);
+  if (powerMin !== null) result.powerMin = Number.parseInt(powerMin, 10);
 
   const powerMax = searchParams.get('powerMax');
-  if (powerMax !== null) result.powerMax = parseInt(powerMax, 10);
+  if (powerMax !== null) result.powerMax = Number.parseInt(powerMax, 10);
 
   const toughnessMin = searchParams.get('toughnessMin');
-  if (toughnessMin !== null) result.toughnessMin = parseInt(toughnessMin, 10);
+  if (toughnessMin !== null) result.toughnessMin = Number.parseInt(toughnessMin, 10);
 
   const toughnessMax = searchParams.get('toughnessMax');
-  if (toughnessMax !== null) result.toughnessMax = parseInt(toughnessMax, 10);
+  if (toughnessMax !== null) result.toughnessMax = Number.parseInt(toughnessMax, 10);
 
   const cmcMin = searchParams.get('cmcMin');
-  if (cmcMin !== null) result.cmcMin = parseInt(cmcMin, 10);
+  if (cmcMin !== null) result.cmcMin = Number.parseInt(cmcMin, 10);
 
   const cmcMax = searchParams.get('cmcMax');
-  if (cmcMax !== null) result.cmcMax = parseInt(cmcMax, 10);
+  if (cmcMax !== null) result.cmcMax = Number.parseInt(cmcMax, 10);
 
   return result;
 }

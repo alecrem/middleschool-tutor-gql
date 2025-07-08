@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Share, Check, AlertCircle } from 'lucide-react';
 import { useHydratedTranslation } from '../hooks/useHydratedTranslation';
 import { useThemedStyles } from '../hooks/useTheme';
 import { Icon } from './Icon';
-import { ComponentSize } from '../lib/theme';
+import type { ComponentSize } from '../lib/theme';
 
 interface ShareButtonProps {
   url: string;
@@ -31,7 +31,7 @@ export function ShareButton({ url, label, size = 'sm', className, disabled = fal
       await navigator.clipboard.writeText(absoluteUrl);
       setCopyStatus('success');
       setTimeout(() => setCopyStatus('idle'), 2000);
-    } catch (error) {
+    } catch (_error) {
       setCopyStatus('error');
       setTimeout(() => setCopyStatus('idle'), 2000);
     }
