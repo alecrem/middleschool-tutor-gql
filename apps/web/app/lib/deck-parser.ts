@@ -32,7 +32,7 @@ function parseDeckLine(line: string): DeckEntry | null {
     if (knownSplitCardPattern.test(line)) {
       // This contains a known split card, check if there's a comment after it
       const match = line.match(/^(.*?\b\w+\s*\/\/\s*\w+)(.*)/);
-      if (match && match[2].trim().startsWith('//')) {
+      if (match?.[2].trim().startsWith('//')) {
         // There's a comment after the split card
         cleanLine = match[1].trim();
       }
@@ -50,7 +50,7 @@ function parseDeckLine(line: string): DeckEntry | null {
   const quantityFirst = cleanLine.match(/^(\d+)x?\s+(.+)$/);
   if (quantityFirst) {
     return {
-      quantity: parseInt(quantityFirst[1], 10),
+      quantity: Number.parseInt(quantityFirst[1], 10),
       name: quantityFirst[2].trim()
     };
   }
@@ -59,7 +59,7 @@ function parseDeckLine(line: string): DeckEntry | null {
   const quantityLast = cleanLine.match(/^(.+?)\s+(?:x)?(\d+)$/);
   if (quantityLast) {
     return {
-      quantity: parseInt(quantityLast[2], 10),
+      quantity: Number.parseInt(quantityLast[2], 10),
       name: quantityLast[1].trim()
     };
   }

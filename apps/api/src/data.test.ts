@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeAll } from 'vitest'
+import { describe, test, expect, } from 'vitest'
 import { validateCards, searchCards } from './data'
 
 // Note: These tests will use the actual card data loaded from the JSON file

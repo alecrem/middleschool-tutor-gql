@@ -44,7 +44,7 @@ export function NumberRangeSelect({
       <select
         name={hasNonDefaultValues ? `${namePrefix}Min` : undefined}
         value={minValue}
-        onChange={(e) => onMinChange(parseInt(e.target.value))}
+        onChange={(e) => onMinChange(Number.parseInt(e.target.value))}
         style={selectStyle}
       >
         {Array.from({ length: maxRange + 1 }, (_, i) => (
@@ -61,7 +61,7 @@ export function NumberRangeSelect({
       <select
         name={hasNonDefaultValues ? `${namePrefix}Max` : undefined}
         value={maxValue}
-        onChange={(e) => onMaxChange(parseInt(e.target.value))}
+        onChange={(e) => onMaxChange(Number.parseInt(e.target.value))}
         style={selectStyle}
       >
         {Array.from({ length: maxRange + 1 }, (_, i) => (

@@ -5,11 +5,23 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
+    "lint:fix": "turbo lint:fix",
+    "lint:ci": "turbo lint:ci",
     "test": "turbo test",
-    "typecheck": "turbo typecheck"
+    "typecheck": "turbo typecheck",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
     "turbo": "^2.0.0"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx,json,jsonc}": [
+      "biome lint --write",
+      "biome format --write"
+    ]
   },
   "packageManager": "pnpm@9.0.0"
 }

@@ -1,4 +1,4 @@
-import { useState, ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { ChevronDown } from 'lucide-react';
 import { useTheme } from "../hooks/useTheme";
 import { Icon } from './Icon';

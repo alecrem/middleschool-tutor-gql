@@ -25,7 +25,7 @@ export const mockUseTheme = () => {
         },
       },
       utilities: {
-        borderRadius: (size: string) => '8px',
+        borderRadius: (_size: string) => '8px',
         transition: (prop: string) => `${prop} 0.2s ease`,
         spacing: (size: string) => {
           const sizes = { xs: '4px', sm: '8px', md: '12px', lg: '16px', xl: '20px', '2xl': '24px' }

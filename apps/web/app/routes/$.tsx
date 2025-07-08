@@ -1,4 +1,4 @@
-import { type LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { useThemedStyles } from "../hooks/useTheme";
 import { useHydratedTranslation } from "../hooks/useHydratedTranslation";

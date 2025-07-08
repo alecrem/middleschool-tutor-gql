@@ -11,7 +11,6 @@ import { StyledButton } from "./StyledButton";
 import { StyledInput } from "./StyledInput";
 import { StyledSelect } from "./StyledSelect";
 import { StyledContainer } from "./StyledContainer";
-import { Icon } from "./Icon";
 
 interface SearchControlsProps {
   query: string;
@@ -37,7 +36,7 @@ export function SearchControls({
   cmcMax = 16,
 }: SearchControlsProps) {
   const { t } = useHydratedTranslation();
-  const { colors, flexRow, flexColumn, topBorder } = useThemedStyles();
+  const { flexRow, flexColumn, topBorder } = useThemedStyles();
   const navigation = useNavigation();
 
   // Initialize form state with current URL parameters
@@ -82,16 +81,29 @@ export function SearchControls({
   return (
     <StyledContainer variant="section">
       <h2>{t("searchCards")}</h2>
-      <p dangerouslySetInnerHTML={{ __html: t("description") }} />
+      <p>
+        {t("descriptionBefore")}
+        <a
+          href="https://www.eternalcentral.com/middleschoolrules/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "inherit", textDecoration: "underline" }}
+        >
+          {t("descriptionLink")}
+        </a>
+        {t("descriptionAfter")}
+      </p>
 
       <Form method="get">
         {/* Main search input */}
-        <div style={{ 
-          display: "flex", 
-          alignItems: "stretch",
-          gap: "0.5rem", 
-          marginBottom: "1rem" 
-        }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "stretch",
+            gap: "0.5rem",
+            marginBottom: "1rem",
+          }}
+        >
           <StyledInput
             type="text"
             name="query"
@@ -108,7 +120,7 @@ export function SearchControls({
             disabled={isSearching || isSearchDisabled}
             size="md"
             icon={Search}
-            style={{ whiteSpace: 'nowrap', minWidth: 'max-content' }}
+            style={{ whiteSpace: "nowrap", minWidth: "max-content" }}
           >
             {isSearching ? t("searching") : t("search")}
           </StyledButton>
@@ -208,7 +220,7 @@ export function SearchControls({
                 variant="secondary"
                 fullWidth
                 icon={RotateCcw}
-                style={{ whiteSpace: 'nowrap' }}
+                style={{ whiteSpace: "nowrap" }}
               >
                 {t("resetToDefaults")}
               </StyledButton>
@@ -219,7 +231,7 @@ export function SearchControls({
                 variant="primary"
                 fullWidth
                 icon={Search}
-                style={{ whiteSpace: 'nowrap' }}
+                style={{ whiteSpace: "nowrap" }}
               >
                 {isSearching ? t("searching") : t("search")}
               </StyledButton>

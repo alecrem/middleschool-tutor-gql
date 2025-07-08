@@ -1,5 +1,5 @@
 import { Link } from '@remix-run/react';
-import { LucideIcon, Search, CheckCircle } from 'lucide-react';
+import { type LucideIcon, Search, CheckCircle } from 'lucide-react';
 import { useHydratedTranslation } from '../hooks/useHydratedTranslation';
 import { useThemedStyles } from '../hooks/useTheme';
 import { Icon } from './Icon';
@@ -54,7 +54,6 @@ export function Navigation({ currentPath }: NavigationProps) {
 
   return (
     <nav
-      role="navigation"
       aria-label={t('mainNavigation')}
       style={{
         display: 'flex',

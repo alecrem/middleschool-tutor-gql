@@ -14,6 +14,39 @@ This project uses [Vitest](https://vitest.dev/) as the testing framework for bot
 - **Config**: `vitest.config.ts`
 - **Test files**: `*.test.ts` files alongside source code
 
+## Code Quality
+
+This project uses [Biome](https://biomejs.dev/) for linting and formatting to ensure consistent code style and catch potential issues.
+
+### Linting Commands
+
+```bash
+# Run linting (check only)
+pnpm lint
+
+# Run linting and automatically fix issues
+pnpm lint:fix
+
+# Run linting for CI (with GitHub reporter format)
+pnpm lint:ci
+```
+
+### Pre-commit Hooks
+
+The project uses Husky and lint-staged to automatically:
+- Run `biome lint --write` and `biome format --write` on staged files
+- Ensure code quality before commits
+- Block commits with unfixable lint errors
+
+### VSCode Integration
+
+The project includes VSCode settings (`.vscode/settings.json`) that:
+- Set Biome as the default formatter for JS/TS/JSON files
+- Enable format on save
+- Run code actions (organize imports, quick fixes) on save
+
+Install the [Biome VSCode extension](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) for the best experience.
+
 ## Running Tests
 
 ### All Apps (from root)

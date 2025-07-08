@@ -1,4 +1,4 @@
-import { SelectHTMLAttributes, ReactNode } from 'react';
+import type { SelectHTMLAttributes, ReactNode } from 'react';
 import { useThemedStyles } from '../hooks/useTheme';
 
 export type SelectSize = 'sm' | 'md' | 'lg';

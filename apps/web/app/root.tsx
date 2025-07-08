@@ -8,6 +8,7 @@ import {
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { BodyStyle } from "./components/BodyStyle";
 import { Analytics } from "@vercel/analytics/remix";
+import "./styles/global.css";
 
 export default function App() {
   return (
@@ -19,39 +20,6 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-            * {
-              box-sizing: border-box;
-            }
-            body {
-              margin: 0;
-              overflow-x: hidden;
-              transition: background-color 0.2s ease, color 0.2s ease;
-            }
-            @media (max-width: 640px) {
-              body {
-                font-size: 14px;
-              }
-              .card-layout {
-                flex-direction: column !important;
-              }
-              .card-image {
-                width: 200px !important;
-                height: 280px !important;
-                max-width: 60vw !important;
-                align-self: center !important;
-              }
-            }
-            @media (prefers-reduced-motion: reduce) {
-              * {
-                transition: none !important;
-              }
-            }
-          `,
-          }}
-        />
         <ThemeProvider>
           <BodyStyle />
           <Outlet />

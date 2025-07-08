@@ -7,29 +7,27 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const query = url.searchParams.get("query");
   const cardType = url.searchParams.get("cardType") || "";
   const colors = url.searchParams.getAll("colors");
-  const page = parseInt(url.searchParams.get("page") || "1");
+  const page = Number.parseInt(url.searchParams.get("page") || "1");
   const limit = 20;
   const offset = (page - 1) * limit;
 
   // Parse power/toughness/CMC parameters with defaults
-  const powerMin = url.searchParams.get("powerMin")
-    ? parseInt(url.searchParams.get("powerMin")!)
+  const powerMinParam = url.searchParams.get("powerMin");
+  const powerMin = powerMinParam ? Number.parseInt(powerMinParam) : 0;
+  const powerMaxParam = url.searchParams.get("powerMax");
+  const powerMax = powerMaxParam ? Number.parseInt(powerMaxParam) : 13;
+  const toughnessMinParam = url.searchParams.get("toughnessMin");
+  const toughnessMin = toughnessMinParam
+    ? Number.parseInt(toughnessMinParam)
     : 0;
-  const powerMax = url.searchParams.get("powerMax")
-    ? parseInt(url.searchParams.get("powerMax")!)
+  const toughnessMaxParam = url.searchParams.get("toughnessMax");
+  const toughnessMax = toughnessMaxParam
+    ? Number.parseInt(toughnessMaxParam)
     : 13;
-  const toughnessMin = url.searchParams.get("toughnessMin")
-    ? parseInt(url.searchParams.get("toughnessMin")!)
-    : 0;
-  const toughnessMax = url.searchParams.get("toughnessMax")
-    ? parseInt(url.searchParams.get("toughnessMax")!)
-    : 13;
-  const cmcMin = url.searchParams.get("cmcMin")
-    ? parseInt(url.searchParams.get("cmcMin")!)
-    : 0;
-  const cmcMax = url.searchParams.get("cmcMax")
-    ? parseInt(url.searchParams.get("cmcMax")!)
-    : 16;
+  const cmcMinParam = url.searchParams.get("cmcMin");
+  const cmcMin = cmcMinParam ? Number.parseInt(cmcMinParam) : 0;
+  const cmcMaxParam = url.searchParams.get("cmcMax");
+  const cmcMax = cmcMaxParam ? Number.parseInt(cmcMaxParam) : 16;
 
   // Check if there are any filters applied
   const hasFilters =

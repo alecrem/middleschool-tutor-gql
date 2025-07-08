@@ -1,6 +1,6 @@
-import { readFileSync } from "fs";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import { readFileSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { MagicCard } from "./types.js";
 
 // Handle both ES modules and CommonJS
@@ -10,13 +10,13 @@ const getCurrentDir = (): string => {
   }
   return process.cwd();
 };
-const __dirname: string = getCurrentDir();
+const Dirname: string = getCurrentDir();
 
 let cardsData: MagicCard[] | null = null;
 
 export function loadCards(): MagicCard[] {
   if (cardsData === null) {
-    const cardsPath = join(__dirname, "assets/cards.json");
+    const cardsPath = join(Dirname, "assets/cards.json");
     const rawData = readFileSync(cardsPath, "utf-8");
     cardsData = JSON.parse(rawData) as MagicCard[];
     console.log(`📚 Loaded ${cardsData.length} cards`);
@@ -60,7 +60,7 @@ export function searchCards(
     matches = cards.filter(
       (card) =>
         card.name.toLowerCase().includes(searchTerm) ||
-        (card.name_ja && card.name_ja.toLowerCase().includes(searchTerm)) ||
+        (card.name_ja?.toLowerCase().includes(searchTerm)) ||
         card.type.toLowerCase().includes(searchTerm) ||
         card.text.toLowerCase().includes(searchTerm) ||
         matchesSplitCardSearch(card, searchTerm)
@@ -100,7 +100,7 @@ export function searchCards(
   // Apply power filter if specified (only filter if parameters are provided and not default range)
   if (powerMin !== undefined && powerMax !== undefined) {
     matches = matches.filter((card) => {
-      const power = parseFloat(card.power || "0");
+      const power = Number.parseFloat(card.power || "0");
       return power >= powerMin && power <= powerMax;
     });
   }
@@ -108,7 +108,7 @@ export function searchCards(
   // Apply toughness filter if specified (only filter if parameters are provided and not default range)
   if (toughnessMin !== undefined && toughnessMax !== undefined) {
     matches = matches.filter((card) => {
-      const toughness = parseFloat(card.toughness || "0");
+      const toughness = Number.parseFloat(card.toughness || "0");
       return toughness >= toughnessMin && toughness <= toughnessMax;
     });
   }

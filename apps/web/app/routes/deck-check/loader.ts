@@ -12,7 +12,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   // Check line count before processing
-  const lines = deckList.split('\n').filter(line => line.trim().length > 0);
+  const lines = deckList.split("\n").filter((line) => line.trim().length > 0);
   if (lines.length > 100) {
     return {
       results: null,
@@ -28,20 +28,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     // Get unique found card names for fetching details
     const foundCardNames = validationResults
-      .filter(v => v.found && v.matchedName)
-      .map(v => v.matchedName!)
+      .filter((v) => v.found && v.matchedName)
+      .map((v) => v.matchedName as string)
       .filter((name, index, arr) => arr.indexOf(name) === index); // Remove duplicates
 
     // Fetch card details for all found cards
     const cardDetailsMap = new Map();
     if (foundCardNames.length > 0) {
       try {
-        const cardDetailsPromises = foundCardNames.map(cardName =>
+        const cardDetailsPromises = foundCardNames.map((cardName) =>
           searchCards(cardName, undefined, undefined, 1, 0)
             .then(({ cards }) => ({ cardName, details: cards[0] || null }))
             .catch(() => ({ cardName, details: null }))
         );
-        
+
         const cardDetailsResults = await Promise.all(cardDetailsPromises);
         cardDetailsResults.forEach(({ cardName, details }) => {
           if (details) {
@@ -55,8 +55,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     const results: DeckValidationResult[] = entries.map((entry) => {
       const validation = validationResults.find((v) => v.name === entry.name);
-      const cardDetails = validation?.matchedName ? cardDetailsMap.get(validation.matchedName) || null : null;
-      
+      const cardDetails = validation?.matchedName
+        ? cardDetailsMap.get(validation.matchedName) || null
+        : null;
+
       return {
         name: entry.name,
         quantity: entry.quantity,

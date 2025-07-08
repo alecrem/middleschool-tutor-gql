@@ -1,19 +1,19 @@
-import { readFileSync, writeFileSync, mkdirSync } from "fs";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { MagicCard, PartialMagicCard } from "./types.js";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const Dirname = dirname(fileURLToPath(import.meta.url));
 
 function parseCSVRecords(csvContent: string): string[] {
   const records: string[] = [];
   let currentRecord = "";
   let inQuotes = false;
-  
+
   for (let i = 0; i < csvContent.length; i++) {
     const char = csvContent[i];
     const nextChar = csvContent[i + 1];
-    
+
     if (char === '"') {
       // Handle escaped quotes ("")
       if (nextChar === '"' && inQuotes) {
@@ -23,7 +23,7 @@ function parseCSVRecords(csvContent: string): string[] {
         inQuotes = !inQuotes;
         currentRecord += char;
       }
-    } else if (char === '\n' && !inQuotes) {
+    } else if (char === "\n" && !inQuotes) {
       // End of record (only when not in quotes)
       if (currentRecord.trim()) {
         records.push(currentRecord);
@@ -33,12 +33,12 @@ function parseCSVRecords(csvContent: string): string[] {
       currentRecord += char;
     }
   }
-  
+
   // Add the last record if it exists
   if (currentRecord.trim()) {
     records.push(currentRecord);
   }
-  
+
   return records;
 }
 
@@ -59,7 +59,7 @@ function parseCSV(csvContent: string): MagicCard[] {
 
     const card: PartialMagicCard = {};
     headers.forEach((header, index) => {
-      let value = values[index]?.trim() || "";
+      const value = values[index]?.trim() || "";
 
       // Clean up header names
       const cleanHeader = header
@@ -78,7 +78,7 @@ function parseCSV(csvContent: string): MagicCard[] {
           card[cleanHeader] = value.toLowerCase() === "true";
           break;
         case "mv":
-          card[cleanHeader] = parseInt(value) || 0;
+          card[cleanHeader] = Number.parseInt(value) || 0;
           break;
         case "name_ja":
         case "power":
@@ -116,9 +116,7 @@ function parseCSVLine(line: string): string[] {
   let current = "";
   let inQuotes = false;
 
-  for (let i = 0; i < line.length; i++) {
-    const char = line[i];
-
+  for (const char of line) {
     if (char === '"') {
       inQuotes = !inQuotes;
     } else if (char === "," && !inQuotes) {
@@ -135,10 +133,10 @@ function parseCSVLine(line: string): string[] {
 
 // Convert CSV to JSON
 const csvPath = join(
-  __dirname,
+  Dirname,
   "../data/middleschool_extra_fields_with_banned_images.csv"
 );
-const jsonPath = join(__dirname, "assets/cards.json");
+const jsonPath = join(Dirname, "assets/cards.json");
 
 try {
   const csvContent = readFileSync(csvPath, "utf-8");
@@ -146,7 +144,7 @@ try {
 
   // Ensure assets directory exists
   mkdirSync(dirname(jsonPath), { recursive: true });
-  
+
   writeFileSync(jsonPath, JSON.stringify(cards, null, 2));
   console.log(`✅ Converted ${cards.length} cards to JSON`);
   console.log(`📁 Saved to: ${jsonPath}`);
