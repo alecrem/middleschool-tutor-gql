@@ -98,6 +98,10 @@ function parseCSV(csvContent: string): MagicCard[] {
         case "index":
           // Skip index column
           break;
+        case "rarity":
+          // Skip rarity field - removed from MagicCard data model (see issue #66)
+          // The rarity field is present in the CSV but is not used in the application
+          break;
         default:
           card[cleanHeader] = value.replace(/^["']|["']$/g, "");
       }
