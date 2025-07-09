@@ -72,7 +72,6 @@ const typeDefs = `
     name_ja: String
     banned: Boolean!
     mv: Int!
-    rarity: String!
     text: String!
     type: String!
     power: String

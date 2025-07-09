@@ -398,7 +398,7 @@ export default function DeckCheck() {
               >
                 {results.map((result, index) => (
                   <ExpandableCardRow
-                    key={`${result.input}-${result.found ? "found" : "not-found"}-${index}`}
+                    key={`${result.name}-${result.found ? "found" : "not-found"}-${index}`}
                     result={result}
                     index={index}
                     isJapanese={i18n.language === "ja"}

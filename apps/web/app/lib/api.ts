@@ -1,4 +1,4 @@
-import type { CardSearchResult, } from "./types";
+import type { CardSearchResult } from "./types";
 
 const API_URL = process.env.API_URL || "http://localhost:3001/graphql";
 
@@ -30,7 +30,6 @@ export async function searchCards(
               name_ja
               banned
               mv
-              rarity
               text
               type
               power
@@ -48,7 +47,19 @@ export async function searchCards(
           }
         }
       `,
-      variables: { query, cardType, colors, limit, offset, powerMin, powerMax, toughnessMin, toughnessMax, cmcMin, cmcMax },
+      variables: {
+        query,
+        cardType,
+        colors,
+        limit,
+        offset,
+        powerMin,
+        powerMax,
+        toughnessMin,
+        toughnessMax,
+        cmcMin,
+        cmcMax,
+      },
     }),
   });
 
@@ -67,7 +78,15 @@ export async function searchCards(
 
 export async function validateCards(
   cardNames: string[]
-): Promise<Array<{ name: string; found: boolean; banned: boolean; matchedName: string | null; matchedNameJa: string | null }>> {
+): Promise<
+  Array<{
+    name: string;
+    found: boolean;
+    banned: boolean;
+    matchedName: string | null;
+    matchedNameJa: string | null;
+  }>
+> {
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
@@ -101,4 +120,3 @@ export async function validateCards(
 
   return data.data.validateCards;
 }
-
