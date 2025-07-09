@@ -4,7 +4,6 @@ export interface MagicCard {
   name_ja: string | null;
   banned: boolean;
   mv: number;
-  rarity: string;
   text: string;
   type: string;
   power: string | null;
