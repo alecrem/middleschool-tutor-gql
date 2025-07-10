@@ -17,8 +17,6 @@ let cardsData: MagicCard[] | null = null;
 export function loadCards(): MagicCard[] {
   if (cardsData === null) {
     const cardsPath = join(Dirname, "assets/cards.json");
-    console.log(`🔍 Loading cards from: ${cardsPath}`);
-    console.log(`📂 Current directory: ${Dirname}`);
     const rawData = readFileSync(cardsPath, "utf-8");
     cardsData = JSON.parse(rawData) as MagicCard[];
     console.log(`📚 Loaded ${cardsData.length} cards`);
@@ -196,9 +194,7 @@ export function getCardsByColor(colors: string[]): MagicCard[] {
   });
 }
 
-export function validateCards(
-  cardNames: string[]
-): Array<{
+export function validateCards(cardNames: string[]): Array<{
   name: string;
   found: boolean;
   banned: boolean;
