@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "npm run convert-data && tsc && mkdir -p dist/assets && ls -la src/assets/ && cp src/assets/cards.json dist/assets/ && ls -la dist/assets/",
+    "build": "npm run convert-data && npm run embed-data && tsc",
+    "embed-data": "node -e \"const fs=require('fs'); const cards=JSON.parse(fs.readFileSync('src/assets/cards.json','utf8')); fs.writeFileSync('src/cards-data.ts', 'export const cardsData = ' + JSON.stringify(cards) + ';');\"",
     "start": "node dist/index.js",
     "convert-data": "tsx src/csv-to-json.ts",
     "test": "vitest",

@@ -5,6 +5,7 @@ dist/
 
 # Ignore generated JSON data in build
 src/assets/cards.json
+src/cards-data.ts
 
 # Local environment
 .env

@@ -1,24 +1,11 @@
-import { readFileSync } from "node:fs";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 import type { MagicCard } from "./types.js";
-
-// Handle both ES modules and CommonJS
-const getCurrentDir = (): string => {
-  if (typeof import.meta !== "undefined" && import.meta.url) {
-    return dirname(fileURLToPath(import.meta.url));
-  }
-  return process.cwd();
-};
-const Dirname: string = getCurrentDir();
+import { cardsData as importedCardsData } from "./cards-data.js";
 
 let cardsData: MagicCard[] | null = null;
 
 export function loadCards(): MagicCard[] {
   if (cardsData === null) {
-    const cardsPath = join(Dirname, "assets/cards.json");
-    const rawData = readFileSync(cardsPath, "utf-8");
-    cardsData = JSON.parse(rawData) as MagicCard[];
+    cardsData = importedCardsData as MagicCard[];
     console.log(`📚 Loaded ${cardsData.length} cards`);
   }
   return cardsData as MagicCard[];
