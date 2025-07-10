@@ -9,8 +9,6 @@ import {
 } from "./data.js";
 import { pathToFileURL } from "node:url";
 
-// Force rebuild to ensure assets are included
-
 // GraphQL resolver types
 interface SearchCardsArgs {
   query: string;
