@@ -1,6 +1,7 @@
 /**
  * URL generation utilities for sharing search results and deck checks
  */
+import { compressString } from "./utils";
 
 export interface SearchParams {
   query?: string;
@@ -23,39 +24,45 @@ export function generateSearchShareUrl(searchParams: SearchParams): string {
 
   // Add all search parameters if they exist
   if (searchParams.query?.trim()) {
-    params.set('query', searchParams.query.trim());
+    params.set("query", searchParams.query.trim());
   }
-  
-  if (searchParams.cardType && searchParams.cardType !== 'all') {
-    params.set('cardType', searchParams.cardType);
+
+  if (searchParams.cardType && searchParams.cardType !== "all") {
+    params.set("cardType", searchParams.cardType);
   }
-  
+
   if (searchParams.colors && searchParams.colors.length > 0) {
-    params.set('colors', searchParams.colors.join(','));
+    params.set("colors", searchParams.colors.join(","));
   }
-  
+
   if (searchParams.powerMin !== undefined && searchParams.powerMin !== null) {
-    params.set('powerMin', searchParams.powerMin.toString());
+    params.set("powerMin", searchParams.powerMin.toString());
   }
-  
+
   if (searchParams.powerMax !== undefined && searchParams.powerMax !== null) {
-    params.set('powerMax', searchParams.powerMax.toString());
+    params.set("powerMax", searchParams.powerMax.toString());
   }
-  
-  if (searchParams.toughnessMin !== undefined && searchParams.toughnessMin !== null) {
-    params.set('toughnessMin', searchParams.toughnessMin.toString());
+
+  if (
+    searchParams.toughnessMin !== undefined &&
+    searchParams.toughnessMin !== null
+  ) {
+    params.set("toughnessMin", searchParams.toughnessMin.toString());
   }
-  
-  if (searchParams.toughnessMax !== undefined && searchParams.toughnessMax !== null) {
-    params.set('toughnessMax', searchParams.toughnessMax.toString());
+
+  if (
+    searchParams.toughnessMax !== undefined &&
+    searchParams.toughnessMax !== null
+  ) {
+    params.set("toughnessMax", searchParams.toughnessMax.toString());
   }
-  
+
   if (searchParams.cmcMin !== undefined && searchParams.cmcMin !== null) {
-    params.set('cmcMin', searchParams.cmcMin.toString());
+    params.set("cmcMin", searchParams.cmcMin.toString());
   }
-  
+
   if (searchParams.cmcMax !== undefined && searchParams.cmcMax !== null) {
-    params.set('cmcMax', searchParams.cmcMax.toString());
+    params.set("cmcMax", searchParams.cmcMax.toString());
   }
 
   // Return URL with parameters (no page parameter needed)
@@ -63,53 +70,68 @@ export function generateSearchShareUrl(searchParams: SearchParams): string {
     return `/?${params.toString()}`;
   }
 
-  return '/';
+  return "/";
 }
 
 /**
  * Generate a shareable URL for deck check with the current deck list
+ * Uses gzip compression and base64 encoding for all deck lists
  */
-export function generateDeckCheckShareUrl(deckList: string): string {
+export async function generateDeckCheckShareUrl(
+  deckList: string
+): Promise<string> {
   if (deckList?.trim()) {
-    const params = new URLSearchParams();
-    params.set('decklist', deckList.trim());
-    return `/deck-check?${params.toString()}`;
+    try {
+      const compressedData = await compressString(deckList.trim());
+      const params = new URLSearchParams();
+      params.set("compressed", compressedData);
+      return `/deck-check?${params.toString()}`;
+    } catch (_error) {
+      // Fallback to uncompressed if compression fails
+      const params = new URLSearchParams();
+      params.set("decklist", deckList.trim());
+      return `/deck-check?${params.toString()}`;
+    }
   }
 
-  return '/deck-check';
+  return "/deck-check";
 }
 
 /**
  * Extract search parameters from current URL search params
  */
-export function extractSearchParamsFromUrl(searchParams: URLSearchParams): SearchParams {
+export function extractSearchParamsFromUrl(
+  searchParams: URLSearchParams
+): SearchParams {
   const result: SearchParams = {};
 
-  const query = searchParams.get('query');
+  const query = searchParams.get("query");
   if (query) result.query = query;
 
-  const cardType = searchParams.get('cardType');
+  const cardType = searchParams.get("cardType");
   if (cardType) result.cardType = cardType;
 
-  const colors = searchParams.get('colors');
-  if (colors) result.colors = colors.split(',').filter(Boolean);
+  const colors = searchParams.get("colors");
+  if (colors) result.colors = colors.split(",").filter(Boolean);
 
-  const powerMin = searchParams.get('powerMin');
+  const powerMin = searchParams.get("powerMin");
   if (powerMin !== null) result.powerMin = Number.parseInt(powerMin, 10);
 
-  const powerMax = searchParams.get('powerMax');
+  const powerMax = searchParams.get("powerMax");
   if (powerMax !== null) result.powerMax = Number.parseInt(powerMax, 10);
 
-  const toughnessMin = searchParams.get('toughnessMin');
-  if (toughnessMin !== null) result.toughnessMin = Number.parseInt(toughnessMin, 10);
+  const toughnessMin = searchParams.get("toughnessMin");
+  if (toughnessMin !== null)
+    result.toughnessMin = Number.parseInt(toughnessMin, 10);
 
-  const toughnessMax = searchParams.get('toughnessMax');
-  if (toughnessMax !== null) result.toughnessMax = Number.parseInt(toughnessMax, 10);
+  const toughnessMax = searchParams.get("toughnessMax");
+  if (toughnessMax !== null)
+    result.toughnessMax = Number.parseInt(toughnessMax, 10);
 
-  const cmcMin = searchParams.get('cmcMin');
+  const cmcMin = searchParams.get("cmcMin");
   if (cmcMin !== null) result.cmcMin = Number.parseInt(cmcMin, 10);
 
-  const cmcMax = searchParams.get('cmcMax');
+  const cmcMax = searchParams.get("cmcMax");
   if (cmcMax !== null) result.cmcMax = Number.parseInt(cmcMax, 10);
 
   return result;

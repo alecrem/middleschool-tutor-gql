@@ -39,7 +39,8 @@ export default function DeckCheck() {
   const { colors } = useThemedStyles();
   const isValidating =
     navigation.state === "loading" &&
-    navigation.location?.search.includes("decklist=");
+    (navigation.location?.search.includes("decklist=") ||
+      navigation.location?.search.includes("compressed="));
 
   const bannedCards = results?.filter((result) => result.banned) ?? [];
   const notFoundCards = results?.filter((result) => !result.found) ?? [];
@@ -50,6 +51,8 @@ export default function DeckCheck() {
   );
   const [currentDeckList, setCurrentDeckList] = useState(deckList);
   const [lineCount, setLineCount] = useState(0);
+  const [shareUrl, setShareUrl] = useState("/deck-check");
+  const [isGeneratingUrl, setIsGeneratingUrl] = useState(!!deckList?.trim());
 
   // Count lines in deck list
   useEffect(() => {
@@ -59,12 +62,31 @@ export default function DeckCheck() {
     setLineCount(lines.length);
   }, [currentDeckList]);
 
+  // Generate share URL for current deck check
+  useEffect(() => {
+    const generateUrl = async () => {
+      if (currentDeckList.trim()) {
+        setIsGeneratingUrl(true);
+        try {
+          const url = await generateDeckCheckShareUrl(currentDeckList);
+          setShareUrl(url);
+        } catch (error) {
+          console.error("Failed to generate share URL:", error);
+          setShareUrl("/deck-check");
+        } finally {
+          setIsGeneratingUrl(false);
+        }
+      } else {
+        setShareUrl("/deck-check");
+        setIsGeneratingUrl(false);
+      }
+    };
+    generateUrl();
+  }, [currentDeckList]);
+
   const isOverLimit = lineCount > 100;
   const isNearLimit = lineCount > 90 && lineCount <= 100;
   const isDeckListEmpty = currentDeckList.trim().length === 0;
-
-  // Generate share URL for current deck check
-  const shareUrl = generateDeckCheckShareUrl(currentDeckList);
 
   const copyDeckListToClipboard = async () => {
     if (!results) return;
@@ -371,7 +393,7 @@ export default function DeckCheck() {
                   url={shareUrl}
                   label={t("shareDeckCheck")}
                   size="sm"
-                  disabled={!isDeckValid}
+                  disabled={!isDeckValid || isGeneratingUrl}
                 />
               </div>
             </div>
