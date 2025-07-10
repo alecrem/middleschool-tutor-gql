@@ -2,30 +2,10 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { validateCards, searchCards } from "../../lib/api";
 import { parseDeckList } from "../../lib/deck-parser";
 import type { DeckValidationResult } from "../../lib/types";
-import { decompressStringServer } from "../../lib/compression.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
-  const compressedDeckList = url.searchParams.get("compressed");
-  const plainDeckList = url.searchParams.get("decklist");
-
-  let deckList = "";
-
-  // Priority: compressed parameter first, then fallback to decklist
-  if (compressedDeckList) {
-    try {
-      deckList = await decompressStringServer(compressedDeckList);
-    } catch (error) {
-      console.error("Failed to decompress deck list:", error);
-      return {
-        results: null,
-        deckList: "",
-        error: "deckDecompressionError",
-      };
-    }
-  } else if (plainDeckList) {
-    deckList = plainDeckList;
-  }
+  const deckList = url.searchParams.get("decklist") || "";
 
   if (!deckList || deckList.trim() === "") {
     return { results: null, deckList: "", error: null };
@@ -44,7 +24,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   try {
     const entries = parseDeckList(deckList);
     const cardNames = entries.map((entry) => entry.name);
+    console.log("Parsed deck list into", entries.length, "entries");
+    console.log("Card names to validate:", cardNames);
     const validationResults = await validateCards(cardNames);
+    console.log("Validation completed successfully");
 
     // Get unique found card names for fetching details
     const foundCardNames = validationResults
