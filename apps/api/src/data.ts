@@ -181,9 +181,7 @@ export function getCardsByColor(colors: string[]): MagicCard[] {
   });
 }
 
-export function validateCards(
-  cardNames: string[]
-): Array<{
+export function validateCards(cardNames: string[]): Array<{
   name: string;
   found: boolean;
   banned: boolean;
