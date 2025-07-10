@@ -17,6 +17,7 @@ import { ShareButton } from "../../components/ShareButton";
 import { useThemedStyles } from "../../hooks/useTheme";
 import { Icon } from "../../components/Icon";
 import { generateDeckCheckShareUrl } from "../../lib/urlUtils";
+import { decompressString } from "../../lib/utils";
 import { loader } from "./loader";
 
 export { loader };
@@ -32,7 +33,8 @@ export const meta: MetaFunction = () => {
 };
 
 export default function DeckCheck() {
-  const { results, deckList, error } = useLoaderData<typeof loader>();
+  const { results, deckList, error, compressed } =
+    useLoaderData<typeof loader>();
   const { t, i18n } = useHydratedTranslation();
   const navigation = useNavigation();
   const location = useLocation();
@@ -83,6 +85,41 @@ export default function DeckCheck() {
     };
     generateUrl();
   }, [currentDeckList]);
+
+  // Handle client-side decompression when compressed data is received from server
+  useEffect(() => {
+    if (compressed) {
+      const handleDecompression = async () => {
+        try {
+          const decompressedDeckList = await decompressString(compressed);
+          setCurrentDeckList(decompressedDeckList);
+
+          // Auto-submit the form with the decompressed deck list
+          const form = document.querySelector(
+            'form[method="get"]'
+          ) as HTMLFormElement;
+          if (form) {
+            const formData = new FormData(form);
+            formData.set("decklist", decompressedDeckList);
+
+            // Convert FormData to URL search params and navigate
+            const params = new URLSearchParams();
+            for (const [key, value] of formData.entries()) {
+              if (typeof value === "string") {
+                params.set(key, value);
+              }
+            }
+
+            window.location.search = params.toString();
+          }
+        } catch (error) {
+          console.error("Failed to decompress deck list on client:", error);
+          // Handle decompression error - could show an error message
+        }
+      };
+      handleDecompression();
+    }
+  }, [compressed]);
 
   const isOverLimit = lineCount > 100;
   const isNearLimit = lineCount > 90 && lineCount <= 100;

@@ -2,7 +2,6 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { validateCards, searchCards } from "../../lib/api";
 import { parseDeckList } from "../../lib/deck-parser";
 import type { DeckValidationResult } from "../../lib/types";
-import { decompressString } from "../../lib/utils";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -11,18 +10,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   let deckList = "";
 
-  // Priority: compressed parameter first, then fallback to decklist
+  // Handle compressed URLs by deferring to client-side decompression
   if (compressedDeckList) {
-    try {
-      deckList = await decompressString(compressedDeckList);
-    } catch (error) {
-      console.error("Failed to decompress deck list:", error);
-      return {
-        results: null,
-        deckList: "",
-        error: "deckDecompressionError",
-      };
-    }
+    // Return a special state that tells the client to decompress
+    return {
+      results: null,
+      deckList: "",
+      error: null,
+      compressed: compressedDeckList,
+    };
   } else if (plainDeckList) {
     deckList = plainDeckList;
   }
