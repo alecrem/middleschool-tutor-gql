@@ -15,6 +15,7 @@ export function formatPowerToughness(value: string): string {
 
 /**
  * Compress a string using gzip compression and base64 encoding
+ * Browser-only implementation using CompressionStream
  */
 export async function compressString(input: string): Promise<string> {
   try {
@@ -40,6 +41,7 @@ export async function compressString(input: string): Promise<string> {
 
 /**
  * Decompress a base64 encoded gzip compressed string
+ * Browser-only implementation using DecompressionStream
  */
 export async function decompressString(
   compressedInput: string
