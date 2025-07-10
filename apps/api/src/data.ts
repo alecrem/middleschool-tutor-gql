@@ -1,24 +1,11 @@
-import { readFileSync } from "node:fs";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 import type { MagicCard } from "./types.js";
-
-// Handle both ES modules and CommonJS
-const getCurrentDir = (): string => {
-  if (typeof import.meta !== "undefined" && import.meta.url) {
-    return dirname(fileURLToPath(import.meta.url));
-  }
-  return process.cwd();
-};
-const Dirname: string = getCurrentDir();
+import { cardsData as importedCardsData } from "./cards-data.js";
 
 let cardsData: MagicCard[] | null = null;
 
 export function loadCards(): MagicCard[] {
   if (cardsData === null) {
-    const cardsPath = join(Dirname, "assets/cards.json");
-    const rawData = readFileSync(cardsPath, "utf-8");
-    cardsData = JSON.parse(rawData) as MagicCard[];
+    cardsData = importedCardsData as MagicCard[];
     console.log(`📚 Loaded ${cardsData.length} cards`);
   }
   return cardsData as MagicCard[];
@@ -45,10 +32,16 @@ export function searchCards(
 
   if (!query.trim()) {
     // If there's no query and no filters, return empty result to prompt for search
-    if (!cardType && (!colors || colors.length === 0) && 
-        powerMin === undefined && powerMax === undefined && 
-        toughnessMin === undefined && toughnessMax === undefined &&
-        cmcMin === undefined && cmcMax === undefined) {
+    if (
+      !cardType &&
+      (!colors || colors.length === 0) &&
+      powerMin === undefined &&
+      powerMax === undefined &&
+      toughnessMin === undefined &&
+      toughnessMax === undefined &&
+      cmcMin === undefined &&
+      cmcMax === undefined
+    ) {
       return {
         cards: [],
         total: 0,
@@ -60,7 +53,7 @@ export function searchCards(
     matches = cards.filter(
       (card) =>
         card.name.toLowerCase().includes(searchTerm) ||
-        (card.name_ja?.toLowerCase().includes(searchTerm)) ||
+        card.name_ja?.toLowerCase().includes(searchTerm) ||
         card.type.toLowerCase().includes(searchTerm) ||
         card.text.toLowerCase().includes(searchTerm) ||
         matchesSplitCardSearch(card, searchTerm)
@@ -124,16 +117,18 @@ export function searchCards(
   const cardsWithPerfectMatch = matches.map((card) => {
     const cardNameLower = card.name.toLowerCase();
     const cardNameJa = card.name_ja?.toLowerCase();
-    
+
     const isExactMatch = cardNameLower === searchTerm;
     const isExactMatchJa = cardNameJa === searchTerm;
-    
+
     // Check for normalized split card match
-    const isNormalizedMatch = cardNameLower.includes(" // ") && 
-                             normalizeSlashPattern(cardNameLower) === normalizeSlashPattern(searchTerm);
-    
+    const isNormalizedMatch =
+      cardNameLower.includes(" // ") &&
+      normalizeSlashPattern(cardNameLower) ===
+        normalizeSlashPattern(searchTerm);
+
     const perfectMatch = isExactMatch || isExactMatchJa || isNormalizedMatch;
-    
+
     return { ...card, perfectMatch };
   });
 
@@ -188,30 +183,36 @@ export function getCardsByColor(colors: string[]): MagicCard[] {
 
 export function validateCards(
   cardNames: string[]
-): Array<{ name: string; found: boolean; banned: boolean; matchedName: string | null; matchedNameJa: string | null }> {
+): Array<{
+  name: string;
+  found: boolean;
+  banned: boolean;
+  matchedName: string | null;
+  matchedNameJa: string | null;
+}> {
   // Reject requests with more than 100 cards
   if (cardNames.length > 100) {
     throw new Error("Deck list must not exceed 100 lines");
   }
 
   const cards = loadCards();
-  
+
   return cardNames.map((cardName) => {
     const trimmedName = cardName.trim();
     const normalizedName = trimmedName.toLowerCase();
-    
+
     // Find card by exact name match (case-insensitive)
     let foundCard = cards.find(
       (card) =>
         card.name.toLowerCase() === normalizedName ||
         (card.name_ja && card.name_ja.toLowerCase() === normalizedName)
     );
-    
+
     // If no exact match found, check for split card patterns
     if (!foundCard) {
       foundCard = findSplitCardMatch(cards, normalizedName);
     }
-    
+
     return {
       name: trimmedName,
       found: !!foundCard,
@@ -222,58 +223,61 @@ export function validateCards(
   });
 }
 
-function findSplitCardMatch(cards: MagicCard[], searchName: string): MagicCard | undefined {
+function findSplitCardMatch(
+  cards: MagicCard[],
+  searchName: string
+): MagicCard | undefined {
   // Normalize the search name by handling various slash patterns
   const normalizedSearchName = normalizeSlashPattern(searchName);
-  
+
   return cards.find((card) => {
     const cardName = card.name.toLowerCase();
-    
+
     // Check if this is a split card (contains " // ")
     if (cardName.includes(" // ")) {
       const normalizedCardName = normalizeSlashPattern(cardName);
-      
+
       // Direct match after normalization
       if (normalizedCardName === normalizedSearchName) {
         return true;
       }
     }
-    
+
     return false;
   });
 }
 
 function normalizeSlashPattern(name: string): string {
   // First handle double slashes, then single slashes (but not already processed ones)
-  let result = name.replace(/\s*\/\/\s*/g, " // ");  // "Fire//Ice" → "Fire // Ice"
-  
+  let result = name.replace(/\s*\/\/\s*/g, " // "); // "Fire//Ice" → "Fire // Ice"
+
   // Only replace single slashes if they're not already part of a " // " pattern
   if (!result.includes(" // ")) {
-    result = result.replace(/\s*\/\s*/g, " // ");    // "Fire / Ice" or "Fire/Ice" → "Fire // Ice"
+    result = result.replace(/\s*\/\s*/g, " // "); // "Fire / Ice" or "Fire/Ice" → "Fire // Ice"
   }
-  
+
   return result.trim();
 }
 
 function matchesSplitCardSearch(card: MagicCard, searchTerm: string): boolean {
   const cardName = card.name.toLowerCase();
-  
+
   // Check if this is a split card (contains " // ")
   if (cardName.includes(" // ")) {
     const normalizedSearchTerm = normalizeSlashPattern(searchTerm);
     const normalizedCardName = normalizeSlashPattern(cardName);
-    
+
     // Direct match after normalization
     if (normalizedCardName.includes(normalizedSearchTerm)) {
       return true;
     }
-    
+
     // Check if search matches either half of the split card
     const [leftHalf, rightHalf] = cardName.split(" // ");
     if (leftHalf.includes(searchTerm) || rightHalf.includes(searchTerm)) {
       return true;
     }
   }
-  
+
   return false;
 }
