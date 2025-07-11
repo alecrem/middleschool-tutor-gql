@@ -40,10 +40,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   try {
     const entries = parseDeckList(deckList);
     const cardNames = entries.map((entry) => entry.name);
-    console.log("Parsed deck list into", entries.length, "entries");
-    console.log("Card names to validate:", cardNames);
     const validationResults = await validateCards(cardNames);
-    console.log("Validation completed successfully");
 
     // Get unique found card names for fetching details
     const foundCardNames = validationResults
