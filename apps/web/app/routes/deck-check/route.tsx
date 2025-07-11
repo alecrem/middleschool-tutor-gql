@@ -5,7 +5,7 @@ import {
   useNavigation,
   useLocation,
 } from "@remix-run/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Check, Copy, AlertTriangle, XCircle, CheckCircle } from "lucide-react";
 import { ExpandableCardRow } from "../../components/ExpandableCardRow";
 import { useHydratedTranslation } from "../../hooks/useHydratedTranslation";
@@ -33,8 +33,10 @@ export const meta: MetaFunction = () => {
 };
 
 export default function DeckCheck() {
-  const { results, deckList, error, compressed } =
-    useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
+  const { results, deckList, error } = loaderData;
+  const compressed =
+    "compressed" in loaderData ? loaderData.compressed : undefined;
   const { t, i18n } = useHydratedTranslation();
   const navigation = useNavigation();
   const location = useLocation();
@@ -56,6 +58,30 @@ export default function DeckCheck() {
   const [shareUrl, setShareUrl] = useState("/deck-check");
   const [isGeneratingUrl, setIsGeneratingUrl] = useState(!!deckList?.trim());
 
+  // Helper function to generate formatted deck list from validation results
+  const generateFormattedDeckList = useCallback(
+    (validationResults: typeof results) => {
+      if (!validationResults) return "";
+
+      return validationResults
+        .map((result) => {
+          // Clean quantity - remove 'x' suffix and ensure it's a number
+          const cleanQuantity = result.quantity.toString().replace(/x$/i, "");
+          const quantity = Number.parseInt(cleanQuantity) || 1;
+
+          // Use English matched name if found, otherwise original input
+          const cardName =
+            result.found && result.matchedName
+              ? result.matchedName
+              : result.name;
+
+          return `${quantity} ${cardName}`;
+        })
+        .join("\n");
+    },
+    []
+  );
+
   // Count lines in deck list
   useEffect(() => {
     const lines = currentDeckList
@@ -67,10 +93,11 @@ export default function DeckCheck() {
   // Generate share URL for current deck check
   useEffect(() => {
     const generateUrl = async () => {
-      if (currentDeckList.trim()) {
+      if (results) {
+        const deckListToShare = generateFormattedDeckList(results);
         setIsGeneratingUrl(true);
         try {
-          const url = await generateDeckCheckShareUrl(currentDeckList);
+          const url = await generateDeckCheckShareUrl(deckListToShare);
           setShareUrl(url);
         } catch (error) {
           console.error("Failed to generate share URL:", error);
@@ -84,7 +111,7 @@ export default function DeckCheck() {
       }
     };
     generateUrl();
-  }, [currentDeckList]);
+  }, [results, generateFormattedDeckList]);
 
   // Handle client-side decompression when compressed data is received from server
   useEffect(() => {
@@ -129,22 +156,7 @@ export default function DeckCheck() {
     if (!results) return;
 
     try {
-      const deckListText = results
-        .map((result) => {
-          // Clean quantity - remove 'x' suffix and ensure it's a number
-          const cleanQuantity = result.quantity.toString().replace(/x$/i, "");
-          const quantity = Number.parseInt(cleanQuantity) || 1;
-
-          // Use English matched name if found, otherwise original input
-          const cardName =
-            result.found && result.matchedName
-              ? result.matchedName
-              : result.name;
-
-          return `${quantity} ${cardName}`;
-        })
-        .join("\n");
-
+      const deckListText = generateFormattedDeckList(results);
       await navigator.clipboard.writeText(deckListText);
       setCopyStatus("success");
       setTimeout(() => setCopyStatus("idle"), 2000);
