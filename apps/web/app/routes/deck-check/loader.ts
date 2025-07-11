@@ -2,6 +2,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { validateCards, searchCards } from "../../lib/api";
 import { parseDeckList } from "../../lib/deck-parser";
 import type { DeckValidationResult } from "../../lib/types";
+import { sortDeckValidationResults } from "../../lib/card-sorter";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -86,7 +87,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
       };
     });
 
-    return { results, deckList, error: null };
+    // Sort the results by card type, mana value, and name
+    const sortedResults = sortDeckValidationResults(results);
+
+    return { results: sortedResults, deckList, error: null };
   } catch (error) {
     console.error("Deck validation error:", error);
     return {
