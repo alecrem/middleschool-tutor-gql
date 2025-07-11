@@ -209,6 +209,16 @@
           }
         }
       }
+    },
+    {
+      "includes": ["**/card-sorter.test.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useNamingConvention": "off"
+          }
+        }
+      }
     }
   ]
 }
