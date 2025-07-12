@@ -88,6 +88,8 @@ export const translations = {
       urlCopied: "URL copied!",
       copyUrlFailed: "Failed to copy URL",
       sideboard: "Sideboard",
+      sideboardInstructions:
+        "Use a blank line to separate main deck and sideboard.",
     },
   },
   ja: {
@@ -181,6 +183,8 @@ export const translations = {
       urlCopied: "URLをコピーしました!",
       copyUrlFailed: "URLのコピーに失敗しました",
       sideboard: "サイドボード",
+      sideboardInstructions:
+        "空白行一つでメインデッキとサイドボードを分けてください。",
     },
   },
 } as const;

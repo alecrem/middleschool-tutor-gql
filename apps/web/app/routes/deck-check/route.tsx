@@ -275,6 +275,8 @@ export default function DeckCheck() {
                   {t("deckCheckDescriptionLink")}
                 </a>
                 {t("deckCheckDescriptionAfter")}
+                <br />
+                {t("sideboardInstructions")}
               </p>
               {isOverLimit && (
                 <div
