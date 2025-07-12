@@ -102,6 +102,7 @@ export function ExpandableCardRow({
                 : !result.found
                   ? colors.accent.orange
                   : "inherit",
+              textAlign: "left",
             }}
           >
             {result.quantity}{" "}
