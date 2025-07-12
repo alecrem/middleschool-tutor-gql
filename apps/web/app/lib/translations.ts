@@ -87,6 +87,7 @@ export const translations = {
       shareDeckCheck: "Share Deck",
       urlCopied: "URL copied!",
       copyUrlFailed: "Failed to copy URL",
+      sideboard: "Sideboard",
     },
   },
   ja: {
@@ -179,6 +180,7 @@ export const translations = {
       shareDeckCheck: "デッキを共有",
       urlCopied: "URLをコピーしました!",
       copyUrlFailed: "URLのコピーに失敗しました",
+      sideboard: "サイドボード",
     },
   },
 } as const;

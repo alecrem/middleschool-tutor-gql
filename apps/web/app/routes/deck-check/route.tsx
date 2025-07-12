@@ -63,21 +63,39 @@ export default function DeckCheck() {
     (validationResults: typeof results) => {
       if (!validationResults) return "";
 
-      return validationResults
-        .map((result) => {
-          // Clean quantity - remove 'x' suffix and ensure it's a number
-          const cleanQuantity = result.quantity.toString().replace(/x$/i, "");
-          const quantity = Number.parseInt(cleanQuantity) || 1;
+      const mainDeckCards = validationResults.filter(
+        (result) => result.section === "main"
+      );
+      const sideboardCards = validationResults.filter(
+        (result) => result.section === "sideboard"
+      );
 
-          // Use English matched name if found, otherwise original input
-          const cardName =
-            result.found && result.matchedName
-              ? result.matchedName
-              : result.name;
+      const formatCards = (cards: typeof validationResults) => {
+        return cards
+          .map((result) => {
+            // Clean quantity - remove 'x' suffix and ensure it's a number
+            const cleanQuantity = result.quantity.toString().replace(/x$/i, "");
+            const quantity = Number.parseInt(cleanQuantity) || 1;
 
-          return `${quantity} ${cardName}`;
-        })
-        .join("\n");
+            // Use English matched name if found, otherwise original input
+            const cardName =
+              result.found && result.matchedName
+                ? result.matchedName
+                : result.name;
+
+            return `${quantity} ${cardName}`;
+          })
+          .join("\n");
+      };
+
+      const mainDeckText = formatCards(mainDeckCards);
+      const sideboardText = formatCards(sideboardCards);
+
+      if (sideboardCards.length > 0) {
+        return `${mainDeckText}\n\n${sideboardText}`;
+      } else {
+        return mainDeckText;
+      }
     },
     []
   );
@@ -353,133 +371,177 @@ export default function DeckCheck() {
           </div>
         )}
 
-        {results && (
-          <div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "1rem",
-                flexWrap: "wrap",
-                gap: "1rem",
-              }}
-            >
-              <h2
-                style={{
-                  fontSize: "1.5rem",
-                  margin: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                }}
-              >
-                <Icon
-                  icon={isDeckValid ? CheckCircle : AlertTriangle}
-                  size="sm"
-                  color={isDeckValid ? colors.accent.green : colors.text.error}
-                />
-                {t("deckResults")}:{" "}
-                {isDeckValid
-                  ? t("deckValid")
-                  : `${bannedCards.length + notFoundCards.length} ${t(
-                      "cardsNotAllowed"
-                    )}`}
-              </h2>
-              <div
-                style={{
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={copyDeckListToClipboard}
-                  disabled={copyStatus !== "idle"}
+        {results &&
+          (() => {
+            const mainDeckCards = results.filter(
+              (result) => result.section === "main"
+            );
+            const sideboardCards = results.filter(
+              (result) => result.section === "sideboard"
+            );
+
+            return (
+              <div>
+                <div
                   style={{
-                    padding: "0.5rem 1rem",
-                    backgroundColor:
-                      copyStatus === "success"
-                        ? colors.background.secondary
-                        : copyStatus === "error"
-                          ? colors.background.error
-                          : colors.background.secondary,
-                    color:
-                      copyStatus === "success"
-                        ? colors.text.primary
-                        : copyStatus === "error"
-                          ? colors.text.error
-                          : colors.text.primary,
-                    border: `1px solid ${colors.border.primary}`,
-                    borderRadius: "6px",
-                    fontSize: "0.875rem",
-                    cursor: copyStatus === "idle" ? "pointer" : "default",
-                    transition: "all 0.2s ease",
                     display: "flex",
+                    justifyContent: "space-between",
                     alignItems: "center",
-                    gap: "0.5rem",
+                    marginBottom: "1rem",
+                    flexWrap: "wrap",
+                    gap: "1rem",
                   }}
                 >
-                  <Icon
-                    icon={
-                      copyStatus === "success"
-                        ? CheckCircle
+                  <h2
+                    style={{
+                      fontSize: "1.5rem",
+                      margin: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <Icon
+                      icon={isDeckValid ? CheckCircle : AlertTriangle}
+                      size="sm"
+                      color={
+                        isDeckValid ? colors.accent.green : colors.text.error
+                      }
+                    />
+                    {t("deckResults")}:{" "}
+                    {isDeckValid
+                      ? t("deckValid")
+                      : `${bannedCards.length + notFoundCards.length} ${t(
+                          "cardsNotAllowed"
+                        )}`}
+                  </h2>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={copyDeckListToClipboard}
+                      disabled={copyStatus !== "idle"}
+                      style={{
+                        padding: "0.5rem 1rem",
+                        backgroundColor:
+                          copyStatus === "success"
+                            ? colors.background.secondary
+                            : copyStatus === "error"
+                              ? colors.background.error
+                              : colors.background.secondary,
+                        color:
+                          copyStatus === "success"
+                            ? colors.text.primary
+                            : copyStatus === "error"
+                              ? colors.text.error
+                              : colors.text.primary,
+                        border: `1px solid ${colors.border.primary}`,
+                        borderRadius: "6px",
+                        fontSize: "0.875rem",
+                        cursor: copyStatus === "idle" ? "pointer" : "default",
+                        transition: "all 0.2s ease",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <Icon
+                        icon={
+                          copyStatus === "success"
+                            ? CheckCircle
+                            : copyStatus === "error"
+                              ? XCircle
+                              : Copy
+                        }
+                        size="xs"
+                      />
+                      {copyStatus === "success"
+                        ? t("copied")
                         : copyStatus === "error"
-                          ? XCircle
-                          : Copy
-                    }
-                    size="xs"
-                  />
-                  {copyStatus === "success"
-                    ? t("copied")
-                    : copyStatus === "error"
-                      ? t("copyFailed")
-                      : t("copyDeckList")}
-                </button>
-                <ShareButton
-                  url={shareUrl}
-                  label={t("shareDeckCheck")}
-                  size="sm"
-                  disabled={!isDeckValid || isGeneratingUrl}
-                />
-              </div>
-            </div>
+                          ? t("copyFailed")
+                          : t("copyDeckList")}
+                    </button>
+                    <ShareButton
+                      url={shareUrl}
+                      label={t("shareDeckCheck")}
+                      size="sm"
+                      disabled={!isDeckValid || isGeneratingUrl}
+                    />
+                  </div>
+                </div>
 
-            <div
-              style={{
-                border: `1px solid ${colors.border.primary}`,
-                borderRadius: "8px",
-                padding: "1rem",
-                backgroundColor: colors.background.card,
-              }}
-            >
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns:
-                    i18n.language === "ja"
-                      ? "1fr 1fr auto auto"
-                      : "1fr auto auto",
-                  gap: "0.5rem 0.5rem",
-                  fontFamily: "monospace",
-                  fontSize: "0.875rem",
-                }}
-              >
-                {results.map((result, index) => (
-                  <ExpandableCardRow
-                    key={`${result.name}-${result.found ? "found" : "not-found"}-${index}`}
-                    result={result}
-                    index={index}
-                    isJapanese={i18n.language === "ja"}
-                    isLast={index === results.length - 1}
-                  />
-                ))}
+                <div
+                  style={{
+                    border: `1px solid ${colors.border.primary}`,
+                    borderRadius: "8px",
+                    padding: "1rem",
+                    backgroundColor: colors.background.card,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        i18n.language === "ja"
+                          ? "1fr 1fr auto auto"
+                          : "1fr auto auto",
+                      gap: "0.5rem 0.5rem",
+                      fontFamily: "monospace",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    {mainDeckCards.map((result, index) => (
+                      <ExpandableCardRow
+                        key={`main-${result.name}-${result.found ? "found" : "not-found"}-${index}`}
+                        result={result}
+                        index={index}
+                        isJapanese={i18n.language === "ja"}
+                        isLast={
+                          index === mainDeckCards.length - 1 &&
+                          sideboardCards.length === 0
+                        }
+                      />
+                    ))}
+
+                    {sideboardCards.length > 0 && (
+                      <>
+                        <div
+                          style={{
+                            gridColumn: `1 / -1`,
+                            backgroundColor: colors.background.secondary,
+                            padding: "0.75rem",
+                            margin: "1rem 0 0.5rem 0",
+                            borderRadius: "6px",
+                            fontWeight: "600",
+                            fontSize: "1rem",
+                            textAlign: "center",
+                            border: `1px solid ${colors.border.primary}`,
+                          }}
+                        >
+                          {t("sideboard")}
+                        </div>
+                        {sideboardCards.map((result, index) => (
+                          <ExpandableCardRow
+                            key={`sideboard-${result.name}-${result.found ? "found" : "not-found"}-${index}`}
+                            result={result}
+                            index={index + mainDeckCards.length}
+                            isJapanese={i18n.language === "ja"}
+                            isLast={index === sideboardCards.length - 1}
+                          />
+                        ))}
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            );
+          })()}
       </div>
       <Footer />
     </div>

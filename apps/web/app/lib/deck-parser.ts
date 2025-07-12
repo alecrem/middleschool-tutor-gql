@@ -1,24 +1,79 @@
 import type { DeckEntry } from "./types";
 
 export function parseDeckList(deckListText: string): DeckEntry[] {
-  const lines = deckListText
+  // Find the last "\n\n" that has valid cards after it
+  const doubleLinesBreak = "\n\n";
+  let sideboardStartIndex = -1;
+
+  // Look for all double line breaks and check if there are valid cards after each
+  let searchIndex = deckListText.indexOf(doubleLinesBreak);
+  while (searchIndex !== -1) {
+    const textAfter = deckListText.substring(
+      searchIndex + doubleLinesBreak.length
+    );
+    const linesAfter = textAfter
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
+
+    // Check if any of the lines after this break contain valid cards
+    const hasValidCards = linesAfter.some(
+      (line) => parseDeckLine(line) !== null
+    );
+
+    if (hasValidCards) {
+      sideboardStartIndex = searchIndex + doubleLinesBreak.length;
+    }
+
+    searchIndex = deckListText.indexOf(doubleLinesBreak, searchIndex + 1);
+  }
+
+  let mainDeckText: string;
+  let sideboardText: string;
+
+  if (sideboardStartIndex !== -1) {
+    mainDeckText = deckListText.substring(
+      0,
+      sideboardStartIndex - doubleLinesBreak.length
+    );
+    sideboardText = deckListText.substring(sideboardStartIndex);
+  } else {
+    mainDeckText = deckListText;
+    sideboardText = "";
+  }
+
+  const entries: DeckEntry[] = [];
+
+  // Parse main deck
+  const mainLines = mainDeckText
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
 
-  const entries: DeckEntry[] = [];
-
-  for (const line of lines) {
+  for (const line of mainLines) {
     const entry = parseDeckLine(line);
     if (entry) {
-      entries.push(entry);
+      entries.push({ ...entry, section: "main" });
+    }
+  }
+
+  // Parse sideboard
+  const sideboardLines = sideboardText
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+
+  for (const line of sideboardLines) {
+    const entry = parseDeckLine(line);
+    if (entry) {
+      entries.push({ ...entry, section: "sideboard" });
     }
   }
 
   return entries;
 }
 
-function parseDeckLine(line: string): DeckEntry | null {
+function parseDeckLine(line: string): Omit<DeckEntry, "section"> | null {
   const cleanLine = line.trim();
 
   if (!cleanLine) return null;
