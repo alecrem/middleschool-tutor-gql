@@ -294,6 +294,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Strip Mine",
         matchedNameJa: "露天鉱床",
         cardDetails: mockCards.stripMine,
+        section: "main" as const,
       },
       {
         name: "Lightning Bolt",
@@ -303,6 +304,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Lightning Bolt",
         matchedNameJa: "稲妻",
         cardDetails: mockCards.lightningBolt,
+        section: "main" as const,
       },
       {
         name: "Serra Angel",
@@ -312,6 +314,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Serra Angel",
         matchedNameJa: "セラの天使",
         cardDetails: mockCards.serraAngel,
+        section: "main" as const,
       },
       {
         name: "Black Lotus",
@@ -321,6 +324,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Black Lotus",
         matchedNameJa: "ブラック・ロータス",
         cardDetails: mockCards.blackLotus,
+        section: "main" as const,
       },
       {
         name: "Demonic Tutor",
@@ -330,6 +334,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Demonic Tutor",
         matchedNameJa: "悪魔の教示者",
         cardDetails: mockCards.demonic_tutor,
+        section: "main" as const,
       },
       {
         name: "Worship",
@@ -339,6 +344,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Worship",
         matchedNameJa: "崇拝",
         cardDetails: mockCards.worship,
+        section: "main" as const,
       },
     ];
 
@@ -363,6 +369,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Shivan Dragon",
         matchedNameJa: "シヴァン・ドラゴン",
         cardDetails: mockCards.shivanDragon,
+        section: "main" as const,
       },
       {
         name: "Hypnotic Specter",
@@ -372,6 +379,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Hypnotic Specter",
         matchedNameJa: "催眠スペクター",
         cardDetails: mockCards.hypnoticSpecter,
+        section: "main" as const,
       },
       {
         name: "Serra Angel",
@@ -381,6 +389,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Serra Angel",
         matchedNameJa: "セラの天使",
         cardDetails: mockCards.serraAngel,
+        section: "main" as const,
       },
       {
         name: "Savannah Lions",
@@ -390,6 +399,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Savannah Lions",
         matchedNameJa: "サバンナ・ライオン",
         cardDetails: mockCards.savannahLions,
+        section: "main" as const,
       },
     ];
 
@@ -412,6 +422,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Swords to Plowshares",
         matchedNameJa: "剣を鋤に",
         cardDetails: mockCards.swordsToPlowshares,
+        section: "main" as const,
       },
       {
         name: "Lightning Bolt",
@@ -421,6 +432,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Lightning Bolt",
         matchedNameJa: "稲妻",
         cardDetails: mockCards.lightningBolt,
+        section: "main" as const,
       },
       {
         name: "Dark Ritual",
@@ -430,6 +442,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Dark Ritual",
         matchedNameJa: "暗黒の儀式",
         cardDetails: mockCards.darkRitual,
+        section: "main" as const,
       },
       {
         name: "Brainstorm",
@@ -439,6 +452,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Brainstorm",
         matchedNameJa: "渦まく知識",
         cardDetails: mockCards.brainstorm,
+        section: "main" as const,
       },
     ];
 
@@ -467,6 +481,7 @@ describe("sortDeckValidationResults", () => {
           "2",
           "2"
         ),
+        section: "main" as const,
       },
       {
         name: "Pure Creature",
@@ -476,6 +491,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Pure Creature",
         matchedNameJa: "純粋クリーチャー",
         cardDetails: createMockCard("Pure Creature", "Creature", 2, "2", "2"),
+        section: "main" as const,
       },
       {
         name: "Creature Artifact",
@@ -491,6 +507,7 @@ describe("sortDeckValidationResults", () => {
           "2",
           "2"
         ),
+        section: "main" as const,
       },
     ];
 
@@ -512,6 +529,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Valid Card",
         matchedNameJa: "有効カード",
         cardDetails: createMockCard("Valid Card", "Creature", 2, "2", "2"),
+        section: "main" as const,
       },
       {
         name: "Invalid Card",
@@ -521,6 +539,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: null,
         matchedNameJa: null,
         cardDetails: null,
+        section: "main" as const,
       },
       {
         name: "Another Valid Card",
@@ -530,6 +549,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Another Valid Card",
         matchedNameJa: "もう一つの有効カード",
         cardDetails: createMockCard("Another Valid Card", "Instant", 1),
+        section: "main" as const,
       },
     ];
 
@@ -552,6 +572,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Fire // Ice",
         matchedNameJa: "火炎 // 氷",
         cardDetails: createMockCard("Fire // Ice", "Instant // Instant", 1),
+        section: "main" as const,
       },
       {
         name: "Lightning Bolt",
@@ -561,6 +582,7 @@ describe("sortDeckValidationResults", () => {
         matchedName: "Lightning Bolt",
         matchedNameJa: "稲妻",
         cardDetails: mockCards.lightningBolt,
+        section: "main" as const,
       },
     ];
 

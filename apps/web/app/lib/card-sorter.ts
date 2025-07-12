@@ -40,13 +40,19 @@ function getCardTypePriority(typeLine: string): number {
 }
 
 /**
- * Sorts deck validation results by card type, mana value, and English name
+ * Sorts deck validation results by section, then by card type, mana value, and English name
  * Cards not found in the database maintain their original relative order at the end
  */
 export function sortDeckValidationResults(
   results: DeckValidationResult[]
 ): DeckValidationResult[] {
   return results.sort((a, b) => {
+    // First sort by section: main deck comes before sideboard
+    if (a.section !== b.section) {
+      return a.section === "main" ? -1 : 1;
+    }
+
+    // Within the same section, apply the regular sorting logic
     // Cards not found should maintain their original order at the end
     if (!a.found && !b.found) return 0;
     if (!a.found) return 1;

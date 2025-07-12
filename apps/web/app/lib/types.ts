@@ -26,6 +26,7 @@ export interface CardSearchResult {
 export interface DeckEntry {
   quantity: number;
   name: string;
+  section: "main" | "sideboard";
 }
 
 export interface DeckValidationResult {
@@ -36,6 +37,7 @@ export interface DeckValidationResult {
   matchedName: string | null;
   matchedNameJa: string | null;
   cardDetails?: MagicCard | null;
+  section: "main" | "sideboard";
 }
 
 export interface SearchParams {

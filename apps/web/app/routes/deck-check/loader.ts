@@ -84,6 +84,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         matchedName: validation?.matchedName ?? null,
         matchedNameJa: validation?.matchedNameJa ?? null,
         cardDetails,
+        section: entry.section,
       };
     });
 
