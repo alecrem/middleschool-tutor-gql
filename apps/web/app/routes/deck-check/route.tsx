@@ -476,6 +476,7 @@ export default function DeckCheck() {
                   </div>
                 </div>
 
+                {/* Main Deck Section */}
                 <div
                   style={{
                     border: `1px solid ${colors.border.primary}`,
@@ -502,30 +503,45 @@ export default function DeckCheck() {
                         result={result}
                         index={index}
                         isJapanese={i18n.language === "ja"}
-                        isLast={
-                          index === mainDeckCards.length - 1 &&
-                          sideboardCards.length === 0
-                        }
+                        isLast={index === mainDeckCards.length - 1}
                       />
                     ))}
+                  </div>
+                </div>
 
-                    {sideboardCards.length > 0 && (
-                      <>
-                        <div
-                          style={{
-                            gridColumn: `1 / -1`,
-                            backgroundColor: colors.background.secondary,
-                            padding: "0.75rem",
-                            margin: "1rem 0 0.5rem 0",
-                            borderRadius: "6px",
-                            fontWeight: "600",
-                            fontSize: "1rem",
-                            textAlign: "center",
-                            border: `1px solid ${colors.border.primary}`,
-                          }}
-                        >
-                          {t("sideboard")}
-                        </div>
+                {/* Sideboard Section */}
+                {sideboardCards.length > 0 && (
+                  <>
+                    <h3
+                      style={{
+                        fontSize: "1.25rem",
+                        fontWeight: "600",
+                        margin: "2rem 0 1rem 0",
+                        color: colors.text.primary,
+                      }}
+                    >
+                      {t("sideboard")}
+                    </h3>
+                    <div
+                      style={{
+                        border: `1px solid ${colors.border.primary}`,
+                        borderRadius: "8px",
+                        padding: "1rem",
+                        backgroundColor: colors.background.card,
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns:
+                            i18n.language === "ja"
+                              ? "1fr 1fr auto auto"
+                              : "1fr auto auto",
+                          gap: "0.5rem 0.5rem",
+                          fontFamily: "monospace",
+                          fontSize: "0.875rem",
+                        }}
+                      >
                         {sideboardCards.map((result, index) => (
                           <ExpandableCardRow
                             key={`sideboard-${result.name}-${result.found ? "found" : "not-found"}-${index}`}
@@ -535,10 +551,10 @@ export default function DeckCheck() {
                             isLast={index === sideboardCards.length - 1}
                           />
                         ))}
-                      </>
-                    )}
-                  </div>
-                </div>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             );
           })()}
