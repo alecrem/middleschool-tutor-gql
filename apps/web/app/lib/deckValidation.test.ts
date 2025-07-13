@@ -119,6 +119,104 @@ describe("deckValidation", () => {
       expect(result.copyLimitViolations).toEqual([]);
     });
 
+    it("should allow unlimited basic snow lands", () => {
+      const deckWithManyBasicSnowLands = [
+        createMockCard("Lightning Bolt", 4),
+        createMockCard(
+          "Snow-Covered Forest",
+          30,
+          "main",
+          "Basic Snow Land — Forest"
+        ),
+        createMockCard(
+          "Snow-Covered Forest",
+          10,
+          "sideboard",
+          "Basic Snow Land — Forest"
+        ), // Total: 40 snow forests
+        createMockCard(
+          "Snow-Covered Island",
+          26,
+          "main",
+          "Basic Snow Land — Island"
+        ),
+      ];
+
+      const result = validateDeck(deckWithManyBasicSnowLands);
+
+      expect(result.isDeckValid).toBe(true);
+      expect(result.hasCopyLimitViolations).toBe(false);
+      expect(result.copyLimitViolations).toEqual([]);
+    });
+
+    it("should allow unlimited mixed basic and basic snow lands", () => {
+      const deckWithMixedBasicLands = [
+        createMockCard("Lightning Bolt", 4),
+        createMockCard("Forest", 14, "main", "Basic Land — Forest"),
+        createMockCard(
+          "Snow-Covered Forest",
+          14,
+          "main",
+          "Basic Snow Land — Forest"
+        ),
+        createMockCard("Island", 14, "main", "Basic Land — Island"),
+        createMockCard(
+          "Snow-Covered Island",
+          14,
+          "main",
+          "Basic Snow Land — Island"
+        ),
+      ];
+
+      const result = validateDeck(deckWithMixedBasicLands);
+
+      expect(result.isDeckValid).toBe(true);
+      expect(result.hasCopyLimitViolations).toBe(false);
+      expect(result.copyLimitViolations).toEqual([]);
+    });
+
+    it("should allow all types of basic snow lands", () => {
+      const deckWithAllSnowLands = [
+        createMockCard("Lightning Bolt", 4),
+        createMockCard(
+          "Snow-Covered Plains",
+          12,
+          "main",
+          "Basic Snow Land — Plains"
+        ),
+        createMockCard(
+          "Snow-Covered Island",
+          12,
+          "main",
+          "Basic Snow Land — Island"
+        ),
+        createMockCard(
+          "Snow-Covered Swamp",
+          12,
+          "main",
+          "Basic Snow Land — Swamp"
+        ),
+        createMockCard(
+          "Snow-Covered Mountain",
+          12,
+          "main",
+          "Basic Snow Land — Mountain"
+        ),
+        createMockCard(
+          "Snow-Covered Forest",
+          8,
+          "main",
+          "Basic Snow Land — Forest"
+        ),
+      ];
+
+      const result = validateDeck(deckWithAllSnowLands);
+
+      expect(result.isDeckValid).toBe(true);
+      expect(result.hasCopyLimitViolations).toBe(false);
+      expect(result.copyLimitViolations).toEqual([]);
+    });
+
     it("should handle multiple cards violating copy limits", () => {
       const deckWithMultipleViolations = [
         createMockCard("Lightning Bolt", 5, "main"), // 5 copies
