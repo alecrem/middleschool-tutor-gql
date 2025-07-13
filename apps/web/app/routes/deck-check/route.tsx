@@ -5,7 +5,6 @@ import {
   useNavigation,
   useLocation,
 } from "@remix-run/react";
-import { useState, useEffect, useCallback } from "react";
 import { Check, Copy, AlertTriangle, XCircle, CheckCircle } from "lucide-react";
 import { ExpandableCardRow } from "../../components/ExpandableCardRow";
 import { useHydratedTranslation } from "../../hooks/useHydratedTranslation";
@@ -16,8 +15,8 @@ import { Navigation } from "../../components/Navigation";
 import { ShareButton } from "../../components/ShareButton";
 import { useThemedStyles } from "../../hooks/useTheme";
 import { Icon } from "../../components/Icon";
-import { generateDeckCheckShareUrl } from "../../lib/urlUtils";
-import { decompressString } from "../../lib/utils";
+import { useDeckValidation } from "../../hooks/useDeckValidation";
+import { useDeckList } from "../../hooks/useDeckList";
 import { loader } from "./loader";
 
 export { loader };
@@ -46,143 +45,35 @@ export default function DeckCheck() {
     (navigation.location?.search.includes("decklist=") ||
       navigation.location?.search.includes("compressed="));
 
-  const bannedCards = results?.filter((result) => result.banned) ?? [];
-  const notFoundCards = results?.filter((result) => !result.found) ?? [];
-  const isDeckValid = bannedCards.length + notFoundCards.length === 0;
-
-  const [copyStatus, setCopyStatus] = useState<"idle" | "success" | "error">(
-    "idle"
-  );
-  const [currentDeckList, setCurrentDeckList] = useState(deckList);
-  const [lineCount, setLineCount] = useState(0);
-  const [shareUrl, setShareUrl] = useState("/deck-check");
-  const [isGeneratingUrl, setIsGeneratingUrl] = useState(!!deckList?.trim());
-
-  // Helper function to generate formatted deck list from validation results
-  const generateFormattedDeckList = useCallback(
-    (validationResults: typeof results) => {
-      if (!validationResults) return "";
-
-      const mainDeckCards = validationResults.filter(
-        (result) => result.section === "main"
-      );
-      const sideboardCards = validationResults.filter(
-        (result) => result.section === "sideboard"
-      );
-
-      const formatCards = (cards: typeof validationResults) => {
-        return cards
-          .map((result) => {
-            // Clean quantity - remove 'x' suffix and ensure it's a number
-            const cleanQuantity = result.quantity.toString().replace(/x$/i, "");
-            const quantity = Number.parseInt(cleanQuantity) || 1;
-
-            // Use English matched name if found, otherwise original input
-            const cardName =
-              result.found && result.matchedName
-                ? result.matchedName
-                : result.name;
-
-            return `${quantity} ${cardName}`;
-          })
-          .join("\n");
-      };
-
-      const mainDeckText = formatCards(mainDeckCards);
-      const sideboardText = formatCards(sideboardCards);
-
-      if (sideboardCards.length > 0) {
-        return `${mainDeckText}\n\n${sideboardText}`;
-      } else {
-        return mainDeckText;
-      }
-    },
-    []
+  // Use custom hooks for validation and deck list management
+  const validation = useDeckValidation(results, t, i18n.language);
+  const deckListState = useDeckList(
+    deckList,
+    compressed,
+    results,
+    validation.isDeckValid
   );
 
-  // Count lines in deck list
-  useEffect(() => {
-    const lines = currentDeckList
-      .split("\n")
-      .filter((line) => line.trim().length > 0);
-    setLineCount(lines.length);
-  }, [currentDeckList]);
-
-  // Generate share URL for current deck check
-  useEffect(() => {
-    const generateUrl = async () => {
-      if (results) {
-        const deckListToShare = generateFormattedDeckList(results);
-        setIsGeneratingUrl(true);
-        try {
-          const url = await generateDeckCheckShareUrl(deckListToShare);
-          setShareUrl(url);
-        } catch (error) {
-          console.error("Failed to generate share URL:", error);
-          setShareUrl("/deck-check");
-        } finally {
-          setIsGeneratingUrl(false);
-        }
-      } else {
-        setShareUrl("/deck-check");
-        setIsGeneratingUrl(false);
-      }
-    };
-    generateUrl();
-  }, [results, generateFormattedDeckList]);
-
-  // Handle client-side decompression when compressed data is received from server
-  useEffect(() => {
-    if (compressed) {
-      const handleDecompression = async () => {
-        try {
-          const decompressedDeckList = await decompressString(compressed);
-          setCurrentDeckList(decompressedDeckList);
-
-          // Auto-submit the form with the decompressed deck list
-          const form = document.querySelector(
-            'form[method="get"]'
-          ) as HTMLFormElement;
-          if (form) {
-            const formData = new FormData(form);
-            formData.set("decklist", decompressedDeckList);
-
-            // Convert FormData to URL search params and navigate
-            const params = new URLSearchParams();
-            for (const [key, value] of formData.entries()) {
-              if (typeof value === "string") {
-                params.set(key, value);
-              }
-            }
-
-            window.location.search = params.toString();
-          }
-        } catch (error) {
-          console.error("Failed to decompress deck list on client:", error);
-          // Handle decompression error - could show an error message
-        }
-      };
-      handleDecompression();
-    }
-  }, [compressed]);
-
-  const isOverLimit = lineCount > 100;
-  const isNearLimit = lineCount > 90 && lineCount <= 100;
-  const isDeckListEmpty = currentDeckList.trim().length === 0;
-
-  const copyDeckListToClipboard = async () => {
-    if (!results) return;
-
-    try {
-      const deckListText = generateFormattedDeckList(results);
-      await navigator.clipboard.writeText(deckListText);
-      setCopyStatus("success");
-      setTimeout(() => setCopyStatus("idle"), 2000);
-    } catch (_error) {
-      setCopyStatus("error");
-      setTimeout(() => setCopyStatus("idle"), 2000);
-    }
-  };
+  // Extract values from hooks for easier access
+  const {
+    isDeckValid,
+    mainDeckCount,
+    sideboardCount,
+    mainDeckCards,
+    sideboardCards,
+  } = validation;
+  const {
+    copyStatus,
+    currentDeckList,
+    lineCount,
+    shareUrl,
+    isGeneratingUrl,
+    isOverLimit,
+    isNearLimit,
+    isDeckListEmpty,
+    setCurrentDeckList,
+    copyDeckListToClipboard,
+  } = deckListState;
 
   return (
     <div
@@ -375,13 +266,6 @@ export default function DeckCheck() {
 
         {results &&
           (() => {
-            const mainDeckCards = results.filter(
-              (result) => result.section === "main"
-            );
-            const sideboardCards = results.filter(
-              (result) => result.section === "sideboard"
-            );
-
             return (
               <div>
                 <div
@@ -394,29 +278,71 @@ export default function DeckCheck() {
                     gap: "1rem",
                   }}
                 >
-                  <h2
+                  <div
                     style={{
-                      fontSize: "1.5rem",
-                      margin: 0,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
+                      color: isDeckValid
+                        ? colors.text.primary
+                        : colors.text.error,
                     }}
                   >
-                    <Icon
-                      icon={isDeckValid ? CheckCircle : AlertTriangle}
-                      size="sm"
-                      color={
-                        isDeckValid ? colors.accent.green : colors.text.error
-                      }
-                    />
-                    {t("deckResults")}:{" "}
-                    {isDeckValid
-                      ? t("deckValid")
-                      : `${bannedCards.length + notFoundCards.length} ${t(
-                          "cardsNotAllowed"
-                        )}`}
-                  </h2>
+                    <p
+                      style={{
+                        fontSize: "1rem",
+                        margin: 0,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <Icon
+                        icon={isDeckValid ? CheckCircle : AlertTriangle}
+                        size="sm"
+                        color={
+                          isDeckValid ? colors.accent.green : colors.text.error
+                        }
+                      />
+                      {validation.getValidationMessage()}
+                    </p>
+                    {!isDeckValid &&
+                      validation.getValidationErrors().length > 1 && (
+                        <ul
+                          style={{
+                            margin: "0.5rem 0 0 2rem",
+                            padding: 0,
+                            fontSize: "1rem",
+                          }}
+                        >
+                          {validation.getValidationErrors().map((error) => (
+                            <li key={error} style={{ marginBottom: "0.25rem" }}>
+                              {error}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                  </div>
+                </div>
+
+                {/* Main Deck Section */}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "1rem",
+                    flexWrap: "wrap",
+                    gap: "1rem",
+                  }}
+                >
+                  <h3
+                    style={{
+                      fontSize: "1.25rem",
+                      fontWeight: "600",
+                      margin: 0,
+                      color: colors.text.primary,
+                    }}
+                  >
+                    {t("mainDeckCount", { count: mainDeckCount })}
+                  </h3>
                   <div
                     style={{
                       display: "flex",
@@ -477,8 +403,6 @@ export default function DeckCheck() {
                     />
                   </div>
                 </div>
-
-                {/* Main Deck Section */}
                 <div
                   style={{
                     border: `1px solid ${colors.border.primary}`,
@@ -522,7 +446,7 @@ export default function DeckCheck() {
                         color: colors.text.primary,
                       }}
                     >
-                      {t("sideboard")}
+                      {t("sideboardCount", { count: sideboardCount })}
                     </h3>
                     <div
                       style={{
