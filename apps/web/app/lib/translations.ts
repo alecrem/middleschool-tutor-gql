@@ -95,6 +95,8 @@ export const translations = {
       sideboardCount: "Sideboard: {{count}} cards",
       deckContainsBannedCards: "This deck contains banned cards",
       deckContainsUnknownCards: "This deck contains unknown cards",
+      deckContainsTooManyCopies:
+        "This deck contains more than 4 copies of a card",
       mainDeckTooFew: "Main deck has less than 60 cards",
       sideboardTooMany: "Sideboard has more than 15 cards",
       deckNotValid: "This deck is not valid:",
@@ -198,6 +200,8 @@ export const translations = {
       sideboardCount: "サイドボード: {{count}}枚",
       deckContainsBannedCards: "このデッキには禁止カードが含まれています",
       deckContainsUnknownCards: "このデッキには不明なカードが含まれています",
+      deckContainsTooManyCopies:
+        "このデッキには4枚を超えるカードが含まれています",
       mainDeckTooFew: "メインデッキが60枚未満です",
       sideboardTooMany: "サイドボードが15枚を超えています",
       deckNotValid: "このデッキは無効です：",

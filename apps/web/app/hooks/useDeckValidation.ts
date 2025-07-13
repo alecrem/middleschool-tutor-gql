@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import type { DeckValidationResult } from "../lib/types";
 import {
   separateDeckSections,
+  separateDeckSectionsForDisplay,
   validateDeck,
   getValidationErrors,
   getValidationMessage,
@@ -15,8 +16,11 @@ export function useDeckValidation(
   t: (key: string) => string,
   language: string
 ) {
-  // Calculate deck sections and counts
+  // Calculate deck sections and counts (for validation)
   const deckSections = separateDeckSections(results);
+
+  // Calculate consolidated deck sections (for display)
+  const displaySections = separateDeckSectionsForDisplay(results);
 
   // Perform validation
   const validation = validateDeck(results);
@@ -32,8 +36,12 @@ export function useDeckValidation(
   }, [validation, t]);
 
   return {
-    // Deck sections and counts
+    // Deck sections and counts (for validation logic)
     ...deckSections,
+
+    // Consolidated deck sections (for display)
+    mainDeckCardsDisplay: displaySections.mainDeckCards,
+    sideboardCardsDisplay: displaySections.sideboardCards,
 
     // Validation results
     ...validation,

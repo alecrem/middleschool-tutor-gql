@@ -59,8 +59,8 @@ export default function DeckCheck() {
     isDeckValid,
     mainDeckCount,
     sideboardCount,
-    mainDeckCards,
-    sideboardCards,
+    mainDeckCardsDisplay: mainDeckCards,
+    sideboardCardsDisplay: sideboardCards,
   } = validation;
   const {
     copyStatus,
