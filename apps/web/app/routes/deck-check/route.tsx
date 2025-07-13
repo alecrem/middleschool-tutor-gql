@@ -48,7 +48,80 @@ export default function DeckCheck() {
 
   const bannedCards = results?.filter((result) => result.banned) ?? [];
   const notFoundCards = results?.filter((result) => !result.found) ?? [];
-  const isDeckValid = bannedCards.length + notFoundCards.length === 0;
+
+  // Calculate card counts
+  const mainDeckCards =
+    results?.filter((result) => result.section === "main") ?? [];
+  const sideboardCards =
+    results?.filter((result) => result.section === "sideboard") ?? [];
+  const mainDeckCount = mainDeckCards.reduce((sum, result) => {
+    const quantity =
+      Number.parseInt(result.quantity.toString().replace(/x$/i, "")) || 1;
+    return sum + quantity;
+  }, 0);
+  const sideboardCount = sideboardCards.reduce((sum, result) => {
+    const quantity =
+      Number.parseInt(result.quantity.toString().replace(/x$/i, "")) || 1;
+    return sum + quantity;
+  }, 0);
+
+  // Validation checks
+  const hasBannedCards = bannedCards.length > 0;
+  const hasUnknownCards = notFoundCards.length > 0;
+  const mainDeckTooSmall = results && results.length > 0 && mainDeckCount < 60;
+  const sideboardTooLarge = sideboardCount > 15;
+
+  const isDeckValid =
+    !hasBannedCards &&
+    !hasUnknownCards &&
+    !mainDeckTooSmall &&
+    !sideboardTooLarge;
+
+  // Generate validation error message
+  const getValidationMessage = useCallback(() => {
+    if (isDeckValid) return t("deckValid");
+
+    const errors: string[] = [];
+    if (hasBannedCards) errors.push(t("deckContainsBannedCards"));
+    if (hasUnknownCards) errors.push(t("deckContainsUnknownCards"));
+    if (mainDeckTooSmall) errors.push(t("mainDeckTooFew"));
+    if (sideboardTooLarge) errors.push(t("sideboardTooMany"));
+
+    if (errors.length === 1) {
+      const separator = i18n.language === "ja" ? "" : " ";
+      return t("deckNotValid") + separator + errors[0];
+    } else {
+      return t("deckNotValid");
+    }
+  }, [
+    isDeckValid,
+    hasBannedCards,
+    hasUnknownCards,
+    mainDeckTooSmall,
+    sideboardTooLarge,
+    t,
+    i18n.language,
+  ]);
+
+  // Get validation errors for bullet list
+  const getValidationErrors = useCallback(() => {
+    if (isDeckValid) return [];
+
+    const errors: string[] = [];
+    if (hasBannedCards) errors.push(t("deckContainsBannedCards"));
+    if (hasUnknownCards) errors.push(t("deckContainsUnknownCards"));
+    if (mainDeckTooSmall) errors.push(t("mainDeckTooFew"));
+    if (sideboardTooLarge) errors.push(t("sideboardTooMany"));
+
+    return errors;
+  }, [
+    isDeckValid,
+    hasBannedCards,
+    hasUnknownCards,
+    mainDeckTooSmall,
+    sideboardTooLarge,
+    t,
+  ]);
 
   const [copyStatus, setCopyStatus] = useState<"idle" | "success" | "error">(
     "idle"
@@ -375,13 +448,6 @@ export default function DeckCheck() {
 
         {results &&
           (() => {
-            const mainDeckCards = results.filter(
-              (result) => result.section === "main"
-            );
-            const sideboardCards = results.filter(
-              (result) => result.section === "sideboard"
-            );
-
             return (
               <div>
                 <div
@@ -394,29 +460,70 @@ export default function DeckCheck() {
                     gap: "1rem",
                   }}
                 >
-                  <h2
+                  <div
                     style={{
-                      fontSize: "1.5rem",
-                      margin: 0,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
+                      color: isDeckValid
+                        ? colors.text.primary
+                        : colors.text.error,
                     }}
                   >
-                    <Icon
-                      icon={isDeckValid ? CheckCircle : AlertTriangle}
-                      size="sm"
-                      color={
-                        isDeckValid ? colors.accent.green : colors.text.error
-                      }
-                    />
-                    {t("deckResults")}:{" "}
-                    {isDeckValid
-                      ? t("deckValid")
-                      : `${bannedCards.length + notFoundCards.length} ${t(
-                          "cardsNotAllowed"
-                        )}`}
-                  </h2>
+                    <p
+                      style={{
+                        fontSize: "1rem",
+                        margin: 0,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <Icon
+                        icon={isDeckValid ? CheckCircle : AlertTriangle}
+                        size="sm"
+                        color={
+                          isDeckValid ? colors.accent.green : colors.text.error
+                        }
+                      />
+                      {getValidationMessage()}
+                    </p>
+                    {!isDeckValid && getValidationErrors().length > 1 && (
+                      <ul
+                        style={{
+                          margin: "0.5rem 0 0 2rem",
+                          padding: 0,
+                          fontSize: "1rem",
+                        }}
+                      >
+                        {getValidationErrors().map((error) => (
+                          <li key={error} style={{ marginBottom: "0.25rem" }}>
+                            {error}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+
+                {/* Main Deck Section */}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "1rem",
+                    flexWrap: "wrap",
+                    gap: "1rem",
+                  }}
+                >
+                  <h3
+                    style={{
+                      fontSize: "1.25rem",
+                      fontWeight: "600",
+                      margin: 0,
+                      color: colors.text.primary,
+                    }}
+                  >
+                    {t("mainDeckCount", { count: mainDeckCount })}
+                  </h3>
                   <div
                     style={{
                       display: "flex",
@@ -477,8 +584,6 @@ export default function DeckCheck() {
                     />
                   </div>
                 </div>
-
-                {/* Main Deck Section */}
                 <div
                   style={{
                     border: `1px solid ${colors.border.primary}`,
@@ -522,7 +627,7 @@ export default function DeckCheck() {
                         color: colors.text.primary,
                       }}
                     >
-                      {t("sideboard")}
+                      {t("sideboardCount", { count: sideboardCount })}
                     </h3>
                     <div
                       style={{

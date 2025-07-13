@@ -90,6 +90,14 @@ export const translations = {
       sideboard: "Sideboard",
       sideboardInstructions:
         "Use a blank line to separate main deck and sideboard.",
+      mainDeck: "Main Deck",
+      mainDeckCount: "Main Deck: {{count}} cards",
+      sideboardCount: "Sideboard: {{count}} cards",
+      deckContainsBannedCards: "This deck contains banned cards",
+      deckContainsUnknownCards: "This deck contains unknown cards",
+      mainDeckTooFew: "Main deck has less than 60 cards",
+      sideboardTooMany: "Sideboard has more than 15 cards",
+      deckNotValid: "This deck is not valid:",
     },
   },
   ja: {
@@ -185,6 +193,14 @@ export const translations = {
       sideboard: "サイドボード",
       sideboardInstructions:
         "空白行一つでメインデッキとサイドボードを分けてください。",
+      mainDeck: "メインデッキ",
+      mainDeckCount: "メインデッキ: {{count}}枚",
+      sideboardCount: "サイドボード: {{count}}枚",
+      deckContainsBannedCards: "このデッキには禁止カードが含まれています",
+      deckContainsUnknownCards: "このデッキには不明なカードが含まれています",
+      mainDeckTooFew: "メインデッキが60枚未満です",
+      sideboardTooMany: "サイドボードが15枚を超えています",
+      deckNotValid: "このデッキは無効です：",
     },
   },
 } as const;
