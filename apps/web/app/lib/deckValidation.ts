@@ -2,10 +2,13 @@ import type { DeckValidationResult } from "./types";
 
 /**
  * Check if a card is a basic land based on its type line
+ * This covers both regular basic lands and basic snow lands
  */
 function isBasicLand(cardDetails?: { type: string } | null): boolean {
   if (!cardDetails?.type) return false;
-  return cardDetails.type.includes("Basic Land");
+  return (
+    cardDetails.type.includes("Basic") && cardDetails.type.includes("Land")
+  );
 }
 
 /**
