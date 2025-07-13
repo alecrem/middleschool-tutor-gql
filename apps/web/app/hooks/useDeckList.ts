@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import type { DeckValidationResult } from "../lib/types";
 import { generateDeckCheckShareUrl } from "../lib/urlUtils";
 import { decompressString } from "../lib/utils";
+import { consolidateCardsForDisplay } from "../lib/deckValidation";
 
 /**
  * Custom hook for deck list state and operations
@@ -10,7 +11,7 @@ export function useDeckList(
   initialDeckList: string,
   compressed: string | undefined,
   results: DeckValidationResult[] | null,
-  isDeckValid: boolean
+  _isDeckValid: boolean
 ) {
   const [copyStatus, setCopyStatus] = useState<"idle" | "success" | "error">(
     "idle"
@@ -34,6 +35,10 @@ export function useDeckList(
         (result) => result.section === "sideboard"
       );
 
+      // Consolidate duplicate cards within each section
+      const consolidatedMainDeck = consolidateCardsForDisplay(mainDeckCards);
+      const consolidatedSideboard = consolidateCardsForDisplay(sideboardCards);
+
       const formatCards = (cards: typeof validationResults) => {
         return cards
           .map((result) => {
@@ -52,10 +57,10 @@ export function useDeckList(
           .join("\n");
       };
 
-      const mainDeckText = formatCards(mainDeckCards);
-      const sideboardText = formatCards(sideboardCards);
+      const mainDeckText = formatCards(consolidatedMainDeck);
+      const sideboardText = formatCards(consolidatedSideboard);
 
-      if (sideboardCards.length > 0) {
+      if (consolidatedSideboard.length > 0) {
         return `${mainDeckText}\n\n${sideboardText}`;
       } else {
         return mainDeckText;
