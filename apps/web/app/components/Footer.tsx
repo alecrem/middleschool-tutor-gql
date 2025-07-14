@@ -1,5 +1,6 @@
 import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
 import { useThemedStyles } from "../hooks/useTheme";
+import { ExternalLink } from "./ExternalLink";
 
 export function Footer() {
   const { t } = useHydratedTranslation();
@@ -24,9 +25,7 @@ export function Footer() {
             marginBottom: "1rem",
           }}
         >
-          <p style={{ margin: "0 0 0.5rem 0" }}>
-            {t("legalDisclaimer")}
-          </p>
+          <p style={{ margin: "0 0 0.5rem 0" }}>{t("legalDisclaimer")}</p>
         </div>
 
         {/* License footer */}
@@ -39,17 +38,15 @@ export function Footer() {
         >
           <p style={{ margin: 0 }}>
             {t("footerLicense")}{" "}
-            <a
+            <ExternalLink
               href="https://github.com/alecrem/middleschool-tutor-gql"
-              target="_blank"
-              rel="noopener noreferrer"
               style={{
                 color: colors.text.link,
                 textDecoration: "underline",
               }}
             >
               alecrem
-            </a>
+            </ExternalLink>
             .
           </p>
         </div>

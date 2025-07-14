@@ -11,6 +11,7 @@ import { StyledButton } from "./StyledButton";
 import { StyledInput } from "./StyledInput";
 import { StyledSelect } from "./StyledSelect";
 import { StyledContainer } from "./StyledContainer";
+import { ExternalLink } from "./ExternalLink";
 
 interface SearchControlsProps {
   query: string;
@@ -83,14 +84,12 @@ export function SearchControls({
       <h2>{t("searchCards")}</h2>
       <p>
         {t("descriptionBefore")}
-        <a
+        <ExternalLink
           href="https://www.eternalcentral.com/middleschoolrules/"
-          target="_blank"
-          rel="noopener noreferrer"
           style={{ color: "inherit", textDecoration: "underline" }}
         >
           {t("descriptionLink")}
-        </a>
+        </ExternalLink>
         {t("descriptionAfter")}
       </p>
 
