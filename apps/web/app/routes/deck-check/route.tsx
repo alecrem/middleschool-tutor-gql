@@ -18,6 +18,7 @@ import { Icon } from "../../components/Icon";
 import { useDeckValidation } from "../../hooks/useDeckValidation";
 import { useDeckList } from "../../hooks/useDeckList";
 import { loader } from "./loader";
+import { ExternalLink } from "../../components/ExternalLink";
 
 export { loader };
 
@@ -157,14 +158,12 @@ export default function DeckCheck() {
               </div>
               <p>
                 {t("deckCheckDescriptionBefore")}
-                <a
+                <ExternalLink
                   href="https://www.eternalcentral.com/middleschoolrules/"
-                  target="_blank"
-                  rel="noopener noreferrer"
                   style={{ color: "inherit", textDecoration: "underline" }}
                 >
                   {t("deckCheckDescriptionLink")}
-                </a>
+                </ExternalLink>
                 {t("deckCheckDescriptionAfter")}
                 <br />
                 {t("sideboardInstructions")}

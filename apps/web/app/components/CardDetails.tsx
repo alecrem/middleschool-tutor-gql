@@ -1,15 +1,22 @@
-import { useRef, useEffect, useState } from 'react';
-import type { MagicCard } from '../lib/types';
-import { generateScryfallUrl, formatPowerToughness } from '../lib/utils';
-import { useThemedStyles } from '../hooks/useTheme';
-import { useHydratedTranslation } from '../hooks/useHydratedTranslation';
+import { useRef, useEffect, useState } from "react";
+import type { MagicCard } from "../lib/types";
+import { generateScryfallUrl, formatPowerToughness } from "../lib/utils";
+import { useThemedStyles } from "../hooks/useTheme";
+import { useHydratedTranslation } from "../hooks/useHydratedTranslation";
+import { ExternalLink } from "./ExternalLink";
 
 interface CardDetailsProps {
   card: MagicCard;
   isMobile?: boolean;
 }
 
-function CardImage({ imageUrl, cardName }: { imageUrl: string; cardName: string }) {
+function CardImage({
+  imageUrl,
+  cardName,
+}: {
+  imageUrl: string;
+  cardName: string;
+}) {
   const { t } = useHydratedTranslation();
   const { colors } = useThemedStyles();
   const [isVisible, setIsVisible] = useState(false);
@@ -77,9 +84,7 @@ function CardImage({ imageUrl, cardName }: { imageUrl: string; cardName: string 
         />
       )}
       {isVisible && hasError && (
-        <div style={placeholderStyle}>
-          {t("noImage")}
-        </div>
+        <div style={placeholderStyle}>{t("noImage")}</div>
       )}
       {!isVisible && (
         <div style={{ ...placeholderStyle, color: "transparent" }} />
@@ -93,53 +98,63 @@ export function CardDetails({ card, isMobile = false }: CardDetailsProps) {
   const { colors } = useThemedStyles();
 
   return (
-    <div style={{ 
-      display: 'flex',
-      flexDirection: isMobile ? 'column' : 'row',
-      gap: '1.5rem',
-      alignItems: 'flex-start'
-    }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: isMobile ? "column" : "row",
+        gap: "1.5rem",
+        alignItems: "flex-start",
+      }}
+    >
       {/* Card image */}
-      <div style={{ 
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        flexShrink: 0,
-        width: isMobile ? '100%' : 'auto'
-      }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          flexShrink: 0,
+          width: isMobile ? "100%" : "auto",
+        }}
+      >
         <CardImage imageUrl={card.image_small} cardName={card.name} />
       </div>
-      
+
       {/* Card details text */}
-      <div style={{ 
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.75rem',
-        width: '100%',
-        minWidth: 0
-      }}>
-        {/* Card name with color indicators */}
-        <div style={{
+      <div
+        style={{
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          marginBottom: "0.5rem",
-          flexWrap: "wrap",
-          gap: "0.5rem",
-        }}>
-          <h4 style={{ 
-            margin: 0,
-            fontSize: '1.125rem',
-            fontWeight: '600',
-            color: card.banned ? colors.accent.red : colors.text.primary,
-            minWidth: 0,
-            wordBreak: "break-word",
-          }}>
-            {i18n.language === "ja" && card.name_ja !== null && `${card.name_ja} • `}
-            <a
+          flexDirection: "column",
+          gap: "0.75rem",
+          width: "100%",
+          minWidth: 0,
+        }}
+      >
+        {/* Card name with color indicators */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            marginBottom: "0.5rem",
+            flexWrap: "wrap",
+            gap: "0.5rem",
+          }}
+        >
+          <h4
+            style={{
+              margin: 0,
+              fontSize: "1.125rem",
+              fontWeight: "600",
+              color: card.banned ? colors.accent.red : colors.text.primary,
+              minWidth: 0,
+              wordBreak: "break-word",
+            }}
+          >
+            {i18n.language === "ja" &&
+              card.name_ja !== null &&
+              `${card.name_ja} • `}
+            <ExternalLink
               href={generateScryfallUrl(card.name)}
-              target="_blank"
-              rel="noopener noreferrer"
               style={{
                 color: "inherit",
                 textDecoration: "underline",
@@ -147,14 +162,14 @@ export function CardDetails({ card, isMobile = false }: CardDetailsProps) {
               }}
             >
               {card.name}
-            </a>
+            </ExternalLink>
             {card.banned && (
-              <span style={{ color: colors.accent.red, marginLeft: '0.5rem' }}>
-                ({t('banned')})
+              <span style={{ color: colors.accent.red, marginLeft: "0.5rem" }}>
+                ({t("banned")})
               </span>
             )}
           </h4>
-          
+
           {/* Color indicators */}
           <div style={{ display: "flex", gap: "0.25rem", flexShrink: 0 }}>
             {card.w && <span style={{ color: "#fbbf24" }}>W</span>}
@@ -165,37 +180,46 @@ export function CardDetails({ card, isMobile = false }: CardDetailsProps) {
             {card.c && <span style={{ color: "#9ca3af" }}>C</span>}
           </div>
         </div>
-        
+
         {/* Type, mana value, power/toughness */}
-        <div style={{ 
-          fontSize: '0.875rem',
-          marginBottom: '0.75rem'
-        }}>
+        <div
+          style={{
+            fontSize: "0.875rem",
+            marginBottom: "0.75rem",
+          }}
+        >
           <span>{card.type}</span>
           <span> • </span>
-          <span>{t('cmc')}: {card.mv}</span>
+          <span>
+            {t("cmc")}: {card.mv}
+          </span>
           {card.power && card.toughness && (
             <>
               <span> • </span>
-              <span>{formatPowerToughness(card.power)}/{formatPowerToughness(card.toughness)}</span>
+              <span>
+                {formatPowerToughness(card.power)}/
+                {formatPowerToughness(card.toughness)}
+              </span>
             </>
           )}
         </div>
-        
+
         {/* Card text in "well" style */}
         {card.text && (
-          <div style={{ 
-            fontSize: '0.875rem',
-            lineHeight: '1.5',
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-word',
-            color: colors.text.primary,
-            backgroundColor: colors.background.primary,
-            padding: '0.75rem',
-            borderRadius: '6px',
-            border: `1px solid ${colors.border.primary}`,
-            margin: 0,
-          }}>
+          <div
+            style={{
+              fontSize: "0.875rem",
+              lineHeight: "1.5",
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
+              color: colors.text.primary,
+              backgroundColor: colors.background.primary,
+              padding: "0.75rem",
+              borderRadius: "6px",
+              border: `1px solid ${colors.border.primary}`,
+              margin: 0,
+            }}
+          >
             {card.text}
           </div>
         )}
