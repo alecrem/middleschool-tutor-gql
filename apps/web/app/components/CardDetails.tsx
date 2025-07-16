@@ -220,7 +220,7 @@ export function CardDetails({ card, isMobile = false }: CardDetailsProps) {
               margin: 0,
             }}
           >
-            {card.text}
+            {card.text.replace(" // ", "\n//\n")}
           </div>
         )}
       </div>
