@@ -138,7 +138,7 @@ function parseCSVLine(line: string): string[] {
 // Convert CSV to JSON
 const csvPath = join(
   Dirname,
-  "../data/middleschool_extra_fields_with_banned_images.csv"
+  "../data/middleschool_extra_fields_with_banned_images_fixed_splits.csv"
 );
 const jsonPath = join(Dirname, "assets/cards.json");
 
