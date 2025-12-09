@@ -1,0 +1,6 @@
+{
+  "name": "middleschool-tutor",
+  "description": "Search Middle School MTG cards",
+  "version": "1.0.0",
+  "directory": "packages/mcp-server"
+}

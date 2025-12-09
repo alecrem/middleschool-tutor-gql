@@ -1,7 +1,6 @@
 {
-  "name": "mcp-server",
-  "version": "0.0.1",
-  "private": true,
+  "name": "middleschool-tutor-mcp",
+  "version": "1.0.0",
   "type": "module",
   "bin": {
     "middleschool-mcp": "./dist/index.js"
